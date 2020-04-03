@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="photo_titles">
+        <item>Stockholm</item>
+        <item>Tokyo</item>
+        <item>Madrid</item>
+        <item>Shanghai</item>
+    </string-array>
+</resources>

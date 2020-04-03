@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "753714195746",
+    "firebase_url": "https://starttravel-422d1.firebaseio.com",
+    "project_id": "starttravel-422d1",
+    "storage_bucket": "starttravel-422d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753714195746:android:a7a5a6566f07282374897b",
+        "android_client_info": {
+          "package_name": "com.genomu.starttravel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753714195746-gp032rc4hfhpnb6a06slpfsgmssc1vsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.genomu.starttravel",
+            "certificate_hash": "c8ca1bc577013640effcf09f680ab8f6ce1aa9a1"
+          }
+        },
+        {
+          "client_id": "753714195746-j8d1tdekeqlm8ppdsp41ofbbjh36sh09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA25n_cL1hsAWgFRHDXIZx_P39UVGz6FpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753714195746-j8d1tdekeqlm8ppdsp41ofbbjh36sh09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

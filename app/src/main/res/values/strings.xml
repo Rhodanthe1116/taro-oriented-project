@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">StartTravel</string>
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_users">Users</string>
+    <string name="title_list">List</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="login_title_e_mail">e-mail</string>
+    <string name="login_title_password">password</string>
+    <string name="login_btn">Login</string>
+    <string name="login_reg_hint">Don\'t Have an Account?Sign up</string>
+
+    <string name="title_gallery_photo">Stockholm</string>
+
+    <string name="description_cover_home">This is homepage cover</string>
+
+    <string name="content_slogan_home">Start your travel</string>
+    <string name="hint_search_bar_home">Travel,country or city</string>
+    <string name="content_travel_item_home">Suggestions</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
