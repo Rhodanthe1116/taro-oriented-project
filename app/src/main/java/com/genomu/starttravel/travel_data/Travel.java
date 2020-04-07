@@ -1,8 +1,9 @@
 package com.genomu.starttravel.travel_data;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Travel {
+public class Travel extends TravelData{
     private String title;
     private int travel_code;
     private String product_key;
@@ -11,8 +12,39 @@ public class Travel {
     private String end_date;
     private int lower_bound;
     private int upper_bound;
+    public static Travel dummy = new Travel("Dummy",100,"VDRxxx01",102,"2020-02-29","2020-03-07",5,21);
 
-    public Travel(JSONObject jsonObject) {
+    public Travel(){
+
+    }
+    public Travel(String title, int travel_code, String product_key, int price, String start_date, String end_date,
+			int lower_bound, int upper_bound) {
+		super();
+		this.title = title;
+		this.travel_code = travel_code;
+		this.product_key = product_key;
+		this.price = price;
+		this.start_date = start_date;
+		this.end_date = end_date;
+		this.lower_bound = lower_bound;
+		this.upper_bound = upper_bound;
+	}
+
+	public Travel(JSONObject jsonObject) {
+        try {
+            title = jsonObject.getString("title");
+            travel_code = jsonObject.getInt("travel_code");
+            product_key = jsonObject.getString("product_key");
+            price = jsonObject.getInt("price");
+            start_date = jsonObject.getString("start_date");
+            end_date = jsonObject.getString("end_date");
+            lower_bound = jsonObject.getInt("lower_bound");
+            upper_bound = jsonObject.getInt("upper_bound");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

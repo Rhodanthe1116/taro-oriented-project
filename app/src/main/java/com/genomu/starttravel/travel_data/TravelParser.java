@@ -6,8 +6,6 @@ import com.genomu.starttravel.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,26 +15,25 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravelCodeParser extends DataParser {
+public class TravelParser extends DataParser {
 
-    private List<TravelCode> travelCodeList;
+    private List<Travel> travelList;
 
-    public TravelCodeParser(Context context) {
+    public TravelParser(Context context) {
         super(context);
-        travelCodeList = new ArrayList<TravelCode>();
+        travelList = new ArrayList<Travel>();
     }
 
-    public List<TravelCode> getParsedList() {
+    public List<Travel> getParsedList(){
         setUpInput();
-        parseJSON();
-        return travelCodeList;
+        parseGSON();
+        return travelList;
     }
-
 
     @Override
     public void parseGSON() {
         Gson gson = new Gson();
-        travelCodeList = gson.fromJson(jsonString,new TypeToken<ArrayList<TravelCode>>(){}.getType());
+        travelList = gson.fromJson(jsonString,new TypeToken<ArrayList<Travel>>(){}.getType());
     }
 
     @Override
@@ -45,8 +42,7 @@ public class TravelCodeParser extends DataParser {
             JSONArray array = new JSONArray(jsonString);
             for(int i = 0;i<array.length();i++){
                 JSONObject jsonObject = array.getJSONObject(i);
-                jsonObject.put("country","country");
-                travelCodeList.add(new TravelCode(jsonObject));
+                Travel travel = new Travel(jsonObject);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -55,7 +51,7 @@ public class TravelCodeParser extends DataParser {
 
     @Override
     public void setUpInput() {
-        InputStream is = context.getResources().openRawResource(R.raw.travel_code);
+        InputStream is = context.getResources().openRawResource(R.raw.travel);
         try {
             jsonString = readTextFile(is);
         } catch (IOException e) {

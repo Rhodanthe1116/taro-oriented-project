@@ -10,12 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.genomu.starttravel.util.DatabaseInvoker;
+import com.genomu.starttravel.util.HanWen;
+import com.genomu.starttravel.util.SetUserCommand;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -23,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private EditText edx_email;
     private EditText edx_password;
+    private EditText edx_name;
     private String email;
     private String password;
 
@@ -46,7 +51,15 @@ public class SignUpActivity extends AppCompatActivity {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.w(TAG, "createUserWithEmail:failure", task.getException());
                 String message =task.isSuccessful()?"Successful":"Failed";
+                if(task.isSuccessful()){
+                    Log.d(TAG, "create status:"+ UserAuth.getInstance().getStatus());
+                    DatabaseInvoker invoker = new DatabaseInvoker();
+                    invoker.addCommand(new SetUserCommand(new HanWen(),auth.getUid(),edx_name.getText().toString(),new ArrayList<Order>()));
+                    invoker.assignCommand();
+//                    Log.d(TAG, "create user: "+edx_name.getText().toString()+","+auth.getUid()+","+UserInn.getInstance().getNumberOfOrder());
+                }
                 Log.d(TAG, "SignUp"+message);
                 new AlertDialog.Builder(SignUpActivity.this)
                         .setMessage(message)
@@ -70,5 +83,6 @@ public class SignUpActivity extends AppCompatActivity {
     private void findViews(){
         edx_email = findViewById(R.id.email_sign_up);
         edx_password = findViewById(R.id.password_sign_up);
+        edx_name = findViewById(R.id.name_sign_up);
     }
 }

@@ -6,25 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.travel_data.TravelCode;
-import com.genomu.starttravel.travel_data.TravelCodeParser;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.genomu.starttravel.travel_data.TravelParser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TravelHandlerActivity extends AppCompatActivity {
@@ -32,19 +21,23 @@ public class TravelHandlerActivity extends AppCompatActivity {
     private static final String TAG = TravelHandlerActivity.class.getSimpleName();
     private String jsonString;
     private List<TravelCode> travelCodeList;
-
+    private List<Travel> travelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_travel_handler);
-        TravelCodeParser travelCodeParser = new TravelCodeParser(this);
-        travelCodeList = travelCodeParser.getParsedList();
+        TravelParser travelParser = new TravelParser(this);
+        travelList = travelParser.getParsedList();
+//        TravelCodeParser travelCodeParser = new TravelCodeParser(this);
+//        travelCodeList = travelCodeParser.getParsedList();
         RecyclerView recyclerView = findViewById(R.id.TH_recyler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        TravelCodeAdapter travelCodeAdapter = new TravelCodeAdapter();
-        recyclerView.setAdapter(travelCodeAdapter);
+        TravelAdapter travelAdapter = new TravelAdapter(this,travelList,true);
+//        TravelCodeAdapter travelCodeAdapter = new TravelCodeAdapter();
+        recyclerView.setAdapter(travelAdapter);
     }
 
 
@@ -52,7 +45,7 @@ public class TravelHandlerActivity extends AppCompatActivity {
         @NonNull
         @Override
         public TravelCodeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.row_travel,parent,false);
+            View view = getLayoutInflater().inflate(R.layout.row_travel_code,parent,false);
             return new TravelCodeViewHolder(view);
         }
 
@@ -78,4 +71,5 @@ public class TravelHandlerActivity extends AppCompatActivity {
             }
         }
     }
+
 }

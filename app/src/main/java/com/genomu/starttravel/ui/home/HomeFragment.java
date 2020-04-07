@@ -30,6 +30,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.ui.search.SearchFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +68,7 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+//                getDatabaseTest();
                 goSearch();
             }
         });
@@ -74,6 +82,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(p_ad);
         return view;
     }
+
 
     private void findViews() {
         ed_tx = view.findViewById(R.id.search_bar_home);

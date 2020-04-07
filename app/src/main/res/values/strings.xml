@@ -7,6 +7,7 @@
     <string name="sign_up_title">Sign Up</string>
     <string name="login_title_e_mail">e-mail</string>
     <string name="login_title_password">password</string>
+    <string name="sign_up_title_name">name</string>
     <string name="login_btn">Login</string>
     <string name="login_reg_hint">Don\'t Have an Account?Sign up</string>
 
