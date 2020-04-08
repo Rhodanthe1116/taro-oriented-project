@@ -102,5 +102,31 @@ taro-oriented project
 > **GUI資料更動**
 > - 無
 >
+<<<<<<< HEAD
 
+=======
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - Invoker實例是否提升層級
+> - 觀察主體的介面
+> - Concrete Command設計並開發
+> - Travel資料升級
+>      - 已訂人數
+>      
+> - Travel資料交由database處理並修改**travel_data package**
+> - Order資料升級
+>     - 成人訂購人數
+>     - 孩童訂購人數
+>     - 嬰兒訂購人數
+>     - 訂單UID
+> - GUI處理類別以及資料更新至4/6討論內容
+>     - (修改)**搜尋frag**：具排序、各種篩選的選項、拿掉Alert
+>     - (修改)**使用者frag**:多加一張「登入後layout」以及一張「訂單詳資layout」
+>     - (移植)**清單frag**:移到使用者frag中
+>     - (新增)**Travel詳資acti**:下方有訂購鈕
+>     - (新增)**訂購acti**:訂購頁面
+>     - (移植)**Travel處理者acti**:移到搜尋frag中
+>>>>>>> bb417d727d2bed0f67b40d37483f192c94dd8314
 
