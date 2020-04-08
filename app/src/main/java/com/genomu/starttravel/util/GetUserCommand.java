@@ -3,16 +3,18 @@ package com.genomu.starttravel.util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetUserCommand extends DBCommand {
-    List<DBDataObserver> observers;
-    List<DBAspect> aspects;
-    String UID;
+public class GetUserCommand extends DBCommand implements DBDataSubject {
+    private List<DBDataObserver> observers;
+    private List<DBAspect> aspects;
+    private String UID;
 
+    @Override
     public void attach(DBDataObserver observer,DBAspect aspect) {
         observers.add(observer);
         aspects.add(aspect);
     }
 
+    @Override
     public void detach(DBDataObserver observer) {
         int idx = observers.indexOf(observer);
         observers.remove(idx);

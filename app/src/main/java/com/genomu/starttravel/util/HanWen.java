@@ -2,6 +2,7 @@ package com.genomu.starttravel.util;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.List;
 
@@ -11,6 +12,10 @@ public class HanWen {
     private DatabaseReference usersReference = database.getReference("users");
     private DatabaseReference userReference;
 
+
+    void rawSet(String key,List rawList){
+        database.getReference("raw").child(key).setValue(rawList);
+    }
 
     void secureUser(String UID){
         usersReference.child(UID).child("UID").setValue(UID);
@@ -41,6 +46,20 @@ public class HanWen {
         return userReference.child(key);
     }
 
+    Query seekFromRawAtFirst(String key, int limit){
+        return database.getReference("raw").child(key).orderByKey().limitToFirst(limit);
+    }
 
+    Query seekFromRawAtLast(String key, int limit){
+        return database.getReference("raw").child(key).orderByKey().limitToLast(limit);
+    }
+
+    Query seekFromRawAtFirst(String key, String orderRefKey, int limit){
+        return database.getReference("raw").child(key).orderByChild(orderRefKey).limitToFirst(limit);
+    }
+
+    Query seekFromRawAtLast(String key, String orderRefKey, int limit){
+        return database.getReference("raw").child(key).orderByChild(orderRefKey).limitToLast(limit);
+    }
 
 }

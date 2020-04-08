@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class NameDBObserver implements DBDataObserver {
@@ -37,5 +38,15 @@ public class NameDBObserver implements DBDataObserver {
 
             }
         });
+    }
+
+    @Override
+    public void update(Query query) {
+
+    }
+
+    @Override
+    public void update(Query query, boolean isAscending) {
+
     }
 }

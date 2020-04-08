@@ -12,13 +12,14 @@ public class Travel extends TravelData{
     private String end_date;
     private int lower_bound;
     private int upper_bound;
-    public static Travel dummy = new Travel("Dummy",100,"VDRxxx01",102,"2020-02-29","2020-03-07",5,21);
+    private int purchased;
+    public static Travel dummy = new Travel("Dummy",100,"VDRxxx01",102,"2020-02-29","2020-03-07",5,21,0);
 
     public Travel(){
 
     }
     public Travel(String title, int travel_code, String product_key, int price, String start_date, String end_date,
-			int lower_bound, int upper_bound) {
+			int lower_bound, int upper_bound,int purchased) {
 		super();
 		this.title = title;
 		this.travel_code = travel_code;
@@ -28,7 +29,8 @@ public class Travel extends TravelData{
 		this.end_date = end_date;
 		this.lower_bound = lower_bound;
 		this.upper_bound = upper_bound;
-	}
+		this.purchased = purchased;
+    }
 
 	public Travel(JSONObject jsonObject) {
         try {
@@ -110,5 +112,13 @@ public class Travel extends TravelData{
 
     public void setUpper_bound(int upper_bound) {
         this.upper_bound = upper_bound;
+    }
+
+    public int getPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(int purchased) {
+        this.purchased = purchased;
     }
 }

@@ -3,6 +3,12 @@ package com.genomu.starttravel;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.genomu.starttravel.travel_data.TravelCode;
+import com.genomu.starttravel.travel_data.TravelCodeParser;
+import com.genomu.starttravel.travel_data.TravelParser;
+import com.genomu.starttravel.util.AddRawListCommand;
+import com.genomu.starttravel.util.DatabaseInvoker;
+import com.genomu.starttravel.util.HanWen;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -12,6 +18,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         ab.hide();
         int nav = getIntent().getIntExtra("nav",R.id.navigation_home);
         navGto(nav);
-
 
     }
 

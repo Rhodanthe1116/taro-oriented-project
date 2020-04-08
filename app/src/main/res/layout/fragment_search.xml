@@ -23,15 +23,34 @@
         android:id="@+id/result_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/bar_search"
-        app:layout_constraintTop_toBottomOf="@+id/bar_search" />
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sorting_search" />
 
     <ImageButton
         android:id="@+id/go_search_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="51dp"
+        android:layout_height="45dp"
+        android:padding="8sp"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_small_search"
         app:layout_constraintStart_toEndOf="@+id/bar_search"
         app:layout_constraintTop_toTopOf="@+id/bar_search" />
+
+    <Spinner
+        android:id="@+id/sorting_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bar_search" />
+
+    <Spinner
+        android:id="@+id/place_filtering_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/sorting_search"
+        app:layout_constraintTop_toBottomOf="@+id/bar_search" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.genomu.starttravel.util.AddOrderCommand;
+import com.genomu.starttravel.util.AddRawListCommand;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.travel_data.Travel;
@@ -29,6 +30,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         this.travelList = travelList;
         this.clickable = clickable;
     }
+
 
     @NonNull
     @Override
@@ -56,7 +58,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
                                 public void onClick(DialogInterface dialog, int which) {
                                     if(UID!="b07505019"){
                                         DatabaseInvoker invoker = new DatabaseInvoker();
-                                        invoker.addCommand(new AddOrderCommand(new HanWen(),UID,new Order(travel)));
+                                        invoker.addCommand(new AddOrderCommand(new HanWen(),UID,new Order(travel,1,0,0)));
                                         invoker.assignCommand();
                                     }
                                 }

@@ -51,7 +51,7 @@ public class TravelParser extends DataParser {
 
     @Override
     public void setUpInput() {
-        InputStream is = context.getResources().openRawResource(R.raw.travel);
+        InputStream is = context.getResources().openRawResource(R.raw.travel_a_1_2);
         try {
             jsonString = readTextFile(is);
         } catch (IOException e) {

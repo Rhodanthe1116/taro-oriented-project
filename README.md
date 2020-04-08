@@ -1,6 +1,58 @@
 # taro-oriented-project
 taro-oriented project
 ## log
+### alpha-1.2
+> 版本資訊：
+> -
+> 
+> **概述**
+> 
+> >升級各種資料以及建立「快速新增JSON field的程式」
+> >搜尋frag更新至可以有限度獲得資料
+> 
+> **類別新增**
+> - Travel資料升級
+>      - 已訂人數
+>      
+> - Travel資料交由database處理並修改**travel_data package**
+> - database新增ref:**raw** 用於存放**codes**、**travels**等重要資料
+> - Order資料升級
+>     - 成人訂購人數
+>     - 孩童訂購人數
+>     - 嬰兒訂購人數
+>     - 訂單UID 使用**java.util.UUID**產生
+> - 升級瀚文(命令執行者)的能力
+> - 觀察主體的介面 **DBDataSubject**
+> - 新增具體命令
+>     - 添加原始清單命令 AddRawListCommand
+>     - 取得旅遊結果命令 GetTravelsResultCommand
+> - 新增具體觀察者
+>     - 旅遊資料觀察者 TravelsDBObserver
+>     
+> **GUI處理類別更動**
+> - (移植)**Travel處理者acti**:移到搜尋frag中
+> - (修改)**搜尋frag**：具排序、各種篩選的選項
+> 
+> **GUI資料更動**
+> - 移除無用的layout
+> - 更新**搜尋frag**的layout
+> - value/arrays:新增**下拉式選單**資料
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - Invoker實例是否提升層級
+> - Concrete Command設計並開發
+>     - GetTravelsResultCommand 擴充
+>     - 還有更多...
+> - GUI處理類別以及資料更新至4/6討論內容
+>     - (修改)**使用者frag**:多加一張「登入後layout」以及一張「訂單詳資layout」
+>     - (修改)**搜尋frag**:持續改進
+>     - (移植)**清單frag**:移到使用者frag中
+>     - (新增)**Travel詳資acti**:下方有訂購鈕
+>     - (新增)**訂購acti**:訂購頁面
+>     - (移植)**Travel處理者acti**:移到搜尋frag中
+
 ### alpha-1.1
 > 版本資訊：
 > -
@@ -50,27 +102,5 @@ taro-oriented project
 > **GUI資料更動**
 > - 無
 >
---- 
-> 開發方向
-> - 
-> - 萃取觀察者模式
-> - Invoker實例是否提升層級
-> - 觀察主體的介面
-> - Concrtete Command設計並開發
-> - Travel資料升級
->      - 已訂人數
->      
-> - Travel資料交由database處理並修改**travel_data package**
-> - Order資料升級
->     - 成人訂購人數
->     - 孩童訂購人數
->     - 嬰兒訂購人數
->     - 訂單UID
-> - GUI處理類別以及資料更新至4/6討論內容
->     - (修改)**搜尋frag**：具排序、各種篩選的選項、拿掉Alert
->     - (修改)**使用者frag**:多加一張「登入後layout」以及一張「訂單詳資layout」
->     - (移植)**清單frag**:移到使用者frag中
->     - (新增)**Travel詳資acti**:下方有訂購鈕
->     - (新增)**訂購acti**:訂購頁面
->     - (移植)**Travel處理者acti**:移到搜尋frag中
+
 
