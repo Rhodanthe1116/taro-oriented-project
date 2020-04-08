@@ -56,7 +56,7 @@ taro-oriented project
 > - 萃取觀察者模式
 > - Invoker實例是否提升層級
 > - 觀察主體的介面
-> - Concrtete Command設計並開發
+> - Concrete Command設計並開發
 > - Travel資料升級
 >      - 已訂人數
 >      
