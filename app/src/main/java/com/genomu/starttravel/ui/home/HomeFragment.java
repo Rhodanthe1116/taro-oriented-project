@@ -1,5 +1,7 @@
 package com.genomu.starttravel.ui.home;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.TextKeyListener;
@@ -48,6 +50,7 @@ public class HomeFragment extends Fragment {
     private ImageButton btn;
     private List<GalleryPhoto> photos;
     private View view;
+    private ImageView cover;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,9 +80,49 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.travellist_home);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
-
         PhotoAdapter p_ad = new PhotoAdapter();
         recyclerView.setAdapter(p_ad);
+//        Log.d(TAG, "cover initial height"+cover.getMeasuredHeight());
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy>20){
+                    ValueAnimator anim = ValueAnimator.ofInt(cover.getMeasuredHeight(), 480);
+//                    Log.d(TAG, "cover height:"+cover.getMeasuredHeight());
+                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            int val = (Integer) valueAnimator.getAnimatedValue();
+                            ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
+                            layoutParams.height = val;
+                            cover.setLayoutParams(layoutParams);
+                        }
+                    });
+                    anim.setDuration(500);
+                    anim.start();
+                }else if(dy<-15){
+                    ValueAnimator anim = ValueAnimator.ofInt(cover.getMeasuredHeight(), 720);
+                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            int val = (Integer) valueAnimator.getAnimatedValue();
+                            ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
+                            layoutParams.height = val;
+                            cover.setLayoutParams(layoutParams);
+                        }
+                    });
+                    anim.setDuration(500);
+                    anim.start();
+                }
+                Log.d(TAG, "onScrolled: "+dy);
+            }
+        });
         return view;
     }
 
@@ -87,6 +130,7 @@ public class HomeFragment extends Fragment {
     private void findViews() {
         ed_tx = view.findViewById(R.id.search_bar_home);
         btn = view.findViewById(R.id.search_bar_btn_home);
+        cover = view.findViewById(R.id.cover_home);
     }
 
     /*private void closeKeyboard(View currentFocusView){

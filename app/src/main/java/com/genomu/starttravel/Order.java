@@ -2,9 +2,10 @@ package com.genomu.starttravel;
 
 import com.genomu.starttravel.travel_data.Travel;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Order {
+public class Order implements Serializable {
     private Travel travel;
     private int adult;
     private int kid;

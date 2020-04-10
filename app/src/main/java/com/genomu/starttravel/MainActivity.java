@@ -1,17 +1,20 @@
 package com.genomu.starttravel;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
-import com.genomu.starttravel.travel_data.TravelCode;
-import com.genomu.starttravel.travel_data.TravelCodeParser;
-import com.genomu.starttravel.travel_data.TravelParser;
-import com.genomu.starttravel.util.AddRawListCommand;
-import com.genomu.starttravel.util.DatabaseInvoker;
-import com.genomu.starttravel.util.HanWen;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -19,15 +22,22 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String search_content = "";
     private static boolean searched = false;
     private static NavController navController;
+    public static boolean isStartBtn = true;
+
 
     @Override
     protected void onStart() {
@@ -36,14 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "userInn status:"+ UserAuth.getInstance().getStatus());
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_search, R.id.navigation_users,R.id.navigation_list)
+                R.id.navigation_home, R.id.navigation_search, R.id.navigation_users)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -77,4 +87,60 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH,month);
+        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+        String date = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        Button btn = findViewById(R.id.start_date_search);
+        if(isStartBtn){
+            Button end_btn = findViewById(R.id.end_date_btn);
+            DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+            try {
+                if(end_btn.getText()==getResources().getString(R.string.end_date_btn)){
+                    btn.setText(date);
+                }else {
+                    if (calendar.getTime().before(format.parse(end_btn.getText().toString()))) {
+                        btn.setText(date);
+                    } else {
+                        alertKabo();
+                    }
+                }
+            } catch (ParseException e) {
+                Log.w(TAG, "onDateSet: ", e);
+            }
+        }else{
+            Button end_btn = findViewById(R.id.end_date_btn);
+            DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+            try {
+                if(btn.getText()==getResources().getString(R.string.start_date_btn)){
+                    end_btn.setText(date);
+                }else {
+                    if (calendar.getTime().after(format.parse(btn.getText().toString()))) {
+                        end_btn.setText(date);
+                    } else {
+                        alertKabo();
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void alertKabo() {
+        new AlertDialog.Builder(this)
+                .setTitle("pick date error")
+                .setMessage("原來是時光旅行")
+                .setPositiveButton("ok",null)
+                .setView(R.layout.alert_view)
+                .show();
+    }
 }

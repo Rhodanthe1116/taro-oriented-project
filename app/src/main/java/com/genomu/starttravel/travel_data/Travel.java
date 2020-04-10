@@ -3,7 +3,9 @@ package com.genomu.starttravel.travel_data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Travel extends TravelData{
+import java.io.Serializable;
+
+public class Travel extends TravelData implements Serializable {
     private String title;
     private int travel_code;
     private String product_key;

@@ -1,6 +1,7 @@
 package com.genomu.starttravel;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ActionBar ab = getSupportActionBar();
+        ab.hide();
         findViews();
         setupAuth();
         tv_reg_hint.setOnClickListener(new View.OnClickListener() {

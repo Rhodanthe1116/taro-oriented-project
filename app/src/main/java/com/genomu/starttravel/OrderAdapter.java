@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -20,38 +19,35 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.genomu.starttravel.util.AddOrderCommand;
-import com.genomu.starttravel.util.AddRawListCommand;
-import com.genomu.starttravel.util.DatabaseInvoker;
-import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.travel_data.Travel;
 
 import java.util.List;
 
-public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelViewHolder> {
-
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder>{
     private static final String TAG = TravelAdapter.class.getSimpleName();
     private Activity activity;
-    private List<Travel> travelList;
+    private List<Order> orderList;
 
-    public TravelAdapter(Activity activity, List<Travel> travelList) {
+    public OrderAdapter(Activity activity, List<Order> orderList) {
         this.activity = activity;
-        this.travelList = travelList;
+        this.orderList = orderList;
     }
 
 
     @NonNull
     @Override
-    public TravelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OrderAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = activity.getLayoutInflater().inflate(R.layout.row_travel_item, parent, false);
-        return new TravelViewHolder(view);
+        return new OrderAdapter.OrderViewHolder(view);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull TravelViewHolder holder, int position) {
-        final TravelViewHolder vh = holder;
+    public void onBindViewHolder(@NonNull OrderAdapter.OrderViewHolder holder, int position) {
+        final OrderAdapter.OrderViewHolder vh = holder;
         final String UID = UserAuth.getInstance().getUserUID();
-        final Travel travel = travelList.get(position);
+        final Order order = orderList.get(position);
+        final Travel travel = order.getTravel();
 //        volleyRequest(position);
         holder.title.setText(travel.getTitle());
         holder.price.setText(travel.getPrice() + "元");
@@ -59,29 +55,16 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         holder.box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(activity)
-                        .setTitle(travel.getTitle())
-                        .setMessage("出發日期" + travel.getStart_date() + "結束日期" + travel.getEnd_date())
-                        .setPositiveButton("預訂", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (UID != "b07505019") {
-                                    DatabaseInvoker invoker = new DatabaseInvoker();
-                                    invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel, 1, 0, 0)));
-                                    invoker.assignCommand();
-
-                                }
-                            }
-                        })
-                        .setNegativeButton("取消", null)
-                        .show();
-            }
+                    Intent intent = new Intent(activity,UserOrderActivity.class);
+                    intent.putExtra("order",order);
+                    activity.startActivity(intent);
+                }
         });
 
     }
 
     private void volleyRequest(int position) {
-        final Travel travel = travelList.get(position);
+        final Travel travel = orderList.get(position).getTravel();
         RequestQueue queue = Volley.newRequestQueue(activity);
         String url = "https://pixabay.com/api/";
         String key = "?key="+"15945961-2835fdd302951c8f463bbf738";
@@ -107,17 +90,17 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
 
     @Override
     public int getItemCount() {
-        return travelList.size();
+        return orderList.size();
     }
 
-    public class TravelViewHolder extends RecyclerView.ViewHolder {
+    public class OrderViewHolder extends RecyclerView.ViewHolder {
         View box;
         ImageView image;
         TextView title;
         TextView price;
         TextView lower;
 
-        public TravelViewHolder(@NonNull View itemView) {
+        public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image_row_travel);
             box = itemView.findViewById(R.id.box_row_travel);

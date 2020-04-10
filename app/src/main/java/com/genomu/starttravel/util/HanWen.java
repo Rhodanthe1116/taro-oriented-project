@@ -1,13 +1,19 @@
 package com.genomu.starttravel.util;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class HanWen {
     public static final boolean[] flag = {false};
+    private static final String TAG = HanWen.class.getSimpleName();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference usersReference = database.getReference("users");
     private DatabaseReference userReference;
@@ -46,20 +52,35 @@ public class HanWen {
         return userReference.child(key);
     }
 
-    Query seekFromRawAtFirst(String key, int limit){
-        return database.getReference("raw").child(key).orderByKey().limitToFirst(limit);
+    Query seekFromRaw(String key){
+        return database.getReference("raw").child(key).orderByKey();
+    }
+    Query seekFromRaw(String key,String orderRefKey){
+        return database.getReference("raw").child(key).orderByChild(orderRefKey);
     }
 
-    Query seekFromRawAtLast(String key, int limit){
-        return database.getReference("raw").child(key).orderByKey().limitToLast(limit);
+    //Warning:aborted
+    Query addRangeConstraint(Query original,String start,String end) throws ParseException {
+        DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(!start.equals(GetTravelsResultCommand.default_start)){
+            if(!end.equals(GetTravelsResultCommand.default_end)){
+                start = sdf.format(format.parse(start));
+                end = sdf.format(format.parse(end));
+                return original.startAt(start,"start_date").endAt(end,"end_date");
+            }else {
+                start = sdf.format(format.parse(start));
+                return original.startAt(start,"start_date");
+            }
+        }else if(!end.equals(GetTravelsResultCommand.default_end)){
+            end = sdf.format(format.parse(end));
+            return original.endAt(end,"end_date");
+        }
+        return original;
     }
 
-    Query seekFromRawAtFirst(String key, String orderRefKey, int limit){
-        return database.getReference("raw").child(key).orderByChild(orderRefKey).limitToFirst(limit);
-    }
-
-    Query seekFromRawAtLast(String key, String orderRefKey, int limit){
-        return database.getReference("raw").child(key).orderByChild(orderRefKey).limitToLast(limit);
+    Query addLimitConstraint(Query original,int limit,boolean isFirst){
+        return  (isFirst)?(original.limitToFirst(limit)):(original.limitToLast(limit));
     }
 
 }

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sorting">
-        <item>price:descending</item>
-        <item>price:ascending</item>
+        <item>@string/price_d</item>
+        <item>@string/price_a</item>
     </string-array>
     <string-array name="place_filtering">
-        <item>Asia</item>
-        <item>Africa</item>
-        <item>North America</item>
-        <item>South America</item>
-        <item>Europe</item>
-        <item>Oceania</item>
+        <item>@string/place_as</item>
+        <item>@string/place_af</item>
+        <item>@string/place_na</item>
+        <item>@string/place_sa</item>
+        <item>@string/place_eu</item>
+        <item>@string/place_oc</item>
     </string-array>
     <string-array name="photo_titles">
         <item>Stockholm</item>

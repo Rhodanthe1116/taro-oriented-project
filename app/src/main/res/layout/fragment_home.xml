@@ -8,22 +8,14 @@
 
     <ImageView
         android:id="@+id/cover_home"
-        android:layout_width="wrap_content"
-        android:layout_height="270dp"
+        android:layout_width="0dp"
+        android:layout_height="280dp"
         android:contentDescription="@string/description_cover_home"
-        android:cropToPadding="false"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
         android:src="@drawable/cover"
-        app:layout_constraintBottom_toTopOf="@+id/travellist_home"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="450dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/slogan_home"
@@ -41,21 +33,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.62" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/travellist_home"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toBottomOf="@+id/cover_home" />
 
     <TextView
         android:id="@+id/travel_item_home"

@@ -1,6 +1,7 @@
 package com.genomu.starttravel.util;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,16 +14,15 @@ import com.genomu.starttravel.travel_data.Travel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class TravelsDBObserver implements DBDataObserver {
+    private static final String TAG = TravelsDBObserver.class.getSimpleName();
     private RecyclerView recyclerView;
     private Activity activity;
 
@@ -56,14 +56,14 @@ public class TravelsDBObserver implements DBDataObserver {
                 List<Travel> travelList = new ArrayList<Travel>();
                 for(DataSnapshot dataValues:dataSnapshot.getChildren()){
                     Travel travel = dataValues.getValue(Travel.class);
-                    travelList.add(travel);
+                        travelList.add(travel);
                 }
                 if(!isAscending){
                     Collections.reverse(travelList);
                 }
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                TravelAdapter adapter = new TravelAdapter(activity, travelList,true);
+                TravelAdapter adapter = new TravelAdapter(activity, travelList);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setVisibility(View.VISIBLE);
             }

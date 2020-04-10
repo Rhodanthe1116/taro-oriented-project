@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.genomu.starttravel.Order;
+import com.genomu.starttravel.OrderAdapter;
 import com.genomu.starttravel.TravelAdapter;
 import com.genomu.starttravel.travel_data.Travel;
 import com.google.firebase.database.DataSnapshot;
@@ -42,18 +43,18 @@ public class OrdersDBObserver implements DBDataObserver {
                 GenericTypeIndicator<List<Order>> t = new GenericTypeIndicator<List<Order>>(){};
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                TravelAdapter adapter = new TravelAdapter(activity, getResolvedList(dataSnapshot.getValue(t)),false);
+                OrderAdapter adapter = new OrderAdapter(activity, getResolvedList(dataSnapshot.getValue(t)));
                 recyclerView.setAdapter(adapter);
             }
 
-            private List<Travel> getResolvedList(List<Order> orderList){
-                List<Travel> travelList = new ArrayList<>();
+            private List<Order> getResolvedList(List<Order> orderList){
+                List<Order> orders = new ArrayList<>();
                 for(Order order:orderList) {
                     if (!order.getTravel().getTitle().equals("dummy")) {
-                        travelList.add(order.getTravel());
+                        orders.add(order);
                     }
                 }
-                return travelList;
+                return orders;
             }
 
             @Override
