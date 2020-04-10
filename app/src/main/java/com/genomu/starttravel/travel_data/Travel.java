@@ -15,7 +15,8 @@ public class Travel extends TravelData implements Serializable {
     private int lower_bound;
     private int upper_bound;
     private int purchased;
-    public static Travel dummy = new Travel("Dummy",100,"VDRxxx01",102,"2020-02-29","2020-03-07",5,21,0);
+
+    public static Travel dummy = new Travel("dummy",100,"VDRxxx01",102,"2020-02-29","2020-03-07",5,21,0);
 
     public Travel(){
 
@@ -44,7 +45,8 @@ public class Travel extends TravelData implements Serializable {
             end_date = jsonObject.getString("end_date");
             lower_bound = jsonObject.getInt("lower_bound");
             upper_bound = jsonObject.getInt("upper_bound");
-
+            purchased = jsonObject.getInt("purchased");
+//            duration = jsonObject.getInt("duration");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -123,4 +125,5 @@ public class Travel extends TravelData implements Serializable {
     public void setPurchased(int purchased) {
         this.purchased = purchased;
     }
+
 }

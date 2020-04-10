@@ -9,8 +9,20 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.genomu.starttravel.travel_data.JSONSaver;
+import com.genomu.starttravel.travel_data.Travel;
+import com.genomu.starttravel.travel_data.TravelCode;
+import com.genomu.starttravel.travel_data.TravelCodeParser;
+import com.genomu.starttravel.travel_data.TravelParser;
+import com.genomu.starttravel.util.AddRawListCommand;
+import com.genomu.starttravel.util.DatabaseInvoker;
+import com.genomu.starttravel.util.HanWen;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 
 import androidx.annotation.NonNull;
@@ -22,9 +34,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         navGto(nav);
 
     }
+
 
     public static void navGto(int res_id){
         navController.navigate(res_id);

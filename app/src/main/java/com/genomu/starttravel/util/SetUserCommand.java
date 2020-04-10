@@ -17,9 +17,6 @@ public class SetUserCommand extends DBCommand {
 
     @Override
     void work() {
-        hanWen.secureUser(UID);
-        hanWen.sproutOnUser("name",name);
-        hanWen.secureOrderListOnUser();
-//        hanWen.sproutOnUser("orders",orderList);
+        hanWen.secureUser(UID,name);
     }
 }

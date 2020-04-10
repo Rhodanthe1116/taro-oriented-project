@@ -33,14 +33,7 @@ public class GetUserCommand extends DBCommand implements DBDataSubject {
         hanWen.secureUser(UID);
         for (int i = 0;i<observers.size();i++) {
             DBDataObserver observer = observers.get(i);
-            switch (aspects.get(i)){
-                case NAME:
-                    observer.update(hanWen.seekFromUser("name"));
-                    break;
-                case ORDERS:
-                    observer.update(hanWen.seekFromUser("orders"));
-                    break;
-            }
+            observer.update(hanWen.seekFromUser());
         }
     }
 }

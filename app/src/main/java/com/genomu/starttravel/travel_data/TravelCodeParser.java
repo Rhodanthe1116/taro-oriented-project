@@ -28,7 +28,7 @@ public class TravelCodeParser extends DataParser {
 
     public List<TravelCode> getParsedList() {
         setUpInput();
-        parseJSON();
+        parseGSON();
         return travelCodeList;
     }
 
@@ -45,7 +45,6 @@ public class TravelCodeParser extends DataParser {
             JSONArray array = new JSONArray(jsonString);
             for(int i = 0;i<array.length();i++){
                 JSONObject jsonObject = array.getJSONObject(i);
-                jsonObject.put("country","country");
                 travelCodeList.add(new TravelCode(jsonObject));
             }
         } catch (JSONException e) {
@@ -55,7 +54,7 @@ public class TravelCodeParser extends DataParser {
 
     @Override
     public void setUpInput() {
-        InputStream is = context.getResources().openRawResource(R.raw.travel_code);
+        InputStream is = context.getResources().openRawResource(R.raw.travel_code_a_1_4);
         try {
             jsonString = readTextFile(is);
         } catch (IOException e) {

@@ -59,12 +59,13 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String sorting = sorting_spn.getSelectedItem().toString();
+                String place = place_spn.getSelectedItem().toString();
                 String start = start_btn.getText().toString();
                 String end = end_btn.getText().toString();
                 Log.d(TAG, "search range: "+start+","+end);
                 RecyclerView recyclerView = view.findViewById(R.id.result_search);
                 DatabaseInvoker invoker = new DatabaseInvoker();
-                GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end);
+                GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end,place);
                 TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
                 DBAspect aspect = DBAspect.TRAVELS;
                 aspect = getDbAspect(sorting, aspect);
@@ -116,7 +117,7 @@ public class SearchFragment extends Fragment {
     private void defaultSearchResult() {
         RecyclerView recyclerView = view.findViewById(R.id.result_search);
         DatabaseInvoker invoker = new DatabaseInvoker();
-        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),10);
+        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20);
         TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
         command.attach(observer, DBAspect.TRAVELS);
         invoker.addCommand(command);

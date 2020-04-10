@@ -2,61 +2,125 @@ package com.genomu.starttravel.util;
 
 import android.util.Log;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import androidx.annotation.NonNull;
+
+import com.genomu.starttravel.Order;
+import com.genomu.starttravel.travel_data.Travel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HanWen {
     public static final boolean[] flag = {false};
     private static final String TAG = HanWen.class.getSimpleName();
-    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference usersReference = database.getReference("users");
-    private DatabaseReference userReference;
+    private static FirebaseFirestore database = FirebaseFirestore.getInstance();
+    private CollectionReference usersReference = database.collection("users");
+    private DocumentReference userReference;
+    private CollectionReference travelsReference = database.collection("travels");
 
 
-    void rawSet(String key,List rawList){
-        database.getReference("raw").child(key).setValue(rawList);
+    void rawSet(final String key, List rawList){
+        for(int i = 0;i<rawList.size();i++){
+            Log.d(TAG, "rawSet: "+i);
+            database.collection(key).add(rawList.get(i))
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d(TAG, "raw list successfully set on key: "+key);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
+        }
+    }
+
+    void secureUser(String UID,String name){
+        secureUser(UID);
+        Map<String,Object> data = new HashMap<>();
+        data.put("UID",UID);
+        data.put("name",name);
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(Travel.dummy));
+        data.put("orders",orders);
+        usersReference.document(UID).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "onComplete: securing user");
+            }
+        });
     }
 
     void secureUser(String UID){
-        usersReference.child(UID).child("UID").setValue(UID);
-        this.userReference = usersReference.child(UID);
-        //for any command,please call this method first to secure user
+        this.userReference = usersReference.document(UID);
+        //call this method before accessing any user's field
     }
 
-    void secureOrderListOnUser(){
-        userReference.child("orders").child("0").child("travel").child("title").setValue("dummy");
-        //for order list setting command,please call this method before sprouting
+    void sproutOnUser(String key, String value){
+        userReference.update(key,value).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "onFailure: sprouting", e);
+            }
+        });
     }
 
-    void sproutOnUser(String Key, String value){
-        userReference.child(Key).setValue(value);
-    }
-
-    void sproutOnUser(String Key,int value){
-        userReference.child(Key).setValue(value);
+    void sproutOnUser(String key,int value){
+        userReference.update(key,value).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "onFailure: sprouting", e);
+            }
+        });
     }
 
     void sproutOnUser(String key, List value){
         if(value.size()>0) {
-            userReference.child(key).setValue(value);
+            userReference.update(key,value).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "onFailure: sprouting", e);
+                }
+            });
         }
     }
 
-    DatabaseReference seekFromUser(String key){
-        return userReference.child(key);
+    Task<DocumentSnapshot> seekFromUser(){
+        return userReference.get();
     }
 
-    Query seekFromRaw(String key){
-        return database.getReference("raw").child(key).orderByKey();
+    CollectionReference seekFromTravels(){
+        return travelsReference;
     }
-    Query seekFromRaw(String key,String orderRefKey){
-        return database.getReference("raw").child(key).orderByChild(orderRefKey);
+
+    Query seekFromTravels(String field,Object... values){
+        return travelsReference.whereIn(field, Arrays.asList(values));
+    }
+
+    Task<DocumentSnapshot> seekFromRaw(String key){
+        return database.collection("raw").document(key).get();
+    }
+
+    Query seekFromRaw(String field,Object... values){
+        return database.collection("raw").whereIn(field,Arrays.asList(values));
     }
 
     //Warning:aborted
@@ -67,20 +131,27 @@ public class HanWen {
             if(!end.equals(GetTravelsResultCommand.default_end)){
                 start = sdf.format(format.parse(start));
                 end = sdf.format(format.parse(end));
-                return original.startAt(start,"start_date").endAt(end,"end_date");
+                return original.whereGreaterThanOrEqualTo("start_date",start).
+                        whereLessThanOrEqualTo("start_date",end).orderBy("start_date", Query.Direction.ASCENDING);
             }else {
                 start = sdf.format(format.parse(start));
-                return original.startAt(start,"start_date");
+                return original.whereGreaterThanOrEqualTo("start_date",start).orderBy("start_date", Query.Direction.ASCENDING);
             }
         }else if(!end.equals(GetTravelsResultCommand.default_end)){
             end = sdf.format(format.parse(end));
-            return original.endAt(end,"end_date");
+            return original.whereLessThanOrEqualTo("end_date",end).orderBy("end_date", Query.Direction.DESCENDING);
         }
         return original;
     }
 
+
+
+    Query orderBy(Query original,String field,boolean isAscending){
+        return (isAscending)?original.orderBy(field, Query.Direction.ASCENDING):original.orderBy(field, Query.Direction.DESCENDING);
+    }
+
     Query addLimitConstraint(Query original,int limit,boolean isFirst){
-        return  (isFirst)?(original.limitToFirst(limit)):(original.limitToLast(limit));
+        return  (isFirst)?(original.limit(limit)):(original.limitToLast(limit));
     }
 
 }

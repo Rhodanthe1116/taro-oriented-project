@@ -54,6 +54,9 @@ public class Order implements Serializable {
 
     public Order(Travel travel) {
         this.travel = travel;
+        this.adult = 0;
+        this.kid = 0;
+        this.baby = 0;
     }
 
     public Travel getTravel() {

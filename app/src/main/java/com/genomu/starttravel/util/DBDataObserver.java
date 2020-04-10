@@ -1,11 +1,11 @@
 package com.genomu.starttravel.util;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.Query;
 
 public interface DBDataObserver {
     void update();
-    void update(DatabaseReference reference);
     void update(Query query);
-    void update(Query query,boolean isAscending);
+    void update(Task task);
+    void update(String msg);
 }

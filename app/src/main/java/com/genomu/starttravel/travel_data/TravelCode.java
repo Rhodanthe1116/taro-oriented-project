@@ -8,6 +8,9 @@ public class TravelCode extends TravelData{
     private int travel_code;
     private String country;
 
+    public TravelCode(){
+
+    }
     public TravelCode(String travel_code_name, int travel_code,String country) {
         this.travel_code_name = travel_code_name;
         this.travel_code = travel_code;

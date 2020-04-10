@@ -5,6 +5,7 @@
         <item>@string/price_a</item>
     </string-array>
     <string-array name="place_filtering">
+        <item>@string/place</item>
         <item>@string/place_as</item>
         <item>@string/place_af</item>
         <item>@string/place_na</item>

@@ -59,22 +59,25 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         holder.box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(activity)
-                        .setTitle(travel.getTitle())
-                        .setMessage("出發日期" + travel.getStart_date() + "結束日期" + travel.getEnd_date())
-                        .setPositiveButton("預訂", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (UID != "b07505019") {
-                                    DatabaseInvoker invoker = new DatabaseInvoker();
-                                    invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel, 1, 0, 0)));
-                                    invoker.assignCommand();
-
-                                }
-                            }
-                        })
-                        .setNegativeButton("取消", null)
-                        .show();
+                Intent intent = new Intent(activity,TravelDetailActivity.class);
+                intent.putExtra("travel",travel);
+                activity.startActivity(intent);
+//                new AlertDialog.Builder(activity)
+//                        .setTitle(travel.getTitle())
+//                        .setMessage("出發日期" + travel.getStart_date() + "結束日期" + travel.getEnd_date())
+//                        .setPositiveButton("預訂", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                if (UID != "b07505019") {
+//                                    DatabaseInvoker invoker = new DatabaseInvoker();
+//                                    invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel, 1, 0, 0)));
+//                                    invoker.assignCommand();
+//
+//                                }
+//                            }
+//                        })
+//                        .setNegativeButton("取消", null)
+//                        .show();
             }
         });
 
