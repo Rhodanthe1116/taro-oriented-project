@@ -1,4 +1,4 @@
-# 過時版本放置區
+﻿# 過時版本放置區
 ### alpha-1.1
 > 版本資訊：
 > -
@@ -84,3 +84,36 @@
 > - 移除無用的layout
 > - 更新**搜尋frag**的layout
 > - value/arrays:新增**下拉式選單**資料
+### alpha-1.3
+> 版本資訊：
+> -
+> 
+> **概述**
+> 
+> >擴充**搜尋frag**至三種排序可能並新增選日期的GUI
+> >擴充**使用者frag**至orders整合、個別order頁面
+> 
+> **類別新增**
+> - 擴充Travel、Order資料: 實作**Serializable**介面使得**putExtras**可以傳
+> - 從**TravelAdapter**拆離OrderList的處理
+> - 新增**OrderAdapter**
+> - 升級瀚文(命令執行者)的能力
+> - GetTravelsResultCommand 擴充
+>     
+> **GUI處理類別更動**
+> - (新增)**主frag**: 畫面動畫ViewAnimator
+> - (新增)**搜尋frag**: 選日期功能
+> - (新增)**選日frag**: DatePickerFragment
+> - (新增)**咖波Alert**: 用於提醒視窗
+> - (新增)**修改Alert**: 用於修改訂單
+> - (新增)**取消Alert**: 用於取消訂單
+> - (新增)**使用者訂單acti**: 顯示單筆訂單詳細資料
+> - (修改)**使用者frag**: 完整化功能
+> - (移植)**清單frag**:移到使用者frag中
+> 
+> **GUI資料更動**
+> - 調整RecylerView相關的捲動問題:高度0dp
+> - 調整旅遊單筆資料layout
+> - 加入咖波Alert圖示
+> - 多加一張「登入後layout」以及一張「訂單詳資layout」
+> - 新增修改訂單Alertlayout

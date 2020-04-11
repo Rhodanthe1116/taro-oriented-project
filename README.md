@@ -1,5 +1,48 @@
 ﻿# taro-oriented-project
 ## log
+### alpha-1.5
+> 版本資訊：
+> -
+> 
+> **概述**
+> >新增即時抓資料圖片的方法
+> >修改選地區的命令至堪用
+> >導入AsyncTask
+> 
+> **類別更動**
+> - 新增**ImageFromURLTask**: 用於以網址設定圖片
+> - 微調瀚文的功能
+> - 改造TravelAdapter: 提供static方法設置圖片
+> - 調整GetTravelsResultCommand 的選擇地區
+> - 建立訂單重新啟用(仍不會反應到已購人數)
+> - 完成搜尋功能部份的acti生命週期控制
+> - 改北韓國家名欄位為"bomb"以避免無搜尋結果
+> - 新增具體命令
+>     - 查找地區命令 LookForCodesCommand
+>     
+> **GUI處理類別更動**
+> - (新增)**訂購acti**:訂購頁面(bar式選數量)
+> - (新增)**讀取dia**: 用於讀取條顯示
+> - 解決標題字太多的問題
+> 
+> **GUI資料更動**
+> - 加入一張PurchaseForm layout
+> - 加入seek bar layout
+
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - Invoker實例是否提升層級
+> - 整理程式碼 重構
+> - Concrete Command 下一頁、選擇地區
+>     - GetTravelsResultCommand 擴充
+>     - 還有更多...
+> - 咖波Alert處理Exception
+> - 訂單系統完整化
+> - GUI處理類別以及資料更新至4/6討論內容
+>     - (修改)**搜尋frag**:依地區篩選、關鍵字搜尋
+> - 畫面可以用好看一些~~
 ### alpha-1.4
 > 版本資訊：
 > -
@@ -25,54 +68,3 @@
 > 
 > **GUI資料更動**
 > - 加入一張TravelDetail layout
-
---- 
-> 開發方向
-> - 
-> - 萃取觀察者模式
-> - Invoker實例是否提升層級
-> - code(int)、country(String)互相轉換的方法
-> - Concrete Command 下一頁、選擇地區
->     - GetTravelsResultCommand 擴充
->     - 還有更多...
-> - 等待畫面
-> - 實作訂單的資料流動
-> - 從網址設置圖片資源的方法
-> - 咖波Alert處理Exception
-> - GUI處理類別以及資料更新至4/6討論內容
->     - (修改)**搜尋frag**:依地區篩選、關鍵字搜尋
->     - (新增)**訂購acti**:訂購頁面(bar式選數量)
-> - 畫面可以用好看一些~~
-### alpha-1.3
-> 版本資訊：
-> -
-> 
-> **概述**
-> 
-> >擴充**搜尋frag**至三種排序可能並新增選日期的GUI
-> >擴充**使用者frag**至orders整合、個別order頁面
-> 
-> **類別新增**
-> - 擴充Travel、Order資料: 實作**Serializable**介面使得**putExtras**可以傳
-> - 從**TravelAdapter**拆離OrderList的處理
-> - 新增**OrderAdapter**
-> - 升級瀚文(命令執行者)的能力
-> - GetTravelsResultCommand 擴充
->     
-> **GUI處理類別更動**
-> - (新增)**主frag**: 畫面動畫ViewAnimator
-> - (新增)**搜尋frag**: 選日期功能
-> - (新增)**選日frag**: DatePickerFragment
-> - (新增)**咖波Alert**: 用於提醒視窗
-> - (新增)**修改Alert**: 用於修改訂單
-> - (新增)**取消Alert**: 用於取消訂單
-> - (新增)**使用者訂單acti**: 顯示單筆訂單詳細資料
-> - (修改)**使用者frag**: 完整化功能
-> - (移植)**清單frag**:移到使用者frag中
-> 
-> **GUI資料更動**
-> - 調整RecylerView相關的捲動問題:高度0dp
-> - 調整旅遊單筆資料layout
-> - 加入咖波Alert圖示
-> - 多加一張「登入後layout」以及一張「訂單詳資layout」
-> - 新增修改訂單Alertlayout

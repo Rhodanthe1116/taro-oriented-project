@@ -2,6 +2,7 @@ package com.genomu.starttravel.util;
 
 import androidx.annotation.NonNull;
 
+import com.genomu.starttravel.LoadingDialog;
 import com.genomu.starttravel.Order;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,10 +17,12 @@ import java.util.List;
 public class AddOrderCommand extends DBCommand {
     private String UID;
     private Order order;
-    public AddOrderCommand(HanWen hanWen,String UID,Order order) {
+    private LoadingDialog dialog;
+    public AddOrderCommand(HanWen hanWen, String UID, Order order, LoadingDialog dialog) {
         super(hanWen);
         this.UID = UID;
         this.order = order;
+        this.dialog = dialog;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class AddOrderCommand extends DBCommand {
                 List orders = user.getOrders();
                 orders.add(order);
                 hanWen.sproutOnUser("orders",orders);
+                dialog.dismissLoading();
             }
         });
 

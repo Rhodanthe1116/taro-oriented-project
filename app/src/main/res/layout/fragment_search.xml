@@ -90,4 +90,14 @@
         app:layout_constraintStart_toEndOf="@+id/bar_search"
         app:layout_constraintTop_toTopOf="@+id/bar_search" />
 
+    <ProgressBar
+        android:id="@+id/progress_search"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="130dp"
+        android:layout_height="125dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

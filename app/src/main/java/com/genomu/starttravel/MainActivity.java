@@ -2,11 +2,13 @@ package com.genomu.starttravel;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.genomu.starttravel.travel_data.JSONSaver;
@@ -26,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,15 +51,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
+
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    public final static int FUNC_MAIN = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static String search_content = "";
     private static boolean searched = false;
     private static NavController navController;
     public static boolean isStartBtn = true;
-
 
     @Override
     protected void onStart() {
@@ -79,11 +84,23 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         NavigationUI.setupWithNavController(navView, navController);
         ActionBar ab = getSupportActionBar();
         ab.hide();
-        int nav = getIntent().getIntExtra("nav",R.id.navigation_home);
-        navGto(nav);
+//        int nav = getIntent().getIntExtra("nav",R.id.navigation_home);
+//        navGto(nav);
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == FUNC_TRA){
+            if(resultCode == RESULT_OK){
+                int nav = data.getIntExtra("nav",R.id.navigation_home);
+                navGto(nav);
+            }else if(resultCode == RESULT_CANCELED){
+                navGto(R.id.navigation_search);
+            }
+        }
+    }
 
     public static void navGto(int res_id){
         navController.navigate(res_id);

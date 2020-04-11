@@ -3,6 +3,8 @@ package com.genomu.starttravel.ui.home;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.TextKeyListener;
 import android.util.Log;
@@ -32,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.ui.search.SearchFragment;
+import com.genomu.starttravel.util.ImageFromURLTask;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +43,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +62,6 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home,container,false);
         findViews();
-
         ed_tx.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -77,12 +82,23 @@ public class HomeFragment extends Fragment {
         });
 
         setupPhotos();
+        setRecyler();
+        return view;
+    }
+
+
+    private void findViews() {
+        ed_tx = view.findViewById(R.id.search_bar_home);
+        btn = view.findViewById(R.id.search_bar_btn_home);
+        cover = view.findViewById(R.id.cover_home);
+    }
+
+    private void setRecyler(){
         RecyclerView recyclerView = view.findViewById(R.id.travellist_home);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         PhotoAdapter p_ad = new PhotoAdapter();
         recyclerView.setAdapter(p_ad);
-//        Log.d(TAG, "cover initial height"+cover.getMeasuredHeight());
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -123,14 +139,6 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG, "onScrolled: "+dy);
             }
         });
-        return view;
-    }
-
-
-    private void findViews() {
-        ed_tx = view.findViewById(R.id.search_bar_home);
-        btn = view.findViewById(R.id.search_bar_btn_home);
-        cover = view.findViewById(R.id.cover_home);
     }
 
     /*private void closeKeyboard(View currentFocusView){

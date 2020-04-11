@@ -1,17 +1,15 @@
 package com.genomu.starttravel;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -20,15 +18,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.genomu.starttravel.util.AddOrderCommand;
-import com.genomu.starttravel.util.AddRawListCommand;
+import com.genomu.starttravel.travel_data.TravelCode;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.travel_data.Travel;
+import com.genomu.starttravel.util.LookForCodesCommand;
 
 import java.util.List;
 
+import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
+
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelViewHolder> {
+
+    public static long getSeed(Travel travel){
+        return Long.parseLong(travel.getProduct_key().substring(4))
+                +Long.parseLong(travel.getEnd_date().substring(8))*51;
+    }
 
     private static final String TAG = TravelAdapter.class.getSimpleName();
     private Activity activity;
@@ -52,8 +57,15 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         final TravelViewHolder vh = holder;
         final String UID = UserAuth.getInstance().getUserUID();
         final Travel travel = travelList.get(position);
-//        volleyRequest(position);
-        holder.title.setText(travel.getTitle());
+        long seed = getSeed(travel);
+        // waiting GUI here
+        holder.image.setImageResource(R.drawable.alert);
+        parseCountryName(travel.getTravel_code(),activity,holder.image,seed);
+        if(travel.getTitle().length()>20){
+            holder.title.setText(travel.getTitle().substring(0,20)+"...");
+        }else {
+            holder.title.setText(travel.getTitle());
+        }
         holder.price.setText(travel.getPrice() + "元");
         holder.lower.setText("最少" + travel.getLower_bound() + "人成行");
         holder.box.setOnClickListener(new View.OnClickListener() {
@@ -61,52 +73,18 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
             public void onClick(View v) {
                 Intent intent = new Intent(activity,TravelDetailActivity.class);
                 intent.putExtra("travel",travel);
-                activity.startActivity(intent);
-//                new AlertDialog.Builder(activity)
-//                        .setTitle(travel.getTitle())
-//                        .setMessage("出發日期" + travel.getStart_date() + "結束日期" + travel.getEnd_date())
-//                        .setPositiveButton("預訂", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                if (UID != "b07505019") {
-//                                    DatabaseInvoker invoker = new DatabaseInvoker();
-//                                    invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel, 1, 0, 0)));
-//                                    invoker.assignCommand();
-//
-//                                }
-//                            }
-//                        })
-//                        .setNegativeButton("取消", null)
-//                        .show();
+                activity.startActivityForResult(intent,FUNC_TRA);
             }
         });
 
     }
 
-    private void volleyRequest(int position) {
-        final Travel travel = travelList.get(position);
-        RequestQueue queue = Volley.newRequestQueue(activity);
-        String url = "https://pixabay.com/api/";
-        String key = "?key="+"15945961-2835fdd302951c8f463bbf738";
-        String[] array = travel.getTitle().split(" ");
-        Log.d(TAG, "search"+array[0]);
-        String q = "&q=" + array[0];  //key word
-        String image_type = "&image_type=photo";
-        String endpoint = url+key+q+image_type+"&lang=zh&per_page=3";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, endpoint,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, "onResponse: "+response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        queue.add(stringRequest);
+    public static void parseCountryName(int code,Activity activity,ImageView imageView,long seed){
+        DatabaseInvoker invoker = new DatabaseInvoker();
+        invoker.addCommand(new LookForCodesCommand(new HanWen(),code, new TravelCode(),activity,imageView,seed));
+        invoker.assignCommand();
     }
+
 
     @Override
     public int getItemCount() {

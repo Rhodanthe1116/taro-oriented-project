@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TravelDetailActivity"></activity>
+        <activity android:name=".PurchaseFormActivity"></activity>
+        <activity android:name=".TravelDetailActivity" />
         <activity android:name=".UserOrderActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />

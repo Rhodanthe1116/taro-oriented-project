@@ -3,6 +3,7 @@ package com.genomu.starttravel.util;
 import android.app.Activity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,12 +35,14 @@ public class TravelsDBObserver implements DBDataObserver {
     private Activity activity;
     private boolean isRanged;
     private String end;
+    private ProgressBar bar;
 
-    public TravelsDBObserver(RecyclerView recyclerView, Activity activity) {
+    public TravelsDBObserver(RecyclerView recyclerView, Activity activity, ProgressBar bar) {
         this.recyclerView = recyclerView;
         this.activity = activity;
         this.isRanged = false;
         this.end = "2022年4月23日 星期五";
+        this.bar = bar;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class TravelsDBObserver implements DBDataObserver {
     public void update(Query query) {
         recyclerView.setVisibility(View.GONE);
         //waiting UI show here
+        bar.setVisibility(View.VISIBLE);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -75,6 +79,7 @@ public class TravelsDBObserver implements DBDataObserver {
                     recyclerView.setLayoutManager(new LinearLayoutManager(activity));
                     TravelAdapter adapter = new TravelAdapter(activity, travelList);
                     recyclerView.setAdapter(adapter);
+                    bar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                 }else{
                     Log.w(TAG, "onComplete: failed ", task.getException());

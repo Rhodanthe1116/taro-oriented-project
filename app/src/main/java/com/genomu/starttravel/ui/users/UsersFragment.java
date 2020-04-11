@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,8 @@ public class UsersFragment extends Fragment{
 
         if(userAuth.isLogged()){
             view = inflater.inflate(R.layout.fragment_users_logged,container,false);
+
+            ProgressBar bar = view.findViewById(R.id.progress_user);
             userName = view.findViewById(R.id.name_users_logged);
             userImage = view.findViewById(R.id.image_users_logged);
             RecyclerView recyclerView = view.findViewById(R.id.order_list_users_logged);
@@ -63,7 +66,7 @@ public class UsersFragment extends Fragment{
             NameDBObserver dbObserver = new NameDBObserver(userName);
             GetUserCommand command = new GetUserCommand(new HanWen(),userAuth.getUserUID());
             command.attach(dbObserver,NAME);
-            command.attach(new OrdersDBObserver(recyclerView,getActivity()), ORDERS);
+            command.attach(new OrdersDBObserver(recyclerView,getActivity(),bar), ORDERS);
             invoker.addCommand(command);
             invoker.assignCommand();
 

@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,7 @@ public class SearchFragment extends Fragment {
     private Button reset_btn;
     private Spinner sorting_spn;
     private Spinner place_spn;
+    private ProgressBar bar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class SearchFragment extends Fragment {
                 RecyclerView recyclerView = view.findViewById(R.id.result_search);
                 DatabaseInvoker invoker = new DatabaseInvoker();
                 GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end,place);
-                TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
+                TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity(),bar);
                 DBAspect aspect = DBAspect.TRAVELS;
                 aspect = getDbAspect(sorting, aspect);
                 command.attach(observer,aspect);
@@ -115,13 +118,14 @@ public class SearchFragment extends Fragment {
 
 
     private void defaultSearchResult() {
-        RecyclerView recyclerView = view.findViewById(R.id.result_search);
+        final RecyclerView recyclerView = view.findViewById(R.id.result_search);
         DatabaseInvoker invoker = new DatabaseInvoker();
         GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20);
-        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
+        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity(),bar);
         command.attach(observer, DBAspect.TRAVELS);
         invoker.addCommand(command);
         invoker.assignCommand();
+
     }
 
     private void findViews() {
@@ -132,5 +136,6 @@ public class SearchFragment extends Fragment {
         start_btn = view.findViewById(R.id.start_date_search);
         end_btn = view.findViewById(R.id.end_date_btn);
         reset_btn = view.findViewById(R.id.reset_date);
+        bar = view.findViewById(R.id.progress_search);
     }
 }

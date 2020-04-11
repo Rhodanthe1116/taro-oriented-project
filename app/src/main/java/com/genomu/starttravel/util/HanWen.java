@@ -115,13 +115,14 @@ public class HanWen {
         return travelsReference.whereIn(field, Arrays.asList(values));
     }
 
-    Task<DocumentSnapshot> seekFromRaw(String key){
-        return database.collection("raw").document(key).get();
+    CollectionReference seekFromRaw(String key){
+        return database.collection(key);
     }
 
-    Query seekFromRaw(String field,Object... values){
-        return database.collection("raw").whereIn(field,Arrays.asList(values));
+    Query seekFromRaw(String key,String field,Object... values){
+        return database.collection(key).whereIn(field,Arrays.asList(values));
     }
+
 
     //Warning:aborted
     Query addRangeConstraint(Query original,String start,String end) throws ParseException {

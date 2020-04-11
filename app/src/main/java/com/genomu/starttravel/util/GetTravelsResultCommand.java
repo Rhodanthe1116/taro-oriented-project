@@ -1,5 +1,6 @@
 package com.genomu.starttravel.util;
 
+import android.content.Intent;
 import android.util.Log;
 
 
@@ -7,6 +8,7 @@ import com.google.firebase.firestore.Query;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GetTravelsResultCommand extends DBCommand implements DBDataSubject{
@@ -69,7 +71,7 @@ public class GetTravelsResultCommand extends DBCommand implements DBDataSubject{
 
             try {
                 if(!place.equals(default_place)){
-                    Query q = hanWen.seekFromTravels("travel_code",396);
+                    Query q = parseCodes();
                     switch (aspects.get(i)){
                         case PRICE_D:
                             q = hanWen.addRangeConstraint(q,start,end);
@@ -111,6 +113,24 @@ public class GetTravelsResultCommand extends DBCommand implements DBDataSubject{
     }
 
 
+    private Query parseCodes(){
+        switch (place){
+            case "Asia":
+                return hanWen.seekFromTravels("travel_code",433,41,405);
+            case "Africa":
+                return hanWen.seekFromTravels("travel_code",81,84,100);
+            case "North America":
+                return hanWen.seekFromTravels("travel_code",85,43,92,873,409,77);
+            case "Oceania":
+                return hanWen.seekFromTravels("travel_code",50,45,47,408,407,96,867);
+            case "Europe":
+                return hanWen.seekFromTravels("travel_code",395,452,413,44,101,393);
+            case "South America":
+                return hanWen.seekFromTravels("travel_code",57,95);
+            default:
+                return hanWen.seekFromTravels("travel_code",396);
+        }
+    }
     @Override
     public void attach(DBDataObserver observer, DBAspect aspect) {
         observers.add(observer);

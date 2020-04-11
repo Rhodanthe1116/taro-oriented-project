@@ -24,6 +24,7 @@
     <!--下拉式選單資料-->
     <string name="price_d">price:descending</string>
     <string name="price_a">price:ascending</string>
+
     <string name="place_as">Asia</string>
     <string name="place_af">Africa</string>
     <string name="place_na">North America</string>

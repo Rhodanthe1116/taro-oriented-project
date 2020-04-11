@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PurchaseFormActivity">
+
+    <SeekBar
+        android:id="@+id/seek_bar_adult"
+        style="@style/Widget.AppCompat.SeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:indeterminate="false"
+        android:max="8"
+        android:progress="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adult_purchase" />
+
+    <TextView
+        android:id="@+id/title_purchase"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:text="Title"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/adult_purchase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="adult"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/title_purchase"
+        app:layout_constraintStart_toStartOf="@+id/title_purchase"
+        app:layout_constraintTop_toBottomOf="@+id/title_purchase" />
+
+    <TextView
+        android:id="@+id/kid_purchase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="kid"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/adult_purchase"
+        app:layout_constraintStart_toStartOf="@+id/adult_purchase"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar_adult" />
+
+    <SeekBar
+        android:id="@+id/seek_bar_kid"
+        style="@style/Widget.AppCompat.SeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:max="5"
+        android:progress="0"
+        app:layout_constraintEnd_toEndOf="@+id/seek_bar_adult"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar_adult"
+        app:layout_constraintTop_toBottomOf="@+id/kid_purchase" />
+
+    <TextView
+        android:id="@+id/baby_purchase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="baby"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/kid_purchase"
+        app:layout_constraintStart_toStartOf="@+id/kid_purchase"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar_kid" />
+
+    <SeekBar
+        android:id="@+id/seek_bar_baby"
+        style="@style/Widget.AppCompat.SeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:max="5"
+        android:progress="0"
+        app:layout_constraintEnd_toEndOf="@+id/seek_bar_kid"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar_kid"
+        app:layout_constraintTop_toBottomOf="@+id/baby_purchase" />
+
+    <TextView
+        android:id="@+id/total_purchase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="total"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar_baby" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/cancel_btn_purchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="cancel" />
+
+        <Button
+            android:id="@+id/confirm_btn_purchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="confirm" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/adult_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:background="@drawable/ic_tag"
+        android:gravity="center_horizontal"
+        android:paddingBottom="6dp"
+        android:text="1"
+        android:textColor="#B8D3C6"
+        app:layout_constraintBottom_toTopOf="@+id/seek_bar_adult"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar_adult" />
+
+    <TextView
+        android:id="@+id/kid_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:background="@drawable/ic_tag"
+        android:gravity="center_horizontal"
+        android:paddingBottom="6dp"
+        android:text="1"
+        android:textColor="#B8D3C6"
+        app:layout_constraintBottom_toTopOf="@+id/seek_bar_kid"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar_kid" />
+
+    <TextView
+        android:id="@+id/baby_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:background="@drawable/ic_tag"
+        android:gravity="center_horizontal"
+        android:paddingBottom="6dp"
+        android:text="1"
+        android:textColor="#B8D3C6"
+        app:layout_constraintBottom_toTopOf="@+id/seek_bar_baby"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar_baby" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

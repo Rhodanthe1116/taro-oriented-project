@@ -48,8 +48,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         final String UID = UserAuth.getInstance().getUserUID();
         final Order order = orderList.get(position);
         final Travel travel = order.getTravel();
-//        volleyRequest(position);
-        holder.title.setText(travel.getTitle());
+        long seed = TravelAdapter.getSeed(travel);
+        //waiting GUI here
+        holder.image.setImageResource(R.drawable.alert);
+        TravelAdapter.parseCountryName(travel.getTravel_code(),activity,holder.image,seed);
+        if(travel.getTitle().length()>20){
+            holder.title.setText(travel.getTitle().substring(0,20)+"...");
+        }else {
+            holder.title.setText(travel.getTitle());
+        }
         holder.price.setText(travel.getPrice() + "元");
         holder.lower.setText("最少" + travel.getLower_bound() + "人成行");
         holder.box.setOnClickListener(new View.OnClickListener() {
@@ -63,30 +70,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     }
 
-    private void volleyRequest(int position) {
-        final Travel travel = orderList.get(position).getTravel();
-        RequestQueue queue = Volley.newRequestQueue(activity);
-        String url = "https://pixabay.com/api/";
-        String key = "?key="+"15945961-2835fdd302951c8f463bbf738";
-        String[] array = travel.getTitle().split(" ");
-        Log.d(TAG, "search"+array[0]);
-        String q = "&q=" + array[0];  //key word
-        String image_type = "&image_type=photo";
-        String endpoint = url+key+q+image_type+"&lang=zh&per_page=3";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, endpoint,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, "onResponse: "+response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        queue.add(stringRequest);
-    }
 
     @Override
     public int getItemCount() {

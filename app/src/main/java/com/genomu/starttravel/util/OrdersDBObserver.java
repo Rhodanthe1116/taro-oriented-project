@@ -2,6 +2,8 @@ package com.genomu.starttravel.util;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,11 +33,13 @@ public class OrdersDBObserver implements DBDataObserver {
     private static final String TAG = OrdersDBObserver.class.getSimpleName();
     private RecyclerView recyclerView;
     private Activity activity;
+    private ProgressBar bar;
 
 
-    public OrdersDBObserver(RecyclerView recyclerView, Activity activity){
+    public OrdersDBObserver(RecyclerView recyclerView, Activity activity, ProgressBar bar){
         this.recyclerView = recyclerView;
         this.activity = activity;
+        this.bar = bar;
     }
 
     @Override
@@ -52,6 +56,7 @@ public class OrdersDBObserver implements DBDataObserver {
 
     @Override
     public void update(Task task) {
+        bar.setVisibility(View.VISIBLE);
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -62,6 +67,7 @@ public class OrdersDBObserver implements DBDataObserver {
                     recyclerView.setLayoutManager(new LinearLayoutManager(activity));
                     OrderAdapter adapter = new OrderAdapter(activity, getResolvedList(orders));
                     recyclerView.setAdapter(adapter);
+                    bar.setVisibility(View.GONE);
                 }else{
                     Log.w(TAG, "onComplete: ", task.getException());
                 }

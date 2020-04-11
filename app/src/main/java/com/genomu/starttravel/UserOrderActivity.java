@@ -12,11 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.genomu.starttravel.travel_data.Travel;
 
 public class UserOrderActivity extends AppCompatActivity {
+    public final static int FUNC_USO = 7;
     private static final String TAG = UserOrderActivity.class.getSimpleName();
     private TextView title;
     private TextView price;
@@ -26,6 +28,7 @@ public class UserOrderActivity extends AppCompatActivity {
     private TextView anum;
     private TextView knum;
     private TextView bnum;
+    private ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,10 @@ public class UserOrderActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.hide();
         findViews();
+        setViews();
+    }
+
+    private void setViews() {
         final Order order = (Order) getIntent().getSerializableExtra("order");
         Travel travel = order.getTravel();
         title.setText(travel.getTitle());
@@ -41,6 +48,38 @@ public class UserOrderActivity extends AppCompatActivity {
         anum.setText("adult: "+order.getAdult());
         knum.setText("kid: "+order.getKid());
         bnum.setText("baby: "+order.getBaby());
+        imageView.setImageResource(R.drawable.alert);
+        setRevise(order);
+        setCancel();
+        long seed = TravelAdapter.getSeed(travel);
+        TravelAdapter.parseCountryName(travel.getTravel_code(),this,imageView,seed);
+    }
+
+    private void setCancel() {
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(UserOrderActivity.this)
+                        .setTitle("Cancel order")
+                        .setMessage("cancel failed")
+                        .setView(R.layout.alert_view)
+                        .setNegativeButton("...accept",null)
+                        .create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        AlertDialog alertDialog = (AlertDialog) dialog;
+                        Button button = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                        button.setTextColor(getResources().getColor(R.color.negative));
+                    }
+                });
+                dialog.show();
+            }
+        });
+    }
+
+    private void setRevise(final Order order) {
         revise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,27 +116,6 @@ public class UserOrderActivity extends AppCompatActivity {
 
             }
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog dialog = new AlertDialog.Builder(UserOrderActivity.this)
-                        .setTitle("Cancel order")
-                        .setMessage("cancel failed")
-                        .setView(R.layout.alert_view)
-                        .setNegativeButton("...accept",null)
-                        .create();
-
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialog) {
-                        AlertDialog alertDialog = (AlertDialog) dialog;
-                        Button button = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                        button.setTextColor(getResources().getColor(R.color.negative));
-                    }
-                });
-                dialog.show();
-            }
-        });
     }
 
     private void findViews(){
@@ -109,5 +127,6 @@ public class UserOrderActivity extends AppCompatActivity {
         anum = findViewById(R.id.anum_user_order);
         knum = findViewById(R.id.knum_user_order);
         bnum = findViewById(R.id.bnum_user_order);
+        imageView = findViewById(R.id.image_user_order);
     }
 }
