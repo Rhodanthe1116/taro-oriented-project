@@ -29,4 +29,40 @@
         app:layout_constraintVertical_bias="0.0"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <ImageView
+        android:id="@+id/virus"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        android:scaleX="1"
+        android:scaleY="1"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/covid_19" />
+
+    <ImageView
+        android:id="@+id/round_successful"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/seekbar_thumb" />
+
+    <ImageView
+        android:id="@+id/tick_successful"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/round_successful"
+        app:layout_constraintEnd_toEndOf="@+id/round_successful"
+        app:layout_constraintStart_toStartOf="@+id/round_successful"
+        app:layout_constraintTop_toTopOf="@+id/round_successful"
+        app:srcCompat="@drawable/tick_anim" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

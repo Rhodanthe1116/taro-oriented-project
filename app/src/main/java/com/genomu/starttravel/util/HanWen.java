@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.genomu.starttravel.LoadingDialog;
 import com.genomu.starttravel.Order;
 import com.genomu.starttravel.travel_data.Travel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -98,6 +99,17 @@ public class HanWen {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.w(TAG, "onFailure: sprouting", e);
+                }
+            });
+        }
+    }
+
+    void sproutOnUser(String key, List value, final LoadingDialog dialog){
+        if(value.size()>0) {
+            userReference.update(key,value).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                   dialog.dismissLoading();
                 }
             });
         }

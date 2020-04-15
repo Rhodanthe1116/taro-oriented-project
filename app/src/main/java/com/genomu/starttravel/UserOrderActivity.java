@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.genomu.starttravel.travel_data.Travel;
+import com.genomu.starttravel.util.DatabaseInvoker;
+import com.genomu.starttravel.util.ExtirpateOrderCommand;
+import com.genomu.starttravel.util.HanWen;
 
 public class UserOrderActivity extends AppCompatActivity {
     public final static int FUNC_USO = 7;
@@ -50,22 +54,39 @@ public class UserOrderActivity extends AppCompatActivity {
         bnum.setText("baby: "+order.getBaby());
         imageView.setImageResource(R.drawable.alert);
         setRevise(order);
-        setCancel();
+        setCancel(order);
         long seed = TravelAdapter.getSeed(travel);
         TravelAdapter.parseCountryName(travel.getTravel_code(),this,imageView,seed);
     }
 
-    private void setCancel() {
+    private void setCancel(final Order order) {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog.Builder(UserOrderActivity.this)
-                        .setTitle("Cancel order")
-                        .setMessage("cancel failed")
-                        .setView(R.layout.alert_view)
-                        .setNegativeButton("...accept",null)
+                        .setTitle("取消訂單")
+                        .setMessage("確定要取消訂單嗎")
+                        .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                LoadingDialog loadingDialog = new LoadingDialog(UserOrderActivity.this);
+                                DatabaseInvoker invoker = new DatabaseInvoker();
+                                invoker.addCommand(new ExtirpateOrderCommand(new HanWen(),order.getOrderUID(),loadingDialog));
+                                Log.d(TAG, "onClick: "+order.getOrderUID());
+                                invoker.assignCommand();
+                                final Intent intent = getIntent();
+                                loadingDialog.startLoading();
+                                loadingDialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        setResult(RESULT_OK,intent);
+                                        finish();
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("deny",null)
                         .create();
-
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
@@ -83,13 +104,7 @@ public class UserOrderActivity extends AppCompatActivity {
         revise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View root = View.inflate(getApplicationContext(),R.layout.revise_order,null);
-                final EditText edx_ad = root.findViewById(R.id.revise_adult_num);
-                final EditText edx_kid = root.findViewById(R.id.revise_kid_num);
-                final EditText edx_bb = root.findViewById(R.id.revise_baby_num);
-                edx_ad.setText(order.getAdult()+"");
-                edx_kid.setText(order.getKid()+"");
-                edx_bb.setText(order.getBaby()+"");
+                View root = View.inflate(getApplicationContext(),R.layout.activity_purchase_form,null);
                 AlertDialog dialog = new AlertDialog.Builder(UserOrderActivity.this)
                         .setTitle("Revise order")
                         .setMessage("enter revised number below")
@@ -97,9 +112,7 @@ public class UserOrderActivity extends AppCompatActivity {
                         .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                anum.setText("adult: "+edx_ad.getText().toString());
-                                knum.setText("kid: "+edx_kid.getText().toString());
-                                bnum.setText("baby: "+edx_bb.getText().toString());
+
                             }
                         })
                         .setView(root)

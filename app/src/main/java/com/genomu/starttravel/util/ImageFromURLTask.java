@@ -21,7 +21,6 @@ public class ImageFromURLTask extends AsyncTask<String,Integer,Drawable> {
         try {
             URL thumb = new URL(strings[0]);
             thumb_d = Drawable.createFromStream(thumb.openStream(), "testThumb");
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

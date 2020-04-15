@@ -10,12 +10,12 @@
         android:id="@+id/hor_scroll_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="72dp"
         android:scrollbarSize="0dp"
         android:scrollbarStyle="insideOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bar_search">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,11 +24,6 @@
 
             <Spinner
                 android:id="@+id/sorting_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Spinner
-                android:id="@+id/place_filtering_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -48,28 +43,15 @@
                 android:text="@string/end_date_btn"
                 android:textSize="10sp" />
 
-            <Button
-                android:id="@+id/reset_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/reset_date"
-                android:textSize="10sp" />
+            <ImageButton
+                android:id="@+id/go_search_search"
+                android:layout_width="51dp"
+                android:layout_height="45dp"
+                android:padding="8sp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_small_search" />
         </LinearLayout>
     </HorizontalScrollView>
-
-    <EditText
-        android:id="@+id/bar_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="@string/hint_search_bar_home"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/result_search"
@@ -80,22 +62,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hor_scroll_search" />
 
-    <ImageButton
-        android:id="@+id/go_search_search"
-        android:layout_width="51dp"
-        android:layout_height="45dp"
-        android:padding="8sp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_small_search"
-        app:layout_constraintStart_toEndOf="@+id/bar_search"
-        app:layout_constraintTop_toTopOf="@+id/bar_search" />
-
     <ProgressBar
         android:id="@+id/progress_search"
         style="?android:attr/progressBarStyle"
         android:layout_width="130dp"
         android:layout_height="125dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.arlib.floatingsearchview.FloatingSearchView
+        android:id="@+id/floating_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:floatingSearch_close_search_on_keyboard_dismiss="true"
+        app:floatingSearch_leftActionMode="showSearch"
+        app:floatingSearch_menu="@menu/menu_main"
+        app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"
+        app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"
+        app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset"
+        app:floatingSearch_searchHint="Search..."
+        app:floatingSearch_showSearchKey="false"
+        app:floatingSearch_suggestionsListAnimDuration="250"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -21,17 +21,24 @@
     <string name="start_date_btn">When to start</string>
     <string name="end_date_btn">When to end</string>
     <string name="reset_date">Reset</string>
-    <!--下拉式選單資料-->
+    <!--下拉式排序資料-->
     <string name="price_d">price:descending</string>
     <string name="price_a">price:ascending</string>
-
-    <string name="place_as">Asia</string>
-    <string name="place_af">Africa</string>
-    <string name="place_na">North America</string>
-    <string name="place_sa">South America</string>
-    <string name="place_eu">Europe</string>
-    <string name="place">Place</string>
-    <string name="place_oc">Oceania</string>
+    <!--地區搜尋資料-->
+    <string name="place_neas">東北亞</string>
+    <string name="place_ncn">中國北部</string>
+    <string name="place_scn">中國南部</string>
+    <string name="place_seas">東南亞</string>
+    <string name="place_sas">南亞</string>
+    <string name="place_was">西亞</string>
+    <string name="place_na">北美</string>
+    <string name="place_weu">西歐</string>
+    <string name="place_meu">中歐</string>
+    <string name="place_neu">北歐</string>
+    <string name="place_eeu">東歐</string>
+    <string name="place_seu">南歐</string>
+    <string name="place_oc">大洋</string>
+    <string name="place_af">非洲</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

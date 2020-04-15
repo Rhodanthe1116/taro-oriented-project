@@ -22,7 +22,6 @@ public class NameDBObserver implements DBDataObserver {
         this.textView = textView;
     }
 
-
     @Override
     public void update() {
     }

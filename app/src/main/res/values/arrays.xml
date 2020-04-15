@@ -5,13 +5,20 @@
         <item>@string/price_a</item>
     </string-array>
     <string-array name="place_filtering">
-        <item>@string/place</item>
-        <item>@string/place_as</item>
-        <item>@string/place_af</item>
+        <item>@string/place_neas</item>
+        <item>@string/place_ncn</item>
+        <item>@string/place_scn</item>
+        <item>@string/place_seas</item>
+        <item>@string/place_sas</item>
+        <item>@string/place_was</item>
         <item>@string/place_na</item>
-        <item>@string/place_sa</item>
-        <item>@string/place_eu</item>
+        <item>@string/place_weu</item>
+        <item>@string/place_meu</item>
+        <item>@string/place_neu</item>
+        <item>@string/place_eeu</item>
+        <item>@string/place_seu</item>
         <item>@string/place_oc</item>
+        <item>@string/place_af</item>
     </string-array>
     <string-array name="photo_titles">
         <item>Stockholm</item>

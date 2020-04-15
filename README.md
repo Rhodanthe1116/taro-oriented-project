@@ -1,13 +1,54 @@
 ﻿# taro-oriented-project
 ## log
+###### tags: `程式專案`,`紫芋導向`,`start travel`
+### alpha-1.6
+> 版本資訊：
+> -
+> 
+> **概述**
+> > 新增彩蛋~~~~~~~~
+> > 移植地區選擇至搜尋欄並完整化
+> > 實作訂購、取消訂單
+> 
+> **類別更動**
+> - 新增PlaceSuggestion
+> - 新增PlaceCounselor
+> - 微調TravelAdapter讓無結果時顯示Alert
+>     
+> **GUI處理類別更動**
+> - (新增)**彩蛋**
+> - (修改)**搜尋frag**:篩選地區移植到搜尋欄、日期鈕長按取消
+> - (修改)**訂購acti**:調整一些限制、例外
+> - (新增)**動作完成anim**:成功訂購、移除以及~~修改~~
+> 
+> **GUI資料更動**
+> - 加入彩蛋drawable
+> - 加入seekbar_thumb
+
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - Invoker實例是否提升層級
+> - 整理程式碼 重構
+> - Concrete Command
+>     - GetTravelsResultCommand 擴充
+>     - 還有更多...
+> - 咖波Alert處理Exception
+> - 修改訂單實作 以及畫面處理(seekbar)
+> - 搜尋清單的下一頁功能
+> - 日期按下即時更新
+> - 排序換右上角
+> - 畫面可以用好看一些 (都用完之後可以改)
+> - Auth 讀寫資料庫設定
 ### alpha-1.5
 > 版本資訊：
 > -
 > 
 > **概述**
-> >新增即時抓資料圖片的方法
-> >修改選地區的命令至堪用
-> >導入AsyncTask
+> > 新增即時抓資料圖片的方法
+> > 修改選地區的命令至堪用
+> > 導入AsyncTask
 > 
 > **類別更動**
 > - 新增**ImageFromURLTask**: 用於以網址設定圖片
@@ -28,43 +69,3 @@
 > **GUI資料更動**
 > - 加入一張PurchaseForm layout
 > - 加入seek bar layout
-
---- 
-> 開發方向
-> - 
-> - 萃取觀察者模式
-> - Invoker實例是否提升層級
-> - 整理程式碼 重構
-> - Concrete Command 下一頁、選擇地區
->     - GetTravelsResultCommand 擴充
->     - 還有更多...
-> - 咖波Alert處理Exception
-> - 訂單系統完整化
-> - GUI處理類別以及資料更新至4/6討論內容
->     - (修改)**搜尋frag**:依地區篩選、關鍵字搜尋
-> - 畫面可以用好看一些~~
-### alpha-1.4
-> 版本資訊：
-> -
-> 
-> *!!目前非預設選擇地區會是travel_code=396北歐的樣子!!*
-> *!!選擇日期跟選擇地區目前只能擇一!!*
-> 
-> **概述**
-> >資料庫移植至FireStore
-> >改造處理資料庫的類別
-> >調整搜尋frag至功能堪用
-> 
-> **類別更動**
-> - 改裝瀚文為FireStore處理者
-> - 將Observer跟CommandSubject都修正至FireStore模式
-> - 新增User來接資料庫上的user資料
-> - GetTravelsResultCommand改動至可以有八種排序或篩選的結果
-> - ~~新增JSONSaver(Anodoroid Studio不支援寫檔案到電腦端)~~
->     
-> **GUI處理類別更動**
-> - (移植)**搜尋frag**: 詳細資訊以及訂購Alert移植
-> - (新增)**Travel詳資acti**: 下方有訂購鈕
-> 
-> **GUI資料更動**
-> - 加入一張TravelDetail layout

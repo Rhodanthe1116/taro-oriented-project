@@ -1,4 +1,5 @@
 ﻿# 過時版本放置區
+###### tags: `程式專案`,`紫芋導向`,`start travel`
 ### alpha-1.1
 > 版本資訊：
 > -
@@ -117,3 +118,28 @@
 > - 加入咖波Alert圖示
 > - 多加一張「登入後layout」以及一張「訂單詳資layout」
 > - 新增修改訂單Alertlayout
+### alpha-1.4
+> 版本資訊：
+> -
+> 
+> *!!目前非預設選擇地區會是travel_code=396北歐的樣子!!*
+> *!!選擇日期跟選擇地區目前只能擇一!!*
+> 
+> **概述**
+> >資料庫移植至FireStore
+> >改造處理資料庫的類別
+> >調整搜尋frag至功能堪用
+> 
+> **類別更動**
+> - 改裝瀚文為FireStore處理者
+> - 將Observer跟CommandSubject都修正至FireStore模式
+> - 新增User來接資料庫上的user資料
+> - GetTravelsResultCommand改動至可以有八種排序或篩選的結果
+> - ~~新增JSONSaver(Anodoroid Studio不支援寫檔案到電腦端)~~
+>     
+> **GUI處理類別更動**
+> - (移植)**搜尋frag**: 詳細資訊以及訂購Alert移植
+> - (新增)**Travel詳資acti**: 下方有訂購鈕
+> 
+> **GUI資料更動**
+> - 加入一張TravelDetail layout

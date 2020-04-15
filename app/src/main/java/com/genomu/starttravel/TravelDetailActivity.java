@@ -23,6 +23,7 @@ import com.genomu.starttravel.util.LookForCodesCommand;
 import static com.genomu.starttravel.PurchaseFormActivity.FUNC_PUR;
 
 public class TravelDetailActivity extends AppCompatActivity {
+    public  final static  int RESULT_VIRUS = 433;
     public final static int FUNC_TRA = 1;
     private TextView title;
     private TextView price;
@@ -50,8 +51,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == FUNC_PUR){
             if(resultCode == RESULT_OK){
-                getIntent().putExtra("nav",R.id.navigation_users);
-                setResult(RESULT_OK,getIntent());
+                setResult(RESULT_OK);
                 finish();
             }
         }
@@ -94,7 +94,7 @@ public class TravelDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     getIntent().putExtra("nav",R.id.navigation_search);
-                                    setResult(RESULT_CANCELED,getIntent());
+                                    setResult(RESULT_VIRUS,getIntent());
                                     finish();
                                 }
                             }).show();

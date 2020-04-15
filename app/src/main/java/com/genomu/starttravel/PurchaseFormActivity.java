@@ -7,14 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -23,7 +22,6 @@ import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.AddOrderCommand;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
-import com.google.firebase.firestore.auth.User;
 
 public class PurchaseFormActivity extends AppCompatActivity {
 
@@ -57,6 +55,8 @@ public class PurchaseFormActivity extends AppCompatActivity {
     private void setViews() {
         amount = new int[]{1,0,0};
         final Travel travel =(Travel) getIntent().getSerializableExtra("travel");
+        ktag.setText("0");
+        btag.setText("0");
         title.setText(travel.getTitle());
         price = travel.getPrice();
         total.setText(price+"");
@@ -75,42 +75,69 @@ public class PurchaseFormActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String UID = UserAuth.getInstance().getUserUID();
                 if (UID != "b07505019") {
-                    DatabaseInvoker invoker = new DatabaseInvoker();
-                    LoadingDialog dialog = new LoadingDialog(PurchaseFormActivity.this);
-                    invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel,amount[0] , amount[1], amount[2]),dialog));
-                    invoker.assignCommand();
-                    final Intent intent = getIntent();
-                    dialog.startLoading();
-                    dialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            setResult(RESULT_OK,intent);
-                            finish();
+                    if(amount[0]>0){
+                        int pur_amount = amount[0]+amount[1];
+                        int avai_amount = travel.getUpper_bound()-travel.getPurchased();
+                        if(pur_amount <= avai_amount){
+                            sendPurchaseRequest(UID, travel);
+                        }else{
+                            //not available exception
                         }
-                    });
+                    }else if(amount[1]!=0||amount[2]!=0){
+                        //no adult exception
+                    }else {
+                        //no input exception
+                    }
+                }else{
+                    //not logged exception
                 }
             }
         });
 
     }
 
+    private void sendPurchaseRequest(String UID, Travel travel) {
+        DatabaseInvoker invoker = new DatabaseInvoker();
+        LoadingDialog dialog = new LoadingDialog(PurchaseFormActivity.this);
+        invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel,amount[0] , amount[1], amount[2]),dialog));
+        invoker.assignCommand();
+        final Intent intent = getIntent();
+        dialog.startLoading();
+        dialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        });
+    }
+    private float baby_sec;
     private void setUpSeekBar(final TextView tag,final SeekBar bar) {
         bar.post(new Runnable() {
             @Override
             public void run() {
-                length = (int)(bar.getWidth()*0.9f);
-//                Log.d(TAG, "length>>"+length);
+                length = (int)(abar.getWidth()*0.9f);
+                baby_sec = length;
                 final int tag_t = tag.getTop();
                 final float sec = (float)length/(float)bar.getMax();
                 tag.setVisibility(View.GONE);
                 bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        tag.setX(seekBar.getLeft()+24+sec*progress);
-//                        Log.d(TAG, "left>>"+seekBar.getLeft()+" , sec*progress>>"+sec*progress);
+                        if(seekBar==bbar&&fromUser){
+                            tag.setX(seekBar.getLeft()+24+baby_sec*progress);
+                        }else if(fromUser){
+                            tag.setX(seekBar.getLeft()+24+sec*progress);
+                        }
+
                         tag.setText(progress+"");
                         updateTotal();
                         total.setText(total_price+"");
+                        if(seekBar==abar){
+                            bbar.setMax(progress);
+                            baby_sec = (float)length/(float)bbar.getMax();
+                        }
                     }
 
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

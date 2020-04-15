@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Travel extends TravelData implements Serializable {
+public class Travel extends TravelData implements Serializable{
     private String title;
     private int travel_code;
     private String product_key;
