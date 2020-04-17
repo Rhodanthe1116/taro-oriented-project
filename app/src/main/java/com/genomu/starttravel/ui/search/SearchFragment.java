@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -42,7 +43,7 @@ public class SearchFragment extends Fragment {
     private FloatingSearchView searchView;
     private Button start_btn;
     private Button end_btn;
-    private Spinner sorting_spn;
+    private String sorting;
     private ProgressBar bar;
     private String lastQuery = "";
 
@@ -52,10 +53,33 @@ public class SearchFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_search,container,false);
         findViews();
         if(MainActivity.getSearch_content()!="" && MainActivity.getSearched()){
-//            edx_bar.setText(MainActivity.getSearch_content());
             MainActivity.setSearched(false);
         }
         defaultSearchResult();
+        setUpSearchView();
+        setUpMenuSorting();
+        setBtn();
+        return view;
+    }
+
+    private void setUpMenuSorting() {
+        sorting = getString(R.string.price_d);
+        searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+            @Override
+            public void onActionMenuItemSelected(MenuItem item) {
+                Log.d(TAG, "onActionMenuItemSelected: "+item.getTitle());
+                if(item.getTitle().equals(getString(R.string.price_d))){
+                    sorting = getString(R.string.price_d);
+                    searchPlace(lastQuery);
+                }else if(item.getTitle().equals(getString(R.string.price_a))){
+                    sorting = getString(R.string.price_d);
+                    searchPlace(lastQuery);
+                }
+            }
+        });
+    }
+
+    private void setUpSearchView() {
         searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
@@ -92,10 +116,6 @@ public class SearchFragment extends Fragment {
                 searchPlace(lastQuery);
             }
         });
-        setSpinner();
-
-        setBtn();
-        return view;
     }
 
     private void setBtn() {
@@ -133,27 +153,13 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void setSpinner() {
-        ArrayAdapter<CharSequence> spnAdapter =
-                ArrayAdapter.createFromResource(getActivity(),R.array.sorting,android.R.layout.simple_spinner_item);
-        spnAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sorting_spn.setAdapter(spnAdapter);
-        im_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchPlace(lastQuery);
-            }
-        });
-    }
-
     private void searchPlace(String place) {
-        String sorting = sorting_spn.getSelectedItem().toString();
         String start = start_btn.getText().toString();
         String end = end_btn.getText().toString();
         Log.d(TAG, "search range: "+start+","+end);
         RecyclerView recyclerView = view.findViewById(R.id.result_search);
         DatabaseInvoker invoker = new DatabaseInvoker();
-        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end,place);
+        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),100,start,end,place);
         TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity(),bar);
         DBAspect aspect = DBAspect.TRAVELS;
         aspect = getDbAspect(sorting, aspect);
@@ -187,7 +193,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void findViews() {
-        sorting_spn = view.findViewById(R.id.sorting_search);
         im_btn = view.findViewById(R.id.go_search_search);
         start_btn = view.findViewById(R.id.start_date_search);
         end_btn = view.findViewById(R.id.end_date_btn);

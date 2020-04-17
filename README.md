@@ -1,6 +1,50 @@
 ﻿# taro-oriented-project
 ## log
 ###### tags: `程式專案`,`紫芋導向`,`start travel`
+### alpha-1.7
+> 版本資訊：
+> -
+> 
+> **概述**
+> > 修改訂單實作
+> > 自定義Exception的處理
+> 
+> **類別更動**
+> - 完成修改訂單的功能
+> - 新增ReviseOrderCommand
+> - Order微調以方便Command編寫
+> - 補完小地區的選擇
+> - 重構 LookForCodesCommand
+> - CommandException的處理
+>     - HW_NULL
+>     - INPUT_INVALID
+>     - NO_RESULT
+>     
+> **GUI處理類別更動**
+> - (微調)**搜尋frag**:改排序到右上角
+> 
+> **GUI資料更動**
+> - 加入ReviseOrder
+
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - 使用提醒(不要再提醒利用SharedPreference)
+> - Invoker實例是否提升層級
+> - 整理程式碼 註解
+> - 搜尋清單數量問題
+> - 日期按下即時更新
+> - 搜尋列表加入出團狀態
+> - 訂購系統引入時間概念
+>     - 搜尋端如果超過時間就不能訂
+>     - 使用者訂單(列表)會顯示
+>       「即將開始、進行中、已結束」
+>     - 訂單若在即將開始前?天無法修改抑或取消
+> - 主畫面功能
+> - 
+> - Auth 讀寫資料庫設定
+
 ### alpha-1.6
 > 版本資訊：
 > -
@@ -13,7 +57,10 @@
 > **類別更動**
 > - 新增PlaceSuggestion
 > - 新增PlaceCounselor
+> - 新增CodeMapping以隔離Command跟Switch地區的複雜情形
+> - 新增ExtirpateOrderCommand
 > - 微調TravelAdapter讓無結果時顯示Alert
+> - 修改AddOrderCommand
 >     
 > **GUI處理類別更動**
 > - (新增)**彩蛋**
@@ -24,48 +71,3 @@
 > **GUI資料更動**
 > - 加入彩蛋drawable
 > - 加入seekbar_thumb
-
---- 
-> 開發方向
-> - 
-> - 萃取觀察者模式
-> - Invoker實例是否提升層級
-> - 整理程式碼 重構
-> - Concrete Command
->     - GetTravelsResultCommand 擴充
->     - 還有更多...
-> - 咖波Alert處理Exception
-> - 修改訂單實作 以及畫面處理(seekbar)
-> - 搜尋清單的下一頁功能
-> - 日期按下即時更新
-> - 排序換右上角
-> - 畫面可以用好看一些 (都用完之後可以改)
-> - Auth 讀寫資料庫設定
-### alpha-1.5
-> 版本資訊：
-> -
-> 
-> **概述**
-> > 新增即時抓資料圖片的方法
-> > 修改選地區的命令至堪用
-> > 導入AsyncTask
-> 
-> **類別更動**
-> - 新增**ImageFromURLTask**: 用於以網址設定圖片
-> - 微調瀚文的功能
-> - 改造TravelAdapter: 提供static方法設置圖片
-> - 調整GetTravelsResultCommand 的選擇地區
-> - 建立訂單重新啟用(仍不會反應到已購人數)
-> - 完成搜尋功能部份的acti生命週期控制
-> - 改北韓國家名欄位為"bomb"以避免無搜尋結果
-> - 新增具體命令
->     - 查找地區命令 LookForCodesCommand
->     
-> **GUI處理類別更動**
-> - (新增)**訂購acti**:訂購頁面(bar式選數量)
-> - (新增)**讀取dia**: 用於讀取條顯示
-> - 解決標題字太多的問題
-> 
-> **GUI資料更動**
-> - 加入一張PurchaseForm layout
-> - 加入seek bar layout

@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="@string/place_ncn"
+        android:title="@string/price_d"
+        app:showAsAction="ifRoom" />
+    <item
+        android:title="@string/price_a"
         app:showAsAction="ifRoom" />
 </menu>

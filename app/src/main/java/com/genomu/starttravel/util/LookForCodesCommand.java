@@ -57,76 +57,75 @@ public class LookForCodesCommand extends DBCommand {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(DocumentSnapshot doc: task.getResult()){
-                        travelCode.setCountry(doc.get("country",String.class));
-                        travelCode.setTravelCode(code);
-                        travelCode.setTravelCodeName(doc.get("travelCodeName",String.class));
-                        RequestQueue queue = Volley.newRequestQueue(activity);
-                        String url = "https://pixabay.com/api/";
-                        String key = "?key="+"15945961-2835fdd302951c8f463bbf738";
-                        String[] s = travelCode.getCountry().split(" ");
-                        for(String str:s){
-                            Log.d(TAG, "onComplete: in country "+str);
-                        }
-                        String q = "&q=" + s[new Random(seed).nextInt(s.length)];  //key word
-                        String image_type = "&image_type=photo";
-                        String endpoint = url+key+q+image_type+"&lang=zh&per_page=20";
-                        Log.d(TAG, "onComplete: source >> "+endpoint);
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, endpoint,
-                                new Response.Listener<String>() {
-                                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                                    @Override
-                                    public void onResponse(String response) {
-                                        Log.d(TAG, "onResponse: "+parseURL(response));
-                                        new ImageFromURLTask(imageView).execute(parseURL(response));
-                                    }
-                                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                                    private String parseURL(String source){
-                                        String parsedUrl = "";
-                                        try {
-                                            JSONArray results = new JSONObject(source).getJSONArray("hits");
-                                            for(int i = 0;i<results.length();i++){
-                                                JSONObject reader = results.getJSONObject(i);
-                                                float ratio = (float)reader.getInt("webformatWidth")
-                                                        /(float) reader.getInt("webformatHeight");
-                                                if(!(ratio>1.1f&&ratio<1.6f)&results.length()>1){
-                                                    JSONObject remove = (JSONObject) results.remove(i);
-//                                                    checkRemoveInLog(ratio, remove);
-                                                }
-                                            }
-                                            if(results.length() <= 0)
-                                                throw new IllegalArgumentException();
-                                            int random_index = new Random(seed).nextInt(results.length());
-                                            JSONObject result = results.getJSONObject(random_index);
-                                            parsedUrl = result.getString("webformatURL");
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }catch (IllegalArgumentException e){
-                                            e.printStackTrace();
-                                        }
-                                        return parsedUrl;
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                            }
-                        });
-                        queue.add(stringRequest);
+                        setUpURLForDocs(doc);
                     }
                 }else{
                     Log.w(TAG, "onComplete: ", task.getException());
                 }
             }
+
+            private void setUpURLForDocs(DocumentSnapshot doc) {
+                travelCode.setCountry(doc.get("country",String.class));
+                travelCode.setTravelCode(code);
+                travelCode.setTravelCodeName(doc.get("travelCodeName",String.class));
+                RequestQueue queue = Volley.newRequestQueue(activity);
+                String url = "https://pixabay.com/api/";
+                String key = "?key="+"15945961-2835fdd302951c8f463bbf738";
+                String[] s = travelCode.getCountry().split(" ");
+                for(String str:s){
+                    Log.d(TAG, "onComplete: in country "+str);
+                }
+                String q = "&q=" + s[new Random(seed).nextInt(s.length)];  //key word
+                String image_type = "&image_type=photo";
+                String endpoint = url+key+q+image_type+"&lang=zh&per_page=20";
+                Log.d(TAG, "onComplete: source >> "+endpoint);
+                StringRequest stringRequest = getStringRequest(endpoint);
+                queue.add(stringRequest);
+            }
+
+            private StringRequest getStringRequest(String endpoint) {
+                return new StringRequest(Request.Method.GET, endpoint,
+                        new Response.Listener<String>() {
+                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                            @Override
+                            public void onResponse(String response) {
+                                Log.d(TAG, "onResponse: "+parseURL(response));
+                                new ImageFromURLTask(imageView).execute(parseURL(response));
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+            }
         });
     }
 
-    private void checkRemoveInLog(float ratio, JSONObject remove) throws JSONException {
-        Log.d(TAG, "removing(w/h) : ("+
-                remove.getInt("webformatWidth")+
-                " / "+
-                remove.getInt("webformatHeight")+
-                ") ; ratio: " +ratio +" ; URL :"+
-                remove.getString("webformatURL")
-        );
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private String parseURL(String source){
+        String parsedUrl = "";
+        try {
+            JSONArray results = new JSONObject(source).getJSONArray("hits");
+            for(int i = 0;i<results.length();i++){
+                JSONObject reader = results.getJSONObject(i);
+                float ratio = (float)reader.getInt("webformatWidth")
+                        /(float) reader.getInt("webformatHeight");
+                if(!(ratio>1.1f&&ratio<1.6f)&results.length()>1){
+                    results.remove(i);
+                }
+            }
+            if(results.length() <= 0) {
+                throw new IllegalArgumentException();
+            }
+            int random_index = new Random(seed).nextInt(results.length());
+            JSONObject result = results.getJSONObject(random_index);
+            parsedUrl = result.getString("webformatURL");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+        return parsedUrl;
     }
 }

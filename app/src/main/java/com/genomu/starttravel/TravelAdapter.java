@@ -46,14 +46,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
     public TravelAdapter(Activity activity, List<Travel> travelList) {
         this.activity = activity;
         this.travelList = travelList;
-        if(travelList.size()==0){
-            new AlertDialog.Builder(activity)
-                    .setView(R.layout.alert_view)
-                    .setTitle("Sorry, we couldn't find any matches")
-                    .setMessage("Things you should try\n◆ Check the spelling.\n◆ Broaden date range.\n◆ Use synonyms or generic terms.")
-                    .setNeutralButton("ok",null)
-                    .show();
-        }
     }
 
 

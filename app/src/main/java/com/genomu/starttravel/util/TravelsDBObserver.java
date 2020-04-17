@@ -78,12 +78,21 @@ public class TravelsDBObserver implements DBDataObserver {
                             travelList.add(travel);
                         }
                     }
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                    TravelAdapter adapter = new TravelAdapter(activity, travelList);
-                    recyclerView.setAdapter(adapter);
-                    bar.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    if(travelList.size()>0){
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+                        TravelAdapter adapter = new TravelAdapter(activity, travelList);
+                        recyclerView.setAdapter(adapter);
+                        bar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }else {
+                        try {
+                            throw new CommandException(CommandException.reasons.NO_RESULT,activity);
+                        } catch (CommandException e) {
+                            e.getExceptionDialog().show();
+                            bar.setVisibility(View.GONE);
+                        }
+                    }
                 }else{
                     Log.w(TAG, "onComplete: failed ", task.getException());
                 }

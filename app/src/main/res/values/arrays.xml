@@ -19,6 +19,59 @@
         <item>@string/place_seu</item>
         <item>@string/place_oc</item>
         <item>@string/place_af</item>
+        <item>@string/place_jp</item>
+        <item>@string/place_kr</item>
+        <item>@string/place_th</item>
+        <item>@string/place_bru</item>
+        <item>@string/place_ma</item>
+        <item>@string/place_phi</item>
+        <item>@string/place_cam</item>
+        <item>@string/place_mya</item>
+        <item>@string/place_sri</item>
+        <item>@string/place_nep</item>
+        <item>@string/place_tur</item>
+        <item>@string/place_ira</item>
+        <item>@string/place_mal</item>
+        <item>@string/place_ala</item>
+        <item>@string/place_usa</item>
+        <item>@string/place_syd</item>
+        <item>@string/place_mel</item>
+        <item>@string/place_swi</item>
+        <item>@string/place_aus</item>
+        <item>@string/place_fra</item>
+        <item>@string/place_bel</item>
+        <item>@string/place_gr</item>
+        <item>@string/place_por</item>
+        <item>@string/place_ska</item>
+        <item>@string/place_ice</item>
+        <item>@string/place_pol</item>
+        <item>@string/place_cro</item>
+        <item>@string/place_rus</item>
+        <item>@string/place_bal</item>
+        <item>@string/place_egy</item>
+        <item>@string/place_mad</item>
+        <item>@string/place_jp_shi</item>
+        <item>@string/place_jp_kyu</item>
+        <item>@string/place_kr_bus</item>
+        <item>@string/place_kr_je</item>
+        <item>@string/place_th_hh</item>
+        <item>@string/place_th_ks</item>
+        <item>@string/place_phi_cb</item>
+        <item>@string/place_phi_pl</item>
+        <item>@string/place_cn_bj</item>
+        <item>@string/place_cn_sx</item>
+        <item>@string/place_cn_jn</item>
+        <item>@string/place_cn_hs</item>
+        <item>@string/place_cn_sd</item>
+        <item>@string/place_cn_cs</item>
+        <item>@string/place_cn_hn</item>
+        <item>@string/place_cn_xm</item>
+        <item>@string/place_cn_kmzs</item>
+        <item>@string/place_cn_sc</item>
+        <item>@string/place_cn_yn</item>
+        <item>@string/place_cn_gz</item>
+        <item>@string/place_cn_dl</item>
+
     </string-array>
     <string-array name="photo_titles">
         <item>Stockholm</item>

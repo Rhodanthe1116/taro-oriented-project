@@ -29,17 +29,25 @@ public class AddOrderCommand extends DBCommand {
     @Override
     void work() {
         hanWen.secureUser(UID);
-        hanWen.seekFromUser().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                User user = task.getResult().toObject(User.class);
-                final List orders = user.getOrders();
-                orders.add(order);
-                updateTravels();
-                hanWen.sproutOnUser("orders",orders,dialog);
+        try {
+            hanWen.seekFromUser().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    User user = task.getResult().toObject(User.class);
+                    final List orders = user.getOrders();
+                    orders.add(order);
+                    updateTravels();
+                    try {
+                        hanWen.sproutOnUser("orders",orders,dialog);
+                    } catch (CommandException e) {
+                        e.printStackTrace();
+                    }
 
-            }
-        });
+                }
+            });
+        } catch (CommandException e) {
+            e.printStackTrace();
+        }
 
     }
 

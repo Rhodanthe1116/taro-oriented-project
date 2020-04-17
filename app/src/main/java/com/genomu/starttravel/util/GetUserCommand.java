@@ -33,7 +33,11 @@ public class GetUserCommand extends DBCommand implements DBDataSubject {
         hanWen.secureUser(UID);
         for (int i = 0;i<observers.size();i++) {
             DBDataObserver observer = observers.get(i);
-            observer.update(hanWen.seekFromUser());
+            try {
+                observer.update(hanWen.seekFromUser());
+            } catch (CommandException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

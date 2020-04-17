@@ -18,28 +18,8 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.genomu.starttravel.travel_data.JSONSaver;
-import com.genomu.starttravel.travel_data.Travel;
-import com.genomu.starttravel.travel_data.TravelCode;
-import com.genomu.starttravel.travel_data.TravelCodeParser;
-import com.genomu.starttravel.travel_data.TravelParser;
-import com.genomu.starttravel.ui.search.SearchFragment;
-import com.genomu.starttravel.util.AddRawListCommand;
-import com.genomu.starttravel.util.DatabaseInvoker;
-import com.genomu.starttravel.util.HanWen;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -50,24 +30,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
 import static com.genomu.starttravel.TravelDetailActivity.RESULT_VIRUS;
 import static com.genomu.starttravel.UserOrderActivity.FUNC_USO;
+import static com.genomu.starttravel.UserOrderActivity.RESULT_REVISE;
 
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -144,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             if(resultCode==RESULT_OK){
                 tickedAnimation();
                 Toast.makeText(this,"訂單已取消",Toast.LENGTH_LONG).show();
+                navGto(R.id.navigation_users);
+            }else if(resultCode==RESULT_REVISE){
+                tickedAnimation();
+                Toast.makeText(this,"訂單已修改",Toast.LENGTH_LONG).show();
                 navGto(R.id.navigation_users);
             }
         }

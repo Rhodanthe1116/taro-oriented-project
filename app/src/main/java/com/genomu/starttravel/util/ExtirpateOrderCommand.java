@@ -20,36 +20,44 @@ public class ExtirpateOrderCommand extends DBCommand{
 
     private final static String TAG = ExtirpateOrderCommand.class.getSimpleName();
     private List<Order> orders;
-    private String orderUID;
+    private Order targetOrder;
     private LoadingDialog dialog;
 
-    public ExtirpateOrderCommand(HanWen hanWen,String orderUID,LoadingDialog dialog) {
+    public ExtirpateOrderCommand(HanWen hanWen,Order targetOrder,LoadingDialog dialog) {
         super(hanWen);
-        this.orderUID = orderUID;
         this.dialog = dialog;
+        this.targetOrder = targetOrder;
     }
 
     @Override
     void work() {
         hanWen.secureUser(UserAuth.getInstance().getUserUID());
-        hanWen.seekFromUser().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                  if(task.isSuccessful()){
-                      User user = task.getResult().toObject(User.class);
-                      assert user != null;
-                      orders = user.getOrders();
-                      for(int i = 1;i<orders.size();i++){
-                          Order order = orders.get(i);
-                          if(order.getOrderUID().equals(orderUID)){
-                              orders.remove(i);
-                              updateTravels(order);
+        try {
+            hanWen.seekFromUser().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                      if(task.isSuccessful()){
+                          User user = task.getResult().toObject(User.class);
+                          assert user != null;
+                          orders = user.getOrders();
+                          for(int i = 1;i<orders.size();i++){
+                              Order order = orders.get(i);
+                              if(order.equals(targetOrder)){
+                                  orders.remove(i);
+                                  updateTravels(order);
+                              }
+                          }
+                          try {
+                              hanWen.sproutOnUser("orders",orders,dialog);
+                          } catch (CommandException e) {
+                              e.printStackTrace();
                           }
                       }
-                      hanWen.sproutOnUser("orders",orders,dialog);
-                  }
-            }
-        });
+                }
+            });
+        } catch (CommandException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateTravels(final Order order) {

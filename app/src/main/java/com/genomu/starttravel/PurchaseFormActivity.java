@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.AddOrderCommand;
+import com.genomu.starttravel.util.CommandException;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 
@@ -74,22 +75,26 @@ public class PurchaseFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String UID = UserAuth.getInstance().getUserUID();
-                if (UID != "b07505019") {
-                    if(amount[0]>0){
-                        int pur_amount = amount[0]+amount[1];
-                        int avai_amount = travel.getUpper_bound()-travel.getPurchased();
-                        if(pur_amount <= avai_amount){
-                            sendPurchaseRequest(UID, travel);
-                        }else{
-                            //not available exception
+                try {
+                    if (UID != "b07505019") {
+                        if(amount[0]>0){
+                            int pur_amount = amount[0]+amount[1];
+                            int avai_amount = travel.getUpper_bound()-travel.getPurchased();
+                            if(pur_amount <= avai_amount){
+                                sendPurchaseRequest(UID, travel);
+                            }else{
+                                throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
+                            }
+                        }else if(amount[1]!=0||amount[2]!=0){
+                            throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
+                        }else {
+                            throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
                         }
-                    }else if(amount[1]!=0||amount[2]!=0){
-                        //no adult exception
-                    }else {
-                        //no input exception
+                    }else{
+                        throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
                     }
-                }else{
-                    //not logged exception
+                }catch (CommandException e){
+                    e.getExceptionDialog().show();
                 }
             }
         });

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <SeekBar
-        android:id="@+id/seek_bar_adult"
+        android:id="@+id/abar_revise"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,34 +25,16 @@
         app:layout_constraintTop_toBottomOf="@+id/adult_purchase" />
 
     <TextView
-        android:id="@+id/title_purchase"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center"
-        android:text="Title"
-        android:textColor="@color/colorPrimary"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/adult_purchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="adult"
         android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="@+id/title_purchase"
-        app:layout_constraintStart_toStartOf="@+id/title_purchase"
-        app:layout_constraintTop_toBottomOf="@+id/title_purchase" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/kid_purchase"
@@ -63,18 +45,18 @@
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@+id/adult_purchase"
         app:layout_constraintStart_toStartOf="@+id/adult_purchase"
-        app:layout_constraintTop_toBottomOf="@+id/seek_bar_adult" />
+        app:layout_constraintTop_toBottomOf="@+id/abar_revise" />
 
     <SeekBar
-        android:id="@+id/seek_bar_kid"
+        android:id="@+id/kbar_revise"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:max="5"
         android:progress="0"
-        app:layout_constraintEnd_toEndOf="@+id/seek_bar_adult"
-        app:layout_constraintStart_toStartOf="@+id/seek_bar_adult"
+        app:layout_constraintEnd_toEndOf="@+id/abar_revise"
+        app:layout_constraintStart_toStartOf="@+id/abar_revise"
         app:layout_constraintTop_toBottomOf="@+id/kid_purchase" />
 
     <TextView
@@ -86,68 +68,54 @@
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@+id/kid_purchase"
         app:layout_constraintStart_toStartOf="@+id/kid_purchase"
-        app:layout_constraintTop_toBottomOf="@+id/seek_bar_kid" />
+        app:layout_constraintTop_toBottomOf="@+id/kbar_revise" />
 
     <SeekBar
-        android:id="@+id/seek_bar_baby"
+        android:id="@+id/bbar_revise"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:max="1"
         android:progress="0"
-        app:layout_constraintEnd_toEndOf="@+id/seek_bar_kid"
-        app:layout_constraintStart_toStartOf="@+id/seek_bar_kid"
+        app:layout_constraintEnd_toEndOf="@+id/kbar_revise"
+        app:layout_constraintStart_toStartOf="@+id/kbar_revise"
         app:layout_constraintTop_toBottomOf="@+id/baby_purchase" />
 
     <TextView
-        android:id="@+id/total_purchase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="total"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seek_bar_baby" />
-
-    <TextView
-        android:id="@+id/adult_tag"
+        android:id="@+id/atag_revise"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:background="@drawable/ic_tag_revise"
         android:gravity="center_horizontal"
         android:paddingBottom="6dp"
         android:text="1"
-        android:textColor="#B8D3C6"
-        app:layout_constraintBottom_toTopOf="@+id/seek_bar_adult"
-        app:layout_constraintStart_toStartOf="@+id/seek_bar_adult" />
+        android:textColor="#F3C0C0"
+        app:layout_constraintBottom_toTopOf="@+id/abar_revise"
+        app:layout_constraintStart_toStartOf="@+id/abar_revise" />
 
     <TextView
-        android:id="@+id/kid_tag"
+        android:id="@+id/ktag_revise"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:background="@drawable/ic_tag_revise"
         android:gravity="center_horizontal"
         android:paddingBottom="6dp"
         android:text="1"
-        android:textColor="#B8D3C6"
-        app:layout_constraintBottom_toTopOf="@+id/seek_bar_kid"
-        app:layout_constraintStart_toStartOf="@+id/seek_bar_kid" />
+        android:textColor="#F3C0C0"
+        app:layout_constraintBottom_toTopOf="@+id/kbar_revise"
+        app:layout_constraintStart_toStartOf="@+id/kbar_revise" />
 
     <TextView
-        android:id="@+id/baby_tag"
+        android:id="@+id/btag_revise"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:background="@drawable/ic_tag_revise"
         android:gravity="center_horizontal"
         android:paddingBottom="6dp"
         android:text="1"
-        android:textColor="#B8D3C6"
-        app:layout_constraintBottom_toTopOf="@+id/seek_bar_baby"
-        app:layout_constraintStart_toStartOf="@+id/seek_bar_baby" />
+        android:textColor="#F3C0C0"
+        app:layout_constraintBottom_toTopOf="@+id/bbar_revise"
+        app:layout_constraintStart_toStartOf="@+id/bbar_revise" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

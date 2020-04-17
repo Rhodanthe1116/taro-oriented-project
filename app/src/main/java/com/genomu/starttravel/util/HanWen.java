@@ -104,23 +104,32 @@ public class HanWen {
         }
     }
 
-    void sproutOnUser(String key, List value, final LoadingDialog dialog){
-        if(value.size()>0) {
+    void sproutOnUser(String key, List value, final LoadingDialog dialog) throws CommandException {
+        if(value.size()>0&&dialog!=null&&key!=null) {
             userReference.update(key,value).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                   dialog.dismissLoading();
+                   if(task.isSuccessful()){
+                       dialog.dismissLoading();
+                   }
                 }
             });
+        }else{
+            throw new CommandException(CommandException.reasons.HW_NULL,null);
         }
     }
 
-    Task<DocumentSnapshot> seekFromUser(){
-        return userReference.get();
+    Task<DocumentSnapshot> seekFromUser() throws CommandException {
+        if(userReference!=null){
+            return userReference.get();
+        }else {
+            throw new CommandException(CommandException.reasons.HW_NULL,null);
+        }
     }
 
-    CollectionReference seekFromTravels(){
-        return travelsReference;
+    CollectionReference seekFromTravels() {
+            return travelsReference;
+
     }
 
     Query seekFromTravels(String field,Object... values){
@@ -135,8 +144,6 @@ public class HanWen {
         return database.collection(key).whereIn(field,Arrays.asList(values));
     }
 
-
-    //Warning:aborted
     Query addRangeConstraint(Query original,String start,String end) throws ParseException {
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

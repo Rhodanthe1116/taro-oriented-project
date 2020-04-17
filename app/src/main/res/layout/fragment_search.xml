@@ -22,15 +22,11 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/sorting_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
             <Button
                 android:id="@+id/start_date_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:includeFontPadding="false"
                 android:text="@string/start_date_btn"
                 android:textSize="10sp" />
@@ -45,8 +41,9 @@
 
             <ImageButton
                 android:id="@+id/go_search_search"
-                android:layout_width="51dp"
-                android:layout_height="45dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:padding="8sp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_small_search" />

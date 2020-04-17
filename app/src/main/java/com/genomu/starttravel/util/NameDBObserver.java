@@ -34,7 +34,7 @@ public class NameDBObserver implements DBDataObserver {
 
     @Override
     public void update(Task task) {
-        textView.setText("getting value from database");
+        textView.setText("從資料庫取得姓名 ...");
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
