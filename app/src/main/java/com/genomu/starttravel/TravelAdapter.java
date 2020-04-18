@@ -3,6 +3,7 @@ package com.genomu.starttravel;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -26,7 +27,13 @@ import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.LookForCodesCommand;
+import com.genomu.starttravel.util.TravelStateOffice;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
@@ -61,6 +68,19 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         final TravelViewHolder vh = holder;
         final String UID = UserAuth.getInstance().getUserUID();
         final Travel travel = travelList.get(position);
+        try {
+            TravelStateOffice office = new TravelStateOffice(travel);
+            if(office.getState()<TravelStateOffice.NOT_YET_START){
+                holder.title.setTextColor(Color.RED);
+            }
+            if(office.getGrouping()==TravelStateOffice.ENSURE){
+                holder.lower.setTextColor(Color.GREEN);
+            }else if(office.getGrouping()==TravelStateOffice.FULL){
+                holder.lower.setTextColor(Color.RED);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         long seed = getSeed(travel);
         // waiting GUI here
         holder.image.setImageResource(R.drawable.alert);

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,12 @@ import com.genomu.starttravel.travel_data.TravelCode;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.LookForCodesCommand;
+import com.genomu.starttravel.util.TravelStateOffice;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.genomu.starttravel.PurchaseFormActivity.FUNC_PUR;
 
@@ -80,6 +87,21 @@ public class TravelDetailActivity extends AppCompatActivity {
 
         long seed = TravelAdapter.getSeed(travel);
         TravelAdapter.parseCountryName(travel.getTravel_code(),this,imageView,seed);
+        try {
+            TravelStateOffice office = new TravelStateOffice(travel);
+            if(office.getState()>=TravelStateOffice.NOT_YET_START&&office.getGrouping()<TravelStateOffice.FULL){
+                setGoBtn(travel);
+            }else{
+                go_btn.setText("行程無法預定");
+                go_btn.setClickable(false);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setGoBtn(final Travel travel) {
         go_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +123,5 @@ public class TravelDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 }

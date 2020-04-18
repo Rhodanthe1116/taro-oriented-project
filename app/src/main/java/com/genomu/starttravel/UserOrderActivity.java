@@ -27,6 +27,9 @@ import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.ExtirpateOrderCommand;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.ReviseOrderCommand;
+import com.genomu.starttravel.util.TravelStateOffice;
+
+import java.text.ParseException;
 
 public class UserOrderActivity extends AppCompatActivity {
     public final static int FUNC_USO = 7;
@@ -61,40 +64,18 @@ public class UserOrderActivity extends AppCompatActivity {
         knum.setText("kid: "+order.getKid());
         bnum.setText("baby: "+order.getBaby());
         imageView.setImageResource(R.drawable.alert);
-        setRevise(order);
-        setCancel(order);
+        setBtn(order);
         long seed = TravelAdapter.getSeed(travel);
         TravelAdapter.parseCountryName(travel.getTravel_code(),this,imageView,seed);
     }
 
-    private void setCancel(final Order order) {
-        cancel.setOnClickListener(new View.OnClickListener() {
+
+    private void clickBtn(final Order order, final boolean isCancel) {
+        Button btn = (isCancel)?cancel:revise;
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog dialog = new AlertDialog.Builder(UserOrderActivity.this)
-                        .setTitle("取消訂單")
-                        .setMessage("確定要取消訂單嗎")
-                        .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                LoadingDialog loadingDialog = new LoadingDialog(UserOrderActivity.this);
-                                DatabaseInvoker invoker = new DatabaseInvoker();
-                                invoker.addCommand(new ExtirpateOrderCommand(new HanWen(),order,loadingDialog));
-                                Log.d(TAG, "onClick: "+order.getOrderUID());
-                                invoker.assignCommand();
-                                final Intent intent = getIntent();
-                                loadingDialog.startLoading();
-                                loadingDialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        setResult(RESULT_OK,intent);
-                                        finish();
-                                    }
-                                });
-                            }
-                        })
-                        .setNegativeButton("deny",null)
-                        .create();
+                AlertDialog dialog = isCancel?getCancelDialog(order):getReviseDialog(order);
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
@@ -107,6 +88,34 @@ public class UserOrderActivity extends AppCompatActivity {
             }
         });
     }
+
+    private AlertDialog getCancelDialog(final Order order) {
+        return new AlertDialog.Builder(UserOrderActivity.this)
+                            .setTitle("取消訂單")
+                            .setMessage("確定要取消訂單嗎")
+                            .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog1, int which) {
+                                    LoadingDialog loadingDialog = new LoadingDialog(UserOrderActivity.this);
+                                    DatabaseInvoker invoker = new DatabaseInvoker();
+                                    invoker.addCommand(new ExtirpateOrderCommand(new HanWen(),order,loadingDialog));
+                                    Log.d(TAG, "onClick: "+order.getOrderUID());
+                                    invoker.assignCommand();
+                                    final Intent intent = getIntent();
+                                    loadingDialog.startLoading();
+                                    loadingDialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog11) {
+                                            setResult(RESULT_OK,intent);
+                                            finish();
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("deny",null)
+                            .create();
+    }
+
     private SeekBar abar;
     private SeekBar kbar;
     private SeekBar bbar;
@@ -116,58 +125,63 @@ public class UserOrderActivity extends AppCompatActivity {
     private int[] amount;
     private float baby_sec;
     private int length;
-    private void setRevise(final Order order) {
-
-        revise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firstEnter = true;
-                View root = View.inflate(getApplicationContext(),R.layout.revise_order,null);
-                abar = root.findViewById(R.id.abar_revise);
-                kbar = root.findViewById(R.id.kbar_revise);
-                bbar = root.findViewById(R.id.bbar_revise);
-                atag = root.findViewById(R.id.atag_revise);
-                ktag = root.findViewById(R.id.ktag_revise);
-                btag = root.findViewById(R.id.btag_revise);
-                amount = new int[3];
-                amount[0] = order.getAdult();   amount[1] = order.getKid();     amount[2] = order.getBaby();
-                setUpSeekBar(atag,abar);
-                setUpSeekBar(ktag,kbar);
-                setUpSeekBar(btag,bbar);
-                AlertDialog dialog = new AlertDialog.Builder(UserOrderActivity.this)
-                        .setTitle("修改訂單")
-                        .setMessage("調整訂單人數")
-                        .setNegativeButton("deny",null)
-                        .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try{
-                                    if(amount[0]>0){
-                                        sendReviseRequest(order);
-                                    }else if(amount[1]!=0||amount[2]!=0){
-                                        throw new CommandException(CommandException.reasons.INPUT_INVALID,UserOrderActivity.this);
-                                    }else {
-                                        throw new CommandException(CommandException.reasons.INPUT_INVALID,UserOrderActivity.this);
-                                    }
-                                }catch (CommandException e){
-                                    e.getExceptionDialog().show();
-                                }
-                            }
-                        })
-                        .setView(root)
-                        .create();
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialog) {
-                        AlertDialog alertDialog = (AlertDialog) dialog;
-                        Button button = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                        button.setTextColor(getResources().getColor(R.color.negative));
-                    }
-                });
-                dialog.show();
-
+    private void setBtn(final Order order) {
+        try {
+            TravelStateOffice office = new TravelStateOffice(order.getTravel());
+            if(office.getState()==TravelStateOffice.CAN_BE_MODIFIED){
+                clickBtn(order,false);
+                clickBtn(order,true);
+            }else {
+                revise.setText("無法修改");
+                revise.setClickable(false);
+                cancel.setText("無法取消");
+                cancel.setClickable(false);
             }
-        });
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private AlertDialog getReviseDialog(final Order order) {
+        firstEnter = true;
+        View root = View.inflate(getApplicationContext(),R.layout.revise_order,null);
+        abar = root.findViewById(R.id.abar_revise);
+        kbar = root.findViewById(R.id.kbar_revise);
+        bbar = root.findViewById(R.id.bbar_revise);
+        atag = root.findViewById(R.id.atag_revise);
+        ktag = root.findViewById(R.id.ktag_revise);
+        btag = root.findViewById(R.id.btag_revise);
+        amount = new int[3];
+        amount[0] = order.getAdult();
+        amount[1] = order.getKid();
+        amount[2] = order.getBaby();
+        setUpSeekBar(atag,abar);
+        setUpSeekBar(ktag,kbar);
+        setUpSeekBar(btag,bbar);
+        return new AlertDialog.Builder(UserOrderActivity.this)
+                .setTitle("修改訂單")
+                .setMessage("調整訂單人數")
+                .setNegativeButton("deny",null)
+                .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onClick(DialogInterface dialog1, int which) {
+                        try{
+                            if(amount[0]>0){
+                                sendReviseRequest(order);
+                            }else if(amount[1]!=0||amount[2]!=0){
+                                throw new CommandException(CommandException.reasons.INPUT_INVALID,UserOrderActivity.this);
+                            }else {
+                                throw new CommandException(CommandException.reasons.INPUT_INVALID,UserOrderActivity.this);
+                            }
+                        }catch (CommandException e){
+                            e.getExceptionDialog().show();
+                        }
+                    }
+                })
+                .setView(root)
+                .create();
     }
 
     private void sendReviseRequest(Order order) {

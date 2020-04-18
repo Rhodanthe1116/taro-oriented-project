@@ -3,6 +3,7 @@ package com.genomu.starttravel;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.genomu.starttravel.travel_data.Travel;
+import com.genomu.starttravel.util.TravelStateOffice;
 
+import java.text.ParseException;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder>{
@@ -56,6 +59,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             holder.title.setText(travel.getTitle().substring(0,20)+"...");
         }else {
             holder.title.setText(travel.getTitle());
+        }
+        try {
+            TravelStateOffice office = new TravelStateOffice(travel);
+            if(office.getState()==TravelStateOffice.CAN_BE_MODIFIED){
+                holder.title.setTextColor(Color.CYAN);
+            }else if(office.getState()==TravelStateOffice.ON_THE_ROAD){
+                holder.title.setTextColor(Color.GREEN);
+            }else if(office.getState()==TravelStateOffice.ALREADY_END){
+                holder.title.setTextColor(Color.RED);
+            }
+        }catch(ParseException e){
+            e.printStackTrace();
         }
         holder.price.setText(travel.getPrice() + "元");
         holder.lower.setText("最少" + travel.getLower_bound() + "人成行");

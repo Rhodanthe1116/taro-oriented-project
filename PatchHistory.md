@@ -171,3 +171,29 @@
 > **GUI資料更動**
 > - 加入一張PurchaseForm layout
 > - 加入seek bar layout
+### alpha-1.6
+> 版本資訊：
+> -
+> 
+> **概述**
+> > 新增彩蛋~~~~~~~~
+> > 移植地區選擇至搜尋欄並完整化
+> > 實作訂購、取消訂單
+> 
+> **類別更動**
+> - 新增PlaceSuggestion
+> - 新增PlaceCounselor
+> - 新增CodeMapping以隔離Command跟Switch地區的複雜情形
+> - 新增ExtirpateOrderCommand
+> - 微調TravelAdapter讓無結果時顯示Alert
+> - 修改AddOrderCommand
+>     
+> **GUI處理類別更動**
+> - (新增)**彩蛋**
+> - (修改)**搜尋frag**:篩選地區移植到搜尋欄、日期鈕長按取消
+> - (修改)**訂購acti**:調整一些限制、例外
+> - (新增)**動作完成anim**:成功訂購、移除以及~~修改~~
+> 
+> **GUI資料更動**
+> - 加入彩蛋drawable
+> - 加入seekbar_thumb

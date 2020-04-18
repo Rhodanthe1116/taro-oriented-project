@@ -2,6 +2,7 @@ package com.genomu.starttravel;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -48,6 +51,32 @@ public class PurchaseFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_purchase_form);
         ActionBar ab = getSupportActionBar();
         ab.hide();
+        boolean remind = getSharedPreferences("StartTravel",MODE_PRIVATE)
+                .getBoolean("remind_purchase",true);
+        Log.d(TAG, "remind: "+remind);
+        if(remind){
+            new AlertDialog.Builder(this)
+                    .setTitle("訂購須知")
+                    .setView(R.layout.dialog_remind)
+                    .setMessage("訂購前提醒您" +
+                            "\n◆ 孩童與嬰兒的條件分別為:\n\r返國當天年滿2~15歲、2歲以下" +
+                            "\n◆ 年滿15歲以成人價計費" +
+                            "\n◆ 至少需要一個大人訂單才得成立" +
+                            "\n◆ 一位嬰兒至少需要一位大人的陪同" +
+                            "\n◆ 孩童享成人價7折、嬰兒則為1折")
+                    .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CheckBox checkBox = ((AlertDialog)dialog).findViewById(R.id.check_box_remind);
+                            Log.d(TAG, "isChecked: "+checkBox.isChecked());
+                            getSharedPreferences("StartTravel",MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("remind_purchase",!checkBox.isChecked())
+                                    .apply();
+                        }
+                    })
+                    .show();
+        }
         findViews();
         setViews();
 
@@ -72,6 +101,7 @@ public class PurchaseFormActivity extends AppCompatActivity {
         setUpSeekBar(ktag,kbar);
         setUpSeekBar(btag,bbar);
         confirm.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 String UID = UserAuth.getInstance().getUserUID();
@@ -221,7 +251,7 @@ public class PurchaseFormActivity extends AppCompatActivity {
     private void updateTotal() {
         amount[0] = abar.getProgress(); amount[1] = kbar.getProgress(); amount[2] = bbar.getProgress();
         Log.d(TAG, "updateTotal: "+amount[0]+" , "+amount[1]*0.8f+" , "+amount[2]*0.5f);
-        total_price = (int)((abar.getProgress()+kbar.getProgress()*0.8f+bbar.getProgress()*0.5f)*price);
+        total_price = (int)((abar.getProgress()+kbar.getProgress()*0.7f+bbar.getProgress()*0.1f)*price);
         Log.d(TAG, "updateTotal: "+total_price);
     }
 
