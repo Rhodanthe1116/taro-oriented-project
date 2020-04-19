@@ -1,20 +1,23 @@
 package com.genomu.starttravel.ui.search;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,33 +35,59 @@ import com.genomu.starttravel.util.GetTravelsResultCommand;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.TravelsDBObserver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
 
     private static final String TAG = SearchFragment.class.getSimpleName();
     private View view;
-    private ImageButton im_btn;
     private FloatingSearchView searchView;
     private Button start_btn;
     private Button end_btn;
     private String sorting;
     private ProgressBar bar;
+
     private String lastQuery = "";
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search,container,false);
-        findViews();
-        if(MainActivity.getSearch_content()!="" && MainActivity.getSearched()){
-            MainActivity.setSearched(false);
+        boolean remind = getActivity().getSharedPreferences("StartTravel", Context.MODE_PRIVATE)
+                .getBoolean("remind_search",true);
+        Log.d(TAG, "remind: "+remind);
+        if(remind){
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("搜尋須知")
+                    .setMessage("長按日期鍵可以取消日期條件")
+                    .setView(R.layout.dialog_remind)
+                    .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CheckBox checkBox = ((AlertDialog)dialog).findViewById(R.id.check_box_remind);
+                            Log.d(TAG, "isChecked: "+checkBox.isChecked());
+                            getActivity().getSharedPreferences("StartTravel",Context.MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("remind_search",!checkBox.isChecked())
+                                    .apply();
+                        }
+                    })
+                    .show();
         }
+        findViews();
         defaultSearchResult();
         setUpSearchView();
         setUpMenuSorting();
         setBtn();
+        if(MainActivity.getSearch_content()!="" && MainActivity.getSearched()){
+            MainActivity.setSearched(false);
+            lastQuery = MainActivity.getSearch_content();
+            searchView.showProgress();
+            searchView.setSearchText(MainActivity.getSearch_content());
+            findPlaceSuggestion(lastQuery,50);
+            searchView.setSearchFocused(true);
+        }
         return view;
     }
 
@@ -88,14 +117,7 @@ public class SearchFragment extends Fragment {
                 } else {
                     searchView.showProgress();
                     final long delay = 50;
-                    PlaceCounselor counselor = new PlaceCounselor(getResources().getStringArray(R.array.place_filtering));
-                    counselor.findSuggestions(newQuery, 5, delay, new PlaceCounselor.OnFindSuggestionsListener() {
-                        @Override
-                        public void onResults(List<PlaceSuggestion> results) {
-                            searchView.swapSuggestions(results);
-                            searchView.hideProgress();
-                        }
-                    });
+                    findPlaceSuggestion(newQuery, delay);
                 }
             }
         });
@@ -118,6 +140,17 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    private void findPlaceSuggestion(String newQuery, long delay) {
+        PlaceCounselor counselor = new PlaceCounselor(getResources().getStringArray(R.array.place_filtering));
+        counselor.findSuggestions(newQuery, 5, delay, new PlaceCounselor.OnFindSuggestionsListener() {
+            @Override
+            public void onResults(List<PlaceSuggestion> results) {
+                searchView.swapSuggestions(results);
+                searchView.hideProgress();
+            }
+        });
+    }
+
     private void setBtn() {
         start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,12 +158,12 @@ public class SearchFragment extends Fragment {
                 MainActivity.isStartBtn = true;
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getParentFragmentManager(),"start picker");
-
             }
         });
         start_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                MainActivity.isStartBtn = true;
                 start_btn.setText(R.string.start_date_btn);
                 return true;
             }
@@ -141,19 +174,51 @@ public class SearchFragment extends Fragment {
                 MainActivity.isStartBtn = false;
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getParentFragmentManager(),"end picker");
-
             }
         });
         end_btn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                end_btn.setText(R.string.start_date_btn);
+                MainActivity.isStartBtn = false;
+                end_btn.setText(R.string.end_date_btn);
                 return true;
+            }
+        });
+        start_btn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d(TAG, "start_onTextChanged: "+s);
+                searchPlace(lastQuery);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        end_btn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d(TAG, "end_onTextChanged: "+s);
+                searchPlace(lastQuery);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
 
-    private void searchPlace(String place) {
+    public void searchPlace(String place) {
         String start = start_btn.getText().toString();
         String end = end_btn.getText().toString();
         Log.d(TAG, "search range: "+start+","+end);
@@ -193,7 +258,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void findViews() {
-        im_btn = view.findViewById(R.id.go_search_search);
         start_btn = view.findViewById(R.id.start_date_search);
         end_btn = view.findViewById(R.id.end_date_btn);
         bar = view.findViewById(R.id.progress_search);

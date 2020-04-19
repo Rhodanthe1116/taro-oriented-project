@@ -1,53 +1,33 @@
 package com.genomu.starttravel.ui.home;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.TextKeyListener;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
-import com.genomu.starttravel.ui.search.SearchFragment;
-import com.genomu.starttravel.util.ImageFromURLTask;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.genomu.starttravel.ScenicSpotActivity;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.genomu.starttravel.ScenicSpotActivity.FUNC_SCS;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
@@ -76,13 +56,12 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-//                getDatabaseTest();
                 goSearch();
             }
         });
 
         setupPhotos();
-        setRecyler();
+        setRecycler();
         return view;
     }
 
@@ -93,12 +72,23 @@ public class HomeFragment extends Fragment {
         cover = view.findViewById(R.id.cover_home);
     }
 
-    private void setRecyler(){
+    private void setRecycler(){
         RecyclerView recyclerView = view.findViewById(R.id.travellist_home);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         PhotoAdapter p_ad = new PhotoAdapter();
         recyclerView.setAdapter(p_ad);
+        recyclerAnimation(recyclerView);
+    }
+
+    private void recyclerAnimation(RecyclerView recyclerView) {
+        cover.setClickable(true);
+        cover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollAnimation(720,500);
+            }
+        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -108,37 +98,27 @@ public class HomeFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy>20){
-                    ValueAnimator anim = ValueAnimator.ofInt(cover.getMeasuredHeight(), 480);
-//                    Log.d(TAG, "cover height:"+cover.getMeasuredHeight());
-                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                            int val = (Integer) valueAnimator.getAnimatedValue();
-                            ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
-                            layoutParams.height = val;
-                            cover.setLayoutParams(layoutParams);
-                        }
-                    });
-                    anim.setDuration(500);
-                    anim.start();
-                }else if(dy<-15){
-                    ValueAnimator anim = ValueAnimator.ofInt(cover.getMeasuredHeight(), 720);
-                    anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                            int val = (Integer) valueAnimator.getAnimatedValue();
-                            ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
-                            layoutParams.height = val;
-                            cover.setLayoutParams(layoutParams);
-                        }
-                    });
-                    anim.setDuration(500);
-                    anim.start();
+                if(dy>10){
+                    scrollAnimation(480,500);
                 }
-                Log.d(TAG, "onScrolled: "+dy);
+//                Log.d(TAG, "onScrolled: "+dy);
             }
         });
+    }
+
+    private void scrollAnimation(int height,int duration) {
+        ValueAnimator anim = ValueAnimator.ofInt(cover.getMeasuredHeight(), height);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
+                layoutParams.height = val;
+                cover.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(duration);
+        anim.start();
     }
 
     /*private void closeKeyboard(View currentFocusView){
@@ -173,9 +153,17 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-            GalleryPhoto photo = photos.get(position);
+            final GalleryPhoto photo = photos.get(position);
             holder.title_text.setText(photo.getTitle());
             holder.photo_image.setImageResource(photo.getImage());
+            holder.photo_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ScenicSpotActivity.class);
+                    intent.putExtra("spots",photo.getTitle());
+                    startActivityForResult(intent,FUNC_SCS);
+                }
+            });
         }
 
         @Override
@@ -189,8 +177,8 @@ public class HomeFragment extends Fragment {
             public PhotoViewHolder(@NonNull View itemView) {
                 super(itemView);
                 photo_image = itemView.findViewById(R.id.gallery_photo);
-
                 title_text = itemView.findViewById(R.id.gallery_name);
+                photo_image.setClickable(true);
 
             }
         }

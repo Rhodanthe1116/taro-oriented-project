@@ -74,9 +74,9 @@
 
     </string-array>
     <string-array name="photo_titles">
-        <item>Stockholm</item>
-        <item>Tokyo</item>
-        <item>Madrid</item>
-        <item>Shanghai</item>
+        <item>日本</item>
+        <item>韓國</item>
+        <item>北歐</item>
+        <item>南歐</item>
     </string-array>
 </resources>

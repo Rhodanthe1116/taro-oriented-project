@@ -1,6 +1,40 @@
-﻿# taro-oriented-project
+# taro-oriented-project
 ## log
 ###### tags: `程式專案`,`紫芋導向`,`start travel`
+### alpha-1.9
+> 版本資訊：
+> -
+> 
+> **概述**
+> > 首頁功能調整
+> > 搜尋frag日期按鈕即時更新
+> > 登入註冊流程控制
+> 
+> **類別更動**
+> - 完成登入註冊功能的acti生命週期控制
+> 
+> **GUI處理類別更動**
+> - (微調)**首頁frag**:連結搜尋frag跟熱門旅程acti
+> - (新增)**首選行程acti**:簡單地用了個全螢幕畫面
+> - (新增)**搜尋frag**:日期btn的addTextChangedListener移除im_btn
+> - 搜尋frag新增搜尋提醒dialog
+> - 新增登入註冊TextWatcher來管控btn
+> 
+> **GUI資料更動**
+> - 更新主畫面資料
+> - 首選行程layout
+
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - Invoker實例是否提升層級
+> - 整理程式碼 註解
+> - 搜尋清單數量問題
+> - orders中的travel要跟travels的同步
+> - 使用者fragGUI優化
+> - Auth 讀寫資料庫設定
+
 ### alpha-1.8
 > 版本資訊：
 > -
@@ -26,41 +60,3 @@
 > - 微調旅遊資訊acti
 > - 微調訂單資訊acti
 > - 新增dialog_remind
-
---- 
-> 開發方向
-> - 
-> - 萃取觀察者模式
-> - Invoker實例是否提升層級
-> - 整理程式碼 註解
-> - 搜尋清單數量問題
-> - orders中的travel要跟travels的同步
-> - 日期按下即時更新
-> - 主畫面frag功能調整
-> - 使用者fragGUI優化
-> - Auth 讀寫資料庫設定
-
-### alpha-1.7
-> 版本資訊：
-> -
-> 
-> **概述**
-> > 修改訂單實作
-> > 自定義Exception的處理
-> 
-> **類別更動**
-> - 完成修改訂單的功能
-> - 新增ReviseOrderCommand
-> - Order微調以方便Command編寫
-> - 補完小地區的選擇
-> - 重構 LookForCodesCommand
-> - CommandException的處理
->     - HW_NULL
->     - INPUT_INVALID
->     - NO_RESULT
->     
-> **GUI處理類別更動**
-> - (微調)**搜尋frag**:改排序到右上角
-> 
-> **GUI資料更動**
-> - 加入ReviseOrder

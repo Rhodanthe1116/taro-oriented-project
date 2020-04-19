@@ -60,6 +60,7 @@
         android:id="@+id/btn_sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:onClick="signUpAcc"
         android:text="@string/sign_up_title"
         app:layout_constraintBottom_toBottomOf="parent"

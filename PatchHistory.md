@@ -1,4 +1,4 @@
-﻿# 過時版本放置區
+# 過時版本放置區
 ###### tags: `程式專案`,`紫芋導向`,`start travel`
 ### alpha-1.1
 > 版本資訊：
@@ -197,3 +197,27 @@
 > **GUI資料更動**
 > - 加入彩蛋drawable
 > - 加入seekbar_thumb
+### alpha-1.7
+> 版本資訊：
+> -
+> 
+> **概述**
+> > 修改訂單實作
+> > 自定義Exception的處理
+> 
+> **類別更動**
+> - 完成修改訂單的功能
+> - 新增ReviseOrderCommand
+> - Order微調以方便Command編寫
+> - 補完小地區的選擇
+> - 重構 LookForCodesCommand
+> - CommandException的處理
+>     - HW_NULL
+>     - INPUT_INVALID
+>     - NO_RESULT
+>     
+> **GUI處理類別更動**
+> - (微調)**搜尋frag**:改排序到右上角
+> 
+> **GUI資料更動**
+> - 加入ReviseOrder

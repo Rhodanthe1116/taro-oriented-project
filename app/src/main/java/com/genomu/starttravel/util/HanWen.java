@@ -1,8 +1,10 @@
 package com.genomu.starttravel.util;
 
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.genomu.starttravel.LoadingDialog;
 import com.genomu.starttravel.Order;
@@ -104,6 +106,7 @@ public class HanWen {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void sproutOnUser(String key, List value, final LoadingDialog dialog) throws CommandException {
         if(value.size()>0&&dialog!=null&&key!=null) {
             userReference.update(key,value).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -119,6 +122,7 @@ public class HanWen {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     Task<DocumentSnapshot> seekFromUser() throws CommandException {
         if(userReference!=null){
             return userReference.get();

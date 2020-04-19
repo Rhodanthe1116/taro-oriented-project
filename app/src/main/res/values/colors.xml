@@ -8,4 +8,6 @@
     <color name="negative">#D0104C</color>
     <color name="theme_primary_text_inverted">#eee</color>
     <color name="theme_secondary_text_inverted">#888</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

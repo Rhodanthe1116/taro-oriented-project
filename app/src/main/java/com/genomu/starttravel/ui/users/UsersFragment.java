@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.genomu.starttravel.LoginActivity;
+import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.UserAuth;
 import com.genomu.starttravel.util.DBAspect;
@@ -27,6 +28,7 @@ import com.genomu.starttravel.util.NameDBObserver;
 import com.genomu.starttravel.util.OrdersDBObserver;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static com.genomu.starttravel.LoginActivity.FUNC_LIN;
 import static com.genomu.starttravel.util.DBAspect.*;
 
 public class UsersFragment extends Fragment{
@@ -107,14 +109,13 @@ public class UsersFragment extends Fragment{
         return view;
     }
 
-
     private void get(){
         Toast.makeText(getActivity(),auth.getUid(),Toast.LENGTH_LONG).show();
     }
 
     private void goLogin(){
         Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
+        getActivity().startActivityForResult(intent,FUNC_LIN);
     }
 
 

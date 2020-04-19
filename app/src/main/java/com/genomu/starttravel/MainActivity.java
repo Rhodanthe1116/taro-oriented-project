@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
 
+import static com.genomu.starttravel.LoginActivity.FUNC_LIN;
 import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
 import static com.genomu.starttravel.TravelDetailActivity.RESULT_VIRUS;
 import static com.genomu.starttravel.UserOrderActivity.FUNC_USO;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onResult: "+ requestCode+" , "+resultCode);
         if(requestCode == FUNC_TRA){
             if(resultCode == RESULT_OK){
                 tickedAnimation();
@@ -120,6 +122,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             }else if(resultCode==RESULT_REVISE){
                 tickedAnimation();
                 Toast.makeText(this,"訂單已修改",Toast.LENGTH_LONG).show();
+                navGto(R.id.navigation_users);
+            }
+        }else if(requestCode == FUNC_LIN){
+            if(resultCode==RESULT_OK){
+                UserAuth.getInstance().setLogged(true);
+                tickedAnimation();
+                Toast.makeText(this,"成功登入",Toast.LENGTH_LONG).show();
                 navGto(R.id.navigation_users);
             }
         }
@@ -312,19 +321,18 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         }else{
             setUpEndDate(calendar, date, btn);
         }
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setUpEndDate(Calendar calendar, String date, Button btn) {
         Button end_btn = findViewById(R.id.end_date_btn);
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        String start = btn.getText().toString();
         try {
-            if(btn.getText()==getResources().getString(R.string.start_date_btn)){
+            if(start.equals(getResources().getString(R.string.start_date_btn))){
                 end_btn.setText(date);
             }else {
-                if (calendar.getTime().after(format.parse(btn.getText().toString()))) {
+                if (calendar.getTime().after(format.parse(start))) {
                     end_btn.setText(date);
                 } else {
                     alertKabo();
@@ -339,11 +347,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private void setUpStartDate(Calendar calendar, String date, Button btn) {
         Button end_btn = findViewById(R.id.end_date_btn);
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+        String end = end_btn.getText().toString();
         try {
-            if(end_btn.getText()==getResources().getString(R.string.end_date_btn)){
+            if(end.equals(getResources().getString(R.string.end_date_btn))){
                 btn.setText(date);
             }else {
-                if (calendar.getTime().before(format.parse(end_btn.getText().toString()))) {
+                if (calendar.getTime().before(format.parse(end))) {
                     btn.setText(date);
                 } else {
                     alertKabo();
