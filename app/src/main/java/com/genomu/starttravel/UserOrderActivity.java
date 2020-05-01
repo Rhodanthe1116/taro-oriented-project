@@ -134,9 +134,12 @@ public class UserOrderActivity extends AppCompatActivity {
             }else {
                 revise.setText("無法修改");
                 revise.setClickable(false);
+                revise.setEnabled(false);
                 cancel.setText("無法取消");
                 cancel.setClickable(false);
+                cancel.setEnabled(false);
             }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

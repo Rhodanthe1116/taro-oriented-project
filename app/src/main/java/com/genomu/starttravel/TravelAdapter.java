@@ -14,26 +14,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.genomu.starttravel.travel_data.TravelCode;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.LookForCodesCommand;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.TravelStateOffice;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
@@ -63,20 +55,28 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         return new TravelViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull TravelViewHolder holder, int position) {
-        final TravelViewHolder vh = holder;
-        final String UID = UserAuth.getInstance().getUserUID();
         final Travel travel = travelList.get(position);
         try {
             TravelStateOffice office = new TravelStateOffice(travel);
-            if(office.getState()<TravelStateOffice.NOT_YET_START){
-                holder.title.setTextColor(Color.RED);
-            }
+
             if(office.getGrouping()==TravelStateOffice.ENSURE){
-                holder.lower.setTextColor(Color.GREEN);
+                holder.status.setText(activity.getString(R.string.row_travel_status02));
+                holder.status.setBackground(activity.getDrawable(R.drawable.status02));
             }else if(office.getGrouping()==TravelStateOffice.FULL){
-                holder.lower.setTextColor(Color.RED);
+                holder.status.setText(activity.getString(R.string.row_travel_status03));
+                holder.status.setBackground(activity.getDrawable(R.drawable.status03));
+            }else {
+                holder.status.setText(activity.getString(R.string.row_travel_status01));
+                holder.status.setBackground(activity.getDrawable(R.drawable.status01));
+            }
+
+            if(office.getState()<TravelStateOffice.NOT_YET_START || office.getGrouping()==TravelStateOffice.FULL){
+                holder.grey.setAlpha(0.5f);
+            }else{
+                holder.grey.setAlpha(0.0f);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -86,15 +86,14 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         holder.image.setImageResource(R.drawable.alert);
         parseCountryName(travel.getTravel_code(),activity,holder.image,seed);
         if(travel.getTitle().length()>20){
-            holder.title.setText(travel.getTitle().substring(0,20)+"...");
+            holder.title.setText(travel.getTitle().substring(0,15)+"...");
         }else {
             holder.title.setText(travel.getTitle());
         }
         holder.price.setText(travel.getPrice() + "元");
-        holder.lower.setText("最少" + travel.getLower_bound() + "人成行");
-        holder.box.setOnClickListener(new View.OnClickListener() {
+        holder.box.setOnClickListener(new OnOneOffClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 Intent intent = new Intent(activity,TravelDetailActivity.class);
                 intent.putExtra("travel",travel);
                 activity.startActivityForResult(intent,FUNC_TRA);
@@ -116,19 +115,21 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
     }
 
     public class TravelViewHolder extends RecyclerView.ViewHolder {
-        View box;
+        CardView box;
+        View grey;
         ImageView image;
         TextView title;
         TextView price;
-        TextView lower;
+        TextView status;
 
         public TravelViewHolder(@NonNull View itemView) {
             super(itemView);
+            grey = itemView.findViewById(R.id.grey);
+            status = itemView.findViewById(R.id.status_travel);
             image = itemView.findViewById(R.id.image_row_travel);
-            box = itemView.findViewById(R.id.box_row_travel);
+            box = itemView.findViewById(R.id.box_travel);
             title = itemView.findViewById(R.id.title_row_travel);
             price = itemView.findViewById(R.id.price_row_travel);
-            lower = itemView.findViewById(R.id.lower_row_travel);
         }
     }
 }

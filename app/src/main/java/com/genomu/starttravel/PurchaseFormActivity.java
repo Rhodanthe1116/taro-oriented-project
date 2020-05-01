@@ -26,6 +26,7 @@ import com.genomu.starttravel.util.AddOrderCommand;
 import com.genomu.starttravel.util.CommandException;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 
 public class PurchaseFormActivity extends AppCompatActivity {
 
@@ -100,26 +101,14 @@ public class PurchaseFormActivity extends AppCompatActivity {
         setUpSeekBar(atag,abar);
         setUpSeekBar(ktag,kbar);
         setUpSeekBar(btag,bbar);
-        confirm.setOnClickListener(new View.OnClickListener() {
+        confirm.setOnClickListener(new OnOneOffClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 String UID = UserAuth.getInstance().getUserUID();
                 try {
                     if (UID != "b07505019") {
-                        if(amount[0]>0){
-                            int pur_amount = amount[0]+amount[1];
-                            int avai_amount = travel.getUpper_bound()-travel.getPurchased();
-                            if(pur_amount <= avai_amount){
-                                sendPurchaseRequest(UID, travel);
-                            }else{
-                                throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
-                            }
-                        }else if(amount[1]!=0||amount[2]!=0){
-                            throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
-                        }else {
-                            throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
-                        }
+                        userIsLoggedPur(UID, travel);
                     }else{
                         throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
                     }
@@ -131,7 +120,30 @@ public class PurchaseFormActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void userIsLoggedPur(String UID, Travel travel) throws CommandException {
+        if(amount[0]>0){
+            adultAmountValidPur(UID, travel);
+        }else if(amount[1]!=0||amount[2]!=0){
+            throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
+        }else {
+            throw new CommandException(CommandException.reasons.INPUT_INVALID,PurchaseFormActivity.this);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void adultAmountValidPur(String UID, Travel travel) throws CommandException {
+        int pur_amount = amount[0]+amount[1];
+        int avai_amount = travel.getUpper_bound()-travel.getPurchased();
+        if(pur_amount <= avai_amount){
+            sendPurchaseRequest(UID, travel);
+        }else{
+            throw new CommandException(CommandException.reasons.INPUT_INVALID, PurchaseFormActivity.this);
+        }
+    }
+
     private void sendPurchaseRequest(String UID, Travel travel) {
+        travel.setPurchased(travel.getPurchased()+amount[0]+amount[1]);
         DatabaseInvoker invoker = new DatabaseInvoker();
         LoadingDialog dialog = new LoadingDialog(PurchaseFormActivity.this);
         invoker.addCommand(new AddOrderCommand(new HanWen(), UID, new Order(travel,amount[0] , amount[1], amount[2]),dialog));

@@ -151,13 +151,16 @@
                     <TextView
                         android:id="@+id/only_detail"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
+                        android:layout_marginBottom="3dp"
+                        android:gravity="bottom"
                         android:text="只要"
                         android:textColor="#000000"
                         app:layout_constraintBottom_toBottomOf="@+id/price_detail"
-                        app:layout_constraintEnd_toStartOf="@+id/price_detail" />
+                        app:layout_constraintEnd_toStartOf="@+id/price_detail"
+                        app:layout_constraintTop_toTopOf="@+id/price_detail" />
 
                     <TextView
                         android:id="@+id/price_detail"
@@ -166,6 +169,7 @@
                         android:layout_marginEnd="32dp"
                         android:layout_marginRight="32dp"
                         android:layout_marginBottom="8dp"
+                        android:gravity="bottom"
                         android:text="21450"
                         android:textColor="#000000"
                         android:textSize="22sp"
@@ -176,13 +180,16 @@
                     <TextView
                         android:id="@+id/dollar_detail"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginStart="4dp"
                         android:layout_marginLeft="4dp"
+                        android:layout_marginBottom="3dp"
+                        android:gravity="bottom"
                         android:text="元"
                         android:textColor="#000000"
                         app:layout_constraintBottom_toBottomOf="@+id/price_detail"
-                        app:layout_constraintStart_toEndOf="@+id/price_detail" />
+                        app:layout_constraintStart_toEndOf="@+id/price_detail"
+                        app:layout_constraintTop_toTopOf="@+id/price_detail" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

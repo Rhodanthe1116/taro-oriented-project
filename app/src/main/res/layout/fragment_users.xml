@@ -7,47 +7,31 @@
     tools:context=".ui.users.UsersFragment">
 
     <Button
-        android:id="@+id/test_btn"
+        android:id="@+id/signin_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Sign in"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/get_current_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="get"
-        app:layout_constraintStart_toStartOf="@+id/test_btn"
-        app:layout_constraintTop_toBottomOf="@+id/test_btn" />
-
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="logout"
-        app:layout_constraintStart_toStartOf="@+id/get_current_user"
-        app:layout_constraintTop_toBottomOf="@+id/get_current_user" />
+        app:layout_constraintTop_toBottomOf="@+id/name_user" />
 
     <ImageView
         android:id="@+id/image_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/default_user"
-        app:layout_constraintBottom_toTopOf="@+id/test_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/name_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User"
-        app:layout_constraintBottom_toTopOf="@+id/test_btn"
         app:layout_constraintEnd_toEndOf="@+id/image_user"
         app:layout_constraintStart_toStartOf="@+id/image_user"
         app:layout_constraintTop_toBottomOf="@+id/image_user" />

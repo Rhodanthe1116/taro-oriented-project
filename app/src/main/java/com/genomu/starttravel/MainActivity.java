@@ -32,7 +32,6 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -47,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public final static int FUNC_MAIN = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static String search_content = "";
-    private static boolean searched = false;
     private static NavController navController;
     public static boolean isStartBtn = true;
     private ImageView virus;
@@ -56,6 +53,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private ImageView tick;
     private AnimatedVectorDrawableCompat avdc;
     private AnimatedVectorDrawable avd;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
     @Override
     protected void onStart() {
@@ -288,24 +291,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public static void navGto(int res_id){
         navController.navigate(res_id);
     }
-
-    public static String getSearch_content() {
-        return search_content;
-    }
-
-    public static void setSearch_content(String search_content) {
-        MainActivity.search_content = search_content;
-        MainActivity.searched = true;
-    }
-
-    public static void setSearched(Boolean searched){
-        MainActivity.searched = searched;
-    }
-
-    public static boolean getSearched(){
-        return MainActivity.searched;
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

@@ -1,8 +1,10 @@
 package com.genomu.starttravel.util;
 
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.genomu.starttravel.LoadingDialog;
 import com.genomu.starttravel.Order;
@@ -15,6 +17,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.genomu.starttravel.util.ReviseOrderCommand.updateOrderPool;
 
 public class ExtirpateOrderCommand extends DBCommand{
 
@@ -29,11 +33,13 @@ public class ExtirpateOrderCommand extends DBCommand{
         this.targetOrder = targetOrder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     void work() {
         hanWen.secureUser(UserAuth.getInstance().getUserUID());
         try {
             hanWen.seekFromUser().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                       if(task.isSuccessful()){
@@ -72,7 +78,10 @@ public class ExtirpateOrderCommand extends DBCommand{
                           int purchased = snapshot.get("purchased",Integer.class);
                           Log.d(TAG, "onComplete: "+purchased);
                           DocumentReference reference = snapshot.getReference();
-                          reference.update("purchased",purchased-(order.getAdult()+order.getKid()));
+                          int updatePur = purchased-(order.getAdult()+order.getKid());
+                          hanWen.rawSeek("orders",order.getOrderUID()).delete();
+                          reference.update("purchased",updatePur);
+                          updateOrderPool(updatePur, reference);
                       }
                   }
             }

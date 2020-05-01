@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.genomu.starttravel.travel_data.Travel;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.TravelStateOffice;
 
 import java.text.ParseException;
@@ -60,6 +62,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         }else {
             holder.title.setText(travel.getTitle());
         }
+        Log.d(TAG, "onBindViewHolder: "+travel.getTitle()+" : "+travel.getPurchased());
         try {
             TravelStateOffice office = new TravelStateOffice(travel);
             if(office.getState()==TravelStateOffice.CAN_BE_MODIFIED){
@@ -73,14 +76,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             e.printStackTrace();
         }
         holder.price.setText(travel.getPrice() + "元");
-        holder.lower.setText("最少" + travel.getLower_bound() + "人成行");
-        holder.box.setOnClickListener(new View.OnClickListener() {
+        holder.box.setOnClickListener(new OnOneOffClickListener() {
             @Override
-            public void onClick(View v) {
-                    Intent intent = new Intent(activity,UserOrderActivity.class);
-                    intent.putExtra("order",order);
-                    activity.startActivityForResult(intent,UserOrderActivity.FUNC_USO);
-                }
+            public void onSingleClick(View v) {
+                Intent intent = new Intent(activity,UserOrderActivity.class);
+                intent.putExtra("order",order);
+                activity.startActivityForResult(intent,UserOrderActivity.FUNC_USO);
+            }
         });
 
     }
@@ -92,19 +94,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
-        View box;
+        CardView box;
         ImageView image;
         TextView title;
         TextView price;
-        TextView lower;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image_row_travel);
-            box = itemView.findViewById(R.id.box_row_travel);
+            box = itemView.findViewById(R.id.box_travel);
             title = itemView.findViewById(R.id.title_row_travel);
             price = itemView.findViewById(R.id.price_row_travel);
-            lower = itemView.findViewById(R.id.lower_row_travel);
+//            lower = itemView.findViewById(R.id.lower_row_travel);
         }
     }
 }

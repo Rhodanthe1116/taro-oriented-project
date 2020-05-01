@@ -80,14 +80,7 @@ public class SearchFragment extends Fragment {
         setUpSearchView();
         setUpMenuSorting();
         setBtn();
-        if(MainActivity.getSearch_content()!="" && MainActivity.getSearched()){
-            MainActivity.setSearched(false);
-            lastQuery = MainActivity.getSearch_content();
-            searchView.showProgress();
-            searchView.setSearchText(MainActivity.getSearch_content());
-            findPlaceSuggestion(lastQuery,50);
-            searchView.setSearchFocused(true);
-        }
+
         return view;
     }
 
@@ -101,7 +94,7 @@ public class SearchFragment extends Fragment {
                     sorting = getString(R.string.price_d);
                     searchPlace(lastQuery);
                 }else if(item.getTitle().equals(getString(R.string.price_a))){
-                    sorting = getString(R.string.price_d);
+                    sorting = getString(R.string.price_a);
                     searchPlace(lastQuery);
                 }
             }
@@ -224,7 +217,7 @@ public class SearchFragment extends Fragment {
         Log.d(TAG, "search range: "+start+","+end);
         RecyclerView recyclerView = view.findViewById(R.id.result_search);
         DatabaseInvoker invoker = new DatabaseInvoker();
-        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),100,start,end,place);
+        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end,place);
         TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity(),bar);
         DBAspect aspect = DBAspect.TRAVELS;
         aspect = getDbAspect(sorting, aspect);

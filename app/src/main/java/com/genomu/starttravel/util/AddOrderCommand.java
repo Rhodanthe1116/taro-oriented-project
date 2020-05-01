@@ -1,8 +1,9 @@
 package com.genomu.starttravel.util;
 
-import android.util.Log;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.genomu.starttravel.LoadingDialog;
 import com.genomu.starttravel.Order;
@@ -12,7 +13,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.genomu.starttravel.util.ReviseOrderCommand.updateOrderPool;
 
 public class AddOrderCommand extends DBCommand {
     private static final String TAG = AddOrderCommand.class.getSimpleName();
@@ -26,6 +31,7 @@ public class AddOrderCommand extends DBCommand {
         this.dialog = dialog;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     void work() {
         hanWen.secureUser(UID);
@@ -35,8 +41,9 @@ public class AddOrderCommand extends DBCommand {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     User user = task.getResult().toObject(User.class);
                     final List orders = user.getOrders();
-                    orders.add(order);
                     updateTravels();
+                    orders.add(order);
+
                     try {
                         hanWen.sproutOnUser("orders",orders,dialog);
                     } catch (CommandException e) {
@@ -62,11 +69,23 @@ public class AddOrderCommand extends DBCommand {
                 if(task.isSuccessful()){
                     for(DocumentSnapshot snapshot : task.getResult().getDocuments()){
                         int purchased = snapshot.get("purchased",Integer.class);
+                        int updatePur = purchased+order.getAdult()+order.getKid();
                         DocumentReference reference = snapshot.getReference();
-                        reference.update("purchased",purchased+order.getAdult()+order.getKid());
+                        goOrderPool(updatePur, reference);
+                        reference.update("purchased",updatePur);
                     }
                 }
             }
         });
     }
+
+    private void goOrderPool(final int updatePur, DocumentReference reference) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("purchased",updatePur);
+        map.put("travel_id",reference.getId());
+        map.put("user_id",UID);
+        hanWen.rawSeek("orders",order.getOrderUID()).set(map);
+        updateOrderPool(updatePur, reference);
+    }
+
 }

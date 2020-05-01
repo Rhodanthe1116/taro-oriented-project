@@ -20,11 +20,11 @@ import com.genomu.starttravel.LoginActivity;
 import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.UserAuth;
-import com.genomu.starttravel.util.DBAspect;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.GetUserCommand;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.NameDBObserver;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.OrdersDBObserver;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -59,7 +59,15 @@ public class UsersFragment extends Fragment{
 
         if(userAuth.isLogged()){
             view = inflater.inflate(R.layout.fragment_users_logged,container,false);
-
+            Button log_out = view.findViewById(R.id.log_out_btn);
+            log_out.setOnClickListener(new OnOneOffClickListener() {
+                @Override
+                public void onSingleClick(View v) {
+                    MainActivity.navGto(R.id.navigation_users);
+                    auth.signOut();
+                    userAuth.goDefault();
+                }
+            });
             ProgressBar bar = view.findViewById(R.id.progress_user);
             userName = view.findViewById(R.id.name_users_logged);
             userImage = view.findViewById(R.id.image_users_logged);
@@ -73,9 +81,7 @@ public class UsersFragment extends Fragment{
             invoker.assignCommand();
 
         }else {
-            Button btn = view.findViewById(R.id.test_btn);
-            Button btn_get = view.findViewById(R.id.get_current_user);
-            Button btn_out = view.findViewById(R.id.logout);
+            Button btn = view.findViewById(R.id.signin_btn);
             userImage = view.findViewById(R.id.image_user);
             userName = view.findViewById(R.id.name_user);
 
@@ -85,22 +91,6 @@ public class UsersFragment extends Fragment{
                     if(!userAuth.isLogged()){
                         goLogin();
                     }
-                }
-            });
-
-            btn_get.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    get();
-                }
-            });
-            btn_out.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    auth.signOut();
-                    userAuth.goDefault();
-                    userImage.setImageResource(R.drawable.default_user);
-                    userName.setText("User");
                 }
             });
         }

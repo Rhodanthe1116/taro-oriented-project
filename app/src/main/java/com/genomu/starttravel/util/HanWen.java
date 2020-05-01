@@ -36,6 +36,9 @@ public class HanWen {
     private DocumentReference userReference;
     private CollectionReference travelsReference = database.collection("travels");
 
+    DocumentReference rawSeek(String key, String docId){
+        return database.collection(key).document(docId);
+    }
 
     void rawSet(final String key, List rawList){
         for(int i = 0;i<rawList.size();i++){

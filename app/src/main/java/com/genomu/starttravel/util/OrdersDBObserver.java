@@ -24,9 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.genomu.starttravel.util.TravelStateOffice.ALREADY_END;
+import static com.genomu.starttravel.util.TravelStateOffice.LACK;
+import static com.genomu.starttravel.util.TravelStateOffice.NOT_YET_START;
 
 public class OrdersDBObserver implements DBDataObserver {
 
@@ -62,26 +67,38 @@ public class OrdersDBObserver implements DBDataObserver {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     User user = task.getResult().toObject(User.class);
-                    List<Order> orders = user.getOrders();
+                    final List<Order> orders = user.getOrders();
+                    culling(orders);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                    OrderAdapter adapter = new OrderAdapter(activity, getResolvedList(orders));
+                    OrderAdapter adapter = new OrderAdapter(activity, orders);
                     recyclerView.setAdapter(adapter);
                     bar.setVisibility(View.GONE);
                 }else{
                     Log.w(TAG, "onComplete: ", task.getException());
                 }
             }
-            private List<Order> getResolvedList(List<Order> orderList){
-                List<Order> orders = new ArrayList<>();
-                for(Order order:orderList) {
-                    if (!order.getTravel().getTitle().equals("dummy")) {
-                        orders.add(order);
-                    }
-                }
-                return orders;
-            }
+
         });
+    }
+    private void culling(List<Order> orders) {
+        for (int i = orders.size()-1;i>=0;i--){
+            Order order = orders.get(i);
+            Travel travel = order.getTravel();
+            try {
+                TravelStateOffice office = new TravelStateOffice(travel);
+                if (office.getState()<NOT_YET_START&&office.getGrouping()==LACK){
+                    orders.remove(i);
+                    Log.d(TAG, "culling: "+travel.getTitle());
+                }else if(office.getState()==ALREADY_END){
+                    orders.remove(i);
+                    Log.d(TAG, "culling: "+travel.getTitle());
+                }
+            } catch (ParseException e) {
+                Log.w(TAG, "culling: ", e);
+            }
+        }
+
     }
 
     @Override

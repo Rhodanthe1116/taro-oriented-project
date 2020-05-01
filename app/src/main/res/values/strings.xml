@@ -99,4 +99,8 @@
     <string name="title_activity_scenic_spot">ScenicSpotActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="row_travel_status01">即將成團</string>
+    <string name="row_travel_status02">已成團</string>
+    <string name="row_travel_status03">已滿團</string>
 </resources>

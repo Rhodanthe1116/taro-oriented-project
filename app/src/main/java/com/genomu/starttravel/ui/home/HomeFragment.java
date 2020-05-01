@@ -31,9 +31,6 @@ import static com.genomu.starttravel.ScenicSpotActivity.FUNC_SCS;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
-
-    private EditText ed_tx;
-    private ImageButton btn;
     private List<GalleryPhoto> photos;
     private View view;
     private ImageView cover;
@@ -42,24 +39,6 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home,container,false);
         findViews();
-        ed_tx.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN){
-                    goSearch();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        btn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                goSearch();
-            }
-        });
-
         setupPhotos();
         setRecycler();
         return view;
@@ -67,8 +46,6 @@ public class HomeFragment extends Fragment {
 
 
     private void findViews() {
-        ed_tx = view.findViewById(R.id.search_bar_home);
-        btn = view.findViewById(R.id.search_bar_btn_home);
         cover = view.findViewById(R.id.cover_home);
     }
 
@@ -101,7 +78,6 @@ public class HomeFragment extends Fragment {
                 if(dy>10){
                     scrollAnimation(480,500);
                 }
-//                Log.d(TAG, "onScrolled: "+dy);
             }
         });
     }
@@ -121,18 +97,6 @@ public class HomeFragment extends Fragment {
         anim.start();
     }
 
-    /*private void closeKeyboard(View currentFocusView){
-            if(currentFocusView != null){
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(currentFocusView.getWindowToken(),0);
-            }
-    }*/
-
-    private void goSearch(){
-        EditText edx = getEd_tx();
-        MainActivity.setSearch_content(edx.getText().toString());
-        MainActivity.navGto(R.id.navigation_search);
-    }
 
     private void setupPhotos() {
         photos = new ArrayList<>();
@@ -182,10 +146,6 @@ public class HomeFragment extends Fragment {
 
             }
         }
-    }
-
-    public EditText getEd_tx() {
-        return ed_tx;
     }
 
 }

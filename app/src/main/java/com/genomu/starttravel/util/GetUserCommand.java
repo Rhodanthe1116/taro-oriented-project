@@ -1,5 +1,9 @@
 package com.genomu.starttravel.util;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,7 @@ public class GetUserCommand extends DBCommand implements DBDataSubject {
         aspects = new ArrayList<>();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     void work() {
         hanWen.secureUser(UID);

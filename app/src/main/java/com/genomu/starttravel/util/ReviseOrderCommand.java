@@ -1,19 +1,23 @@
 package com.genomu.starttravel.util;
 
 import android.app.Activity;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.genomu.starttravel.LoadingDialog;
 import com.genomu.starttravel.Order;
 import com.genomu.starttravel.UserAuth;
+import com.genomu.starttravel.travel_data.Travel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReviseOrderCommand extends DBCommand {
@@ -31,11 +35,13 @@ public class ReviseOrderCommand extends DBCommand {
         this.amount = amount;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     void work() {
         hanWen.secureUser(UserAuth.getInstance().getUserUID());
         try {
             hanWen.seekFromUser().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
@@ -68,6 +74,7 @@ public class ReviseOrderCommand extends DBCommand {
                 .whereEqualTo("start_date",order.getTravel().getStart_date())
                 .whereEqualTo("upper_bound",order.getTravel().getUpper_bound())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -77,6 +84,7 @@ public class ReviseOrderCommand extends DBCommand {
                         int change = amount[0]+amount[1]-(order.getAdult()+order.getKid());
                         if(change+purchased<=order.getTravel().getUpper_bound()){
                             reference.update("purchased",purchased+change);
+                            updateOrderPool(purchased+change, reference);
                         }else {
                             try {
                                 throw new CommandException(CommandException.reasons.INPUT_INVALID,activity);
@@ -88,5 +96,43 @@ public class ReviseOrderCommand extends DBCommand {
                 }
             }
         });
+    }
+
+    static void updateOrderPool(final int updatePur, DocumentReference reference) {
+        new HanWen().seekFromRaw("orders")
+                .whereEqualTo("travel_id",reference.getId()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(DocumentSnapshot snapshot : task.getResult().getDocuments()){
+                                DocumentReference orderRef = snapshot.getReference();
+                                orderRef.update("purchased",updatePur);
+                                updateOrders(snapshot.get("user_id",String.class),orderRef.getId(),updatePur);
+                            }
+
+                        }
+                    }
+                });
+    }
+
+    static void updateOrders(final String userID, final String orderID, final int purchased){
+        new HanWen().rawSeek("users",userID)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                User user = task.getResult().toObject(User.class);
+                List<Order> orders = user.getOrders();
+                for(Order order:orders){
+                    if(order.getOrderUID()!=null&&order.getOrderUID().equals(orderID)){
+                        Travel travel = order.getTravel();
+                        travel.setPurchased(purchased);
+                        order.setTravel(travel);
+                    }
+                }
+                new HanWen().rawSeek("users",userID).update("orders",orders);
+            }
+        });
+
     }
 }
