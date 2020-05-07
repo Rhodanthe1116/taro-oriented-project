@@ -5,13 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/bg_user"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/theme_sub"
+        app:layout_constraintBottom_toTopOf="@+id/list_title_user_logged"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/image_users_logged"
-        android:layout_width="103dp"
-        android:layout_height="103dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/bg_user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logged_user" />
@@ -22,21 +37,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/image_users_logged"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/image_users_logged"
         app:layout_constraintTop_toTopOf="@+id/image_users_logged" />
+
+    <TextView
+        android:id="@+id/membership"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="尊榮會員"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="@+id/name_users_logged"
+        app:layout_constraintStart_toStartOf="@+id/name_users_logged"
+        app:layout_constraintTop_toBottomOf="@+id/name_users_logged" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/order_list_users_logged"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_users_logged"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/list_title_user_logged" />
 
     <ProgressBar
         android:id="@+id/progress_user"
@@ -51,12 +78,37 @@
 
     <Button
         android:id="@+id/log_out_btn"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/logout_btn"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:text="登出"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/bg_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/name_users_logged"
+        app:layout_constraintVertical_bias="0.19999999" />
+
+    <TextView
+        android:id="@+id/list_title_user_logged"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:text="登出"
-        app:layout_constraintBottom_toTopOf="@+id/order_list_users_logged"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="16dp"
+        android:text="訂單列表"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/image_users_logged"
+        app:layout_constraintTop_toBottomOf="@+id/image_users_logged" />
+
+    <ImageView
+        android:id="@+id/frame_round_user"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="@+id/image_users_logged"
+        app:layout_constraintTop_toTopOf="@+id/image_users_logged"
+        app:srcCompat="@drawable/frame_round" />
 </androidx.constraintlayout.widget.ConstraintLayout>

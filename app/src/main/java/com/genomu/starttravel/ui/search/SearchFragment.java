@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -33,6 +34,7 @@ import com.genomu.starttravel.util.DBAspect;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.GetTravelsResultCommand;
 import com.genomu.starttravel.util.HanWen;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.TravelsDBObserver;
 
 import java.util.List;
@@ -87,16 +89,27 @@ public class SearchFragment extends Fragment {
     private void setUpMenuSorting() {
         sorting = getString(R.string.price_d);
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+            private boolean isDescending = true;
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
-                Log.d(TAG, "onActionMenuItemSelected: "+item.getTitle());
-                if(item.getTitle().equals(getString(R.string.price_d))){
-                    sorting = getString(R.string.price_d);
-                    searchPlace(lastQuery);
-                }else if(item.getTitle().equals(getString(R.string.price_a))){
-                    sorting = getString(R.string.price_a);
-                    searchPlace(lastQuery);
+                if(isDescending){
+                    goDescending();
+                    isDescending = false;
+                }else {
+                    goAscending(R.string.price_a);
+                    isDescending = true;
                 }
+
+            }
+
+            private void goAscending(int p) {
+                sorting = getString(p);
+                Toast.makeText(getActivity(),sorting,Toast.LENGTH_LONG).show();
+                searchPlace(lastQuery);
+            }
+
+            private void goDescending() {
+                goAscending(R.string.price_d);
             }
         });
     }
@@ -145,9 +158,9 @@ public class SearchFragment extends Fragment {
     }
 
     private void setBtn() {
-        start_btn.setOnClickListener(new View.OnClickListener() {
+        start_btn.setOnClickListener(new OnOneOffClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 MainActivity.isStartBtn = true;
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getParentFragmentManager(),"start picker");
@@ -161,9 +174,9 @@ public class SearchFragment extends Fragment {
                 return true;
             }
         });
-        end_btn.setOnClickListener(new View.OnClickListener() {
+        end_btn.setOnClickListener(new OnOneOffClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 MainActivity.isStartBtn = false;
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getParentFragmentManager(),"end picker");

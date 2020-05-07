@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -18,12 +19,14 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import genomu.fire_image_helper.ImagePermissionHelper;
+import genomu.fire_image_helper.ImagePickingToken;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -42,7 +45,7 @@ import static com.genomu.starttravel.UserOrderActivity.FUNC_USO;
 import static com.genomu.starttravel.UserOrderActivity.RESULT_REVISE;
 
 
-public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class MainActivity extends ImagePickingToken implements DatePickerDialog.OnDateSetListener {
 
     public final static int FUNC_MAIN = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -63,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     protected void onStart() {
         super.onStart();
+        setHelper();
     }
+    private ImageView testImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         setContentView(R.layout.activity_main);
         Log.d(TAG, "userInn status:"+ UserAuth.getInstance().getStatus());
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_search, R.id.navigation_users)
                 .build();
@@ -87,11 +91,24 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     }
 
+    @Override
+    public void onResolveImage(Bitmap image) {
+        super.onResolveImage(image);
+        ImageView imageView  = findViewById(R.id.image_users_logged);
+        imageView.setImageBitmap(image);
+    }
+
+    @Override
+    protected void setHelper() {
+        helper = new ImagePermissionHelper(this);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onResult: "+ requestCode+" , "+resultCode);
+//        Log.d(TAG, "onResult: "+ requestCode+" , "+resultCode);
+
         if(requestCode == FUNC_TRA){
             if(resultCode == RESULT_OK){
                 tickedAnimation();

@@ -86,4 +86,8 @@ public class Order implements Serializable {
     public void setTravel(Travel travel) {
         this.travel = travel;
     }
+    public int getTotal(){
+        int price = travel.getPrice();
+        return adult*price+kid*price*7/10+baby*price/10;
+    }
 }

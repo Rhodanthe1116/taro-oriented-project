@@ -1,12 +1,15 @@
 package com.genomu.starttravel;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,11 +35,14 @@ public class TravelDetailActivity extends AppCompatActivity {
     private TextView start_date;
     private TextView end_date;
     private TextView product_key;
+    private TextView status;
     private TextView lower;
     private TextView upper;
     private Button go_btn;
     private ImageView imageView;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +65,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setUpView(){
         title = findViewById(R.id.title_detail);
         price = findViewById(R.id.price_detail);
@@ -68,6 +75,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         product_key =findViewById(R.id.product_key_detail);
         lower = findViewById(R.id.lower_detail);
         upper = findViewById(R.id.upper_detail);
+        status = findViewById(R.id.status_detail);
         go_btn = findViewById(R.id.go_btn_detail);
         imageView = findViewById(R.id.image_detail);
         final Travel travel = (Travel) getIntent().getSerializableExtra("travel");
@@ -79,6 +87,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         product_key.setText("產品代碼"+travel.getProduct_key());
         lower.setText(travel.getLower_bound()+"人成團");
         upper.setText(travel.getUpper_bound()+"人滿團");
+        setStatusUI(travel);
         //waiting UI here
         imageView.setImageResource(R.drawable.alert);
 
@@ -119,6 +128,25 @@ public class TravelDetailActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusUI(Travel travel) {
+        try {
+            TravelStateOffice office = new TravelStateOffice(travel);
+
+            if(office.getGrouping()==TravelStateOffice.ENSURE){
+                status.setText(getString(R.string.row_travel_status02));
+                status.setBackground(getDrawable(R.drawable.status02));
+            }else if(office.getGrouping()==TravelStateOffice.FULL){
+                status.setText(getString(R.string.row_travel_status03));
+                status.setBackground(getDrawable(R.drawable.status03));
+            }else {
+                status.setText(getString(R.string.row_travel_status01));
+                status.setBackground(getDrawable(R.drawable.status01));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
     private void dontGoToWuHan() {
         new AlertDialog.Builder(TravelDetailActivity.this).setTitle("訂購錯誤").setMessage("目前無法前往武漢地區")
                 .setCancelable(false)

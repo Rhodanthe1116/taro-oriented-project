@@ -246,3 +246,26 @@
 > - 微調旅遊資訊acti
 > - 微調訂單資訊acti
 > - 新增dialog_remind
+> 
+### alpha-1.9
+> 版本資訊：
+> -
+> 
+> **概述**
+> > 首頁功能調整
+> > 搜尋frag日期按鈕即時更新
+> > 登入註冊流程控制
+> 
+> **類別更動**
+> - 完成登入註冊功能的acti生命週期控制
+> 
+> **GUI處理類別更動**
+> - (微調)**首頁frag**:連結搜尋frag跟熱門旅程acti
+> - (新增)**首選行程acti**:簡單地用了個全螢幕畫面
+> - (新增)**搜尋frag**:日期btn的addTextChangedListener移除im_btn
+> - 搜尋frag新增搜尋提醒dialog
+> - 新增登入註冊TextWatcher來管控btn
+> 
+> **GUI資料更動**
+> - 更新主畫面資料
+> - 首選行程layout

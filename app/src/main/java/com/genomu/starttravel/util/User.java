@@ -2,10 +2,11 @@ package com.genomu.starttravel.util;
 
 import com.genomu.starttravel.Order;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
     private String UID;
     private String name;
     private List<Order> orders;

@@ -204,7 +204,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginRight="12dp"
-                app:cardBackgroundColor="#A98CAB"
+                app:cardBackgroundColor="@color/theme_sub"
                 app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -312,14 +312,14 @@
             android:textSize="20sp" />
 
         <Button
-            android:foreground="?android:attr/selectableItemBackground"
             android:id="@+id/go_btn_detail"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
-            android:background="#A98CAB"
+            android:background="@color/theme_sub"
+            android:foreground="?android:attr/selectableItemBackground"
             android:text="go"
             android:textColor="#FFFFFF" />
     </LinearLayout>

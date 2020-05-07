@@ -82,6 +82,8 @@
                     android:layout_height="match_parent">
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_tx1"
                         android:layout_width="150dp"
@@ -97,6 +99,8 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_tx2"
                         android:layout_width="150dp"
@@ -112,6 +116,8 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_tx3"
                         android:layout_width="150dp"
@@ -127,6 +133,8 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_tx4"
                         android:layout_width="150dp"
@@ -156,6 +164,8 @@
                     android:layout_height="match_parent">
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_hot1"
                         android:layout_width="150dp"
@@ -171,6 +181,8 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_hot2"
                         android:layout_width="150dp"
@@ -187,6 +199,8 @@
 
                     <ImageView
                         android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:id="@+id/ph_hot3"
                         android:layout_width="150dp"
                         android:layout_height="0dp"
@@ -198,9 +212,12 @@
                         android:src="@drawable/gallery_ph03"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ph_hot2"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                         />
 
                     <ImageView
+                        android:clickable="true"
+                        android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/ph_hot4"
                         android:layout_width="150dp"
@@ -232,6 +249,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageSlider" />
+
+            <View
+                android:id="@+id/blank_box_home"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scroller_tx" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

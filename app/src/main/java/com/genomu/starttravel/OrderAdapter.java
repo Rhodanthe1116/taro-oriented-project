@@ -75,7 +75,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         }catch(ParseException e){
             e.printStackTrace();
         }
-        holder.price.setText(travel.getPrice() + "元");
+        holder.price.setText(order.getTotal()+ "元");
         holder.box.setOnClickListener(new OnOneOffClickListener() {
             @Override
             public void onSingleClick(View v) {

@@ -1,102 +1,89 @@
 package com.genomu.starttravel.ui.home;
 
-import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.DragEvent;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
-import com.genomu.starttravel.ScenicSpotActivity;
+import com.genomu.starttravel.util.OnOneOffClickListener;
+import com.smarteist.autoimageslider.IndicatorAnimations;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
+import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.genomu.starttravel.ScenicSpotActivity.FUNC_SCS;
-
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private List<GalleryPhoto> photos;
+    private List<ImageView> hots;
+    private List<ImageView> txs;
     private View view;
-    private ImageView cover;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home,container,false);
         findViews();
         setupPhotos();
-        setRecycler();
+        SliderView sliderView = view.findViewById(R.id.imageSlider);
+        sliderView.setSliderAdapter(new HomeSliderAdapter());
+        sliderView.setIndicatorAnimation(IndicatorAnimations.SLIDE);
+        sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
+        sliderView.setScrollTimeInSec(4);
+        sliderView.startAutoCycle();
         return view;
     }
 
 
     private void findViews() {
-        cover = view.findViewById(R.id.cover_home);
-    }
-
-    private void setRecycler(){
-        RecyclerView recyclerView = view.findViewById(R.id.travellist_home);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        PhotoAdapter p_ad = new PhotoAdapter();
-        recyclerView.setAdapter(p_ad);
-        recyclerAnimation(recyclerView);
-    }
-
-    private void recyclerAnimation(RecyclerView recyclerView) {
-        cover.setClickable(true);
-        cover.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrollAnimation(720,500);
-            }
-        });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if(dy>10){
-                    scrollAnimation(480,500);
+        setUpHots();
+        setUpTxs();
+        for(int i = 0;i<4;i++){
+            final int finalI = i;
+            hots.get(i).setOnClickListener(new OnOneOffClickListener() {
+                @Override
+                public void onSingleClick(View v) {
+                    clickingHot(finalI);
                 }
-            }
-        });
+            });
+        }
     }
 
-    private void scrollAnimation(int height,int duration) {
-        ValueAnimator anim = ValueAnimator.ofInt(cover.getMeasuredHeight(), height);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int val = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams layoutParams = cover.getLayoutParams();
-                layoutParams.height = val;
-                cover.setLayoutParams(layoutParams);
-            }
-        });
-        anim.setDuration(duration);
-        anim.start();
+    private void clickingHot(int i){
+        switch (i){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
     }
 
+    private void setUpTxs() {
+        txs = new ArrayList<>();
+        txs.add((ImageView) view.findViewById(R.id.ph_tx1));
+        txs.add((ImageView) view.findViewById(R.id.ph_tx2));
+        txs.add((ImageView) view.findViewById(R.id.ph_tx3));
+        txs.add((ImageView) view.findViewById(R.id.ph_tx4));
+    }
+
+    private void setUpHots() {
+        hots = new ArrayList<>();
+        hots.add((ImageView) view.findViewById(R.id.ph_hot1));
+        hots.add((ImageView) view.findViewById(R.id.ph_hot2));
+        hots.add((ImageView) view.findViewById(R.id.ph_hot3));
+        hots.add((ImageView) view.findViewById(R.id.ph_hot4));
+    }
 
     private void setupPhotos() {
         photos = new ArrayList<>();
@@ -107,43 +94,30 @@ public class HomeFragment extends Fragment {
         photos.add(new GalleryPhoto(photo_titles[3],R.drawable.gallery_ph04));
     }
 
-    public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>{
-        @NonNull
+    public class HomeSliderAdapter extends SliderViewAdapter<HomeSliderAdapter.HomeViewHolder> {
+
         @Override
-        public PhotoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.gallery_photo,parent,false);
-            return new PhotoViewHolder(view);
+        public HomeViewHolder onCreateViewHolder(ViewGroup parent) {
+            View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.slide_item,null);
+            return new HomeViewHolder(inflate);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-            final GalleryPhoto photo = photos.get(position);
-            holder.title_text.setText(photo.getTitle());
-            holder.photo_image.setImageResource(photo.getImage());
-            holder.photo_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ScenicSpotActivity.class);
-                    intent.putExtra("spots",photo.getTitle());
-                    startActivityForResult(intent,FUNC_SCS);
-                }
-            });
+        public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
+            GalleryPhoto photo = photos.get(position);
+            viewHolder.image.setImageResource(photo.getImage());
         }
 
         @Override
-        public int getItemCount() {
+        public int getCount() {
             return photos.size();
         }
 
-        public class PhotoViewHolder extends RecyclerView.ViewHolder {
-            ImageView photo_image;
-            TextView title_text;
-            public PhotoViewHolder(@NonNull View itemView) {
+        class HomeViewHolder extends SliderViewAdapter.ViewHolder{
+            ImageView image;
+            public HomeViewHolder(View itemView) {
                 super(itemView);
-                photo_image = itemView.findViewById(R.id.gallery_photo);
-                title_text = itemView.findViewById(R.id.gallery_name);
-                photo_image.setClickable(true);
-
+                image = itemView.findViewById(R.id.image_slide_item);
             }
         }
     }

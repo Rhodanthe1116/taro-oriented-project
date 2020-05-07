@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import genomu.fire_image_helper.ImagePickingToken;
+import genomu.fire_image_helper.LoadMan;
 import com.genomu.starttravel.LoginActivity;
 import com.genomu.starttravel.MainActivity;
 import com.genomu.starttravel.R;
@@ -71,9 +73,20 @@ public class UsersFragment extends Fragment{
             ProgressBar bar = view.findViewById(R.id.progress_user);
             userName = view.findViewById(R.id.name_users_logged);
             userImage = view.findViewById(R.id.image_users_logged);
+            final String storeKey = "profile/"+userAuth.getUserUID();
+            LoadMan loadMan = new LoadMan(storeKey,getActivity());
+            loadMan.loadImage(userImage);
+            userImage.setOnClickListener(new OnOneOffClickListener() {
+                @Override
+                public void onSingleClick(View v) {
+                    ImagePickingToken token = (ImagePickingToken) getActivity();
+                    token.setStoreKey(storeKey);
+                }
+            });
+            TextView membership = view.findViewById(R.id.membership);
             RecyclerView recyclerView = view.findViewById(R.id.order_list_users_logged);
             DatabaseInvoker invoker = new DatabaseInvoker();
-            NameDBObserver dbObserver = new NameDBObserver(userName);
+            NameDBObserver dbObserver = new NameDBObserver(userName,membership);
             GetUserCommand command = new GetUserCommand(new HanWen(),userAuth.getUserUID());
             command.attach(dbObserver,NAME);
             command.attach(new OrdersDBObserver(recyclerView,getActivity(),bar), ORDERS);

@@ -59,6 +59,30 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
     @Override
     public void onBindViewHolder(@NonNull TravelViewHolder holder, int position) {
         final Travel travel = travelList.get(position);
+        setStatusUI(holder, travel);
+        long seed = getSeed(travel);
+        // waiting GUI here
+        holder.image.setImageResource(R.drawable.alert);
+        parseCountryName(travel.getTravel_code(),activity,holder.image,seed);
+        if(travel.getTitle().length()>20){
+            holder.title.setText(travel.getTitle().substring(0,15)+"...");
+        }else {
+            holder.title.setText(travel.getTitle());
+        }
+        holder.price.setText(travel.getPrice() + "元");
+        holder.box.setOnClickListener(new OnOneOffClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                Intent intent = new Intent(activity,TravelDetailActivity.class);
+                intent.putExtra("travel",travel);
+                activity.startActivityForResult(intent,FUNC_TRA);
+            }
+        });
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusUI(@NonNull TravelViewHolder holder, Travel travel) {
         try {
             TravelStateOffice office = new TravelStateOffice(travel);
 
@@ -81,25 +105,6 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        long seed = getSeed(travel);
-        // waiting GUI here
-        holder.image.setImageResource(R.drawable.alert);
-        parseCountryName(travel.getTravel_code(),activity,holder.image,seed);
-        if(travel.getTitle().length()>20){
-            holder.title.setText(travel.getTitle().substring(0,15)+"...");
-        }else {
-            holder.title.setText(travel.getTitle());
-        }
-        holder.price.setText(travel.getPrice() + "元");
-        holder.box.setOnClickListener(new OnOneOffClickListener() {
-            @Override
-            public void onSingleClick(View v) {
-                Intent intent = new Intent(activity,TravelDetailActivity.class);
-                intent.putExtra("travel",travel);
-                activity.startActivityForResult(intent,FUNC_TRA);
-            }
-        });
-
     }
 
     public static void parseCountryName(int code,Activity activity,ImageView imageView,long seed){
