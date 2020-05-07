@@ -11,7 +11,7 @@
 > > 會員功能完整化
 > 
 > **類別更動**
-> - (新增)[FireImage Helper package](https://https://hackmd.io/@3kyPThCWTuy3rfeeIvxfQQ/HybKMB1qU)
+> - (新增)[FireImage Helper package](https://hackmd.io/@3kyPThCWTuy3rfeeIvxfQQ/HybKMB1qU)
 > - (修改)**NameDBObserver**:根據購買量更新會員狀態
 > 
 > **GUI處理類別更動**
