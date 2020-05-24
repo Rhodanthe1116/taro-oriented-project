@@ -73,10 +73,22 @@
         <item>@string/place_cn_dl</item>
 
     </string-array>
+    <string-array name="advertise_titles">
+        <item>旅程展開</item>
+        <item>安心訂</item>
+        <item>小黃瓜</item>
+        <item>出國玩好開心</item>
+    </string-array>
     <string-array name="photo_titles">
         <item>日本</item>
         <item>韓國</item>
         <item>北歐</item>
         <item>南歐</item>
+    </string-array>
+    <string-array name="tx_titles">
+        <item>長沙</item>
+        <item>武漢</item>
+        <item>我是醫生</item>
+        <item>張家界</item>
     </string-array>
 </resources>

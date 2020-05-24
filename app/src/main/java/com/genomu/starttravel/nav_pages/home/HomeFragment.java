@@ -1,5 +1,6 @@
-package com.genomu.starttravel.ui.home;
+package com.genomu.starttravel.nav_pages.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.genomu.starttravel.R;
+import com.genomu.starttravel.activity.ScenicSpotActivity;
 import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -19,9 +21,12 @@ import com.smarteist.autoimageslider.SliderViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.genomu.starttravel.activity.ScenicSpotActivity.FUNC_SCS;
+
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private List<GalleryPhoto> photos;
+    private List<GalleryPhoto> ads;
     private List<ImageView> hots;
     private List<ImageView> txs;
     private View view;
@@ -31,6 +36,12 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home,container,false);
         findViews();
         setupPhotos();
+        setupAds();
+        setUpSlider();
+        return view;
+    }
+
+    private void setUpSlider() {
         SliderView sliderView = view.findViewById(R.id.imageSlider);
         sliderView.setSliderAdapter(new HomeSliderAdapter());
         sliderView.setIndicatorAnimation(IndicatorAnimations.SLIDE);
@@ -38,7 +49,15 @@ public class HomeFragment extends Fragment {
         sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
         sliderView.setScrollTimeInSec(4);
         sliderView.startAutoCycle();
-        return view;
+    }
+
+    private void setupAds() {
+        ads = new ArrayList<>();
+        String[] adTitles = getResources().getStringArray(R.array.advertise_titles);
+        ads.add(new GalleryPhoto(adTitles[0],R.drawable.advertise_00));
+        ads.add(new GalleryPhoto(adTitles[1],R.drawable.advertise_01));
+        ads.add(new GalleryPhoto(adTitles[2],R.drawable.advertise_02));
+        ads.add(new GalleryPhoto(adTitles[2],R.drawable.advertise_03));
     }
 
 
@@ -53,20 +72,28 @@ public class HomeFragment extends Fragment {
                     clickingHot(finalI);
                 }
             });
+            txs.get(i).setOnClickListener(new OnOneOffClickListener() {
+                @Override
+                public void onSingleClick(View v) {
+                    clickingTx(finalI);
+                }
+            });
         }
     }
 
+    private void clickingTx(int i) {
+        String[] txTitles = getResources().getStringArray(R.array.tx_titles);
+        goSceneDetail(i,txTitles);
+    }
+
     private void clickingHot(int i){
-        switch (i){
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
+        String[] hotTitles = getResources().getStringArray(R.array.photo_titles);
+        goSceneDetail(i,hotTitles);
+    }
+    private void goSceneDetail(int i,String[] titles){
+        Intent intent = new Intent(getActivity(), ScenicSpotActivity.class);
+        intent.putExtra("spots",titles[i]);
+        startActivityForResult(intent,FUNC_SCS);
     }
 
     private void setUpTxs() {
@@ -104,13 +131,13 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
-            GalleryPhoto photo = photos.get(position);
-            viewHolder.image.setImageResource(photo.getImage());
+            GalleryPhoto ad = ads.get(position);
+            viewHolder.image.setImageResource(ad.getImage());
         }
 
         @Override
         public int getCount() {
-            return photos.size();
+            return ads.size();
         }
 
         class HomeViewHolder extends SliderViewAdapter.ViewHolder{

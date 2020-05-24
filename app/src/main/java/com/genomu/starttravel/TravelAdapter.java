@@ -1,12 +1,8 @@
 package com.genomu.starttravel;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.genomu.starttravel.activity.TravelDetailActivity;
 import com.genomu.starttravel.travel_data.TravelCode;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
@@ -28,7 +25,7 @@ import com.genomu.starttravel.util.TravelStateOffice;
 import java.text.ParseException;
 import java.util.List;
 
-import static com.genomu.starttravel.TravelDetailActivity.FUNC_TRA;
+import static com.genomu.starttravel.activity.TravelDetailActivity.FUNC_TRA;
 
 public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelViewHolder> {
 
@@ -73,7 +70,7 @@ public class TravelAdapter extends RecyclerView.Adapter<TravelAdapter.TravelView
         holder.box.setOnClickListener(new OnOneOffClickListener() {
             @Override
             public void onSingleClick(View v) {
-                Intent intent = new Intent(activity,TravelDetailActivity.class);
+                Intent intent = new Intent(activity, TravelDetailActivity.class);
                 intent.putExtra("travel",travel);
                 activity.startActivityForResult(intent,FUNC_TRA);
             }

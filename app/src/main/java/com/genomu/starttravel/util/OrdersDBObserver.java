@@ -9,8 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
 import com.genomu.starttravel.Order;
 import com.genomu.starttravel.OrderAdapter;
+import com.genomu.starttravel.R;
 import com.genomu.starttravel.TravelAdapter;
 import com.genomu.starttravel.travel_data.Travel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,13 +41,12 @@ public class OrdersDBObserver implements DBDataObserver {
     private static final String TAG = OrdersDBObserver.class.getSimpleName();
     private RecyclerView recyclerView;
     private Activity activity;
-    private ProgressBar bar;
+    private OrderAdapter adapter;
 
 
-    public OrdersDBObserver(RecyclerView recyclerView, Activity activity, ProgressBar bar){
+    public OrdersDBObserver(RecyclerView recyclerView, Activity activity){
         this.recyclerView = recyclerView;
         this.activity = activity;
-        this.bar = bar;
     }
 
     @Override
@@ -61,7 +63,12 @@ public class OrdersDBObserver implements DBDataObserver {
 
     @Override
     public void update(Task task) {
-        bar.setVisibility(View.VISIBLE);
+        List<Order> skes = getSkes();
+        adapter = new OrderAdapter(activity,skes);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setAdapter(adapter);
+        final SkeletonScreen skeletonScreen = Skeleton.bind(recyclerView).adapter(adapter).load(R.layout.row_skeleton_travel).show();
         task.addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -69,11 +76,10 @@ public class OrdersDBObserver implements DBDataObserver {
                     User user = task.getResult().toObject(User.class);
                     final List<Order> orders = user.getOrders();
                     culling(orders);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                    OrderAdapter adapter = new OrderAdapter(activity, orders);
+                    skeletonScreen.hide();
+                    adapter = new OrderAdapter(activity, orders);
                     recyclerView.setAdapter(adapter);
-                    bar.setVisibility(View.GONE);
+
                 }else{
                     Log.w(TAG, "onComplete: ", task.getException());
                 }
@@ -81,23 +87,33 @@ public class OrdersDBObserver implements DBDataObserver {
 
         });
     }
-    private void culling(List<Order> orders) {
-        for (int i = orders.size()-1;i>=0;i--){
-            Order order = orders.get(i);
-            Travel travel = order.getTravel();
-            try {
-                TravelStateOffice office = new TravelStateOffice(travel);
-                if (office.getState()<NOT_YET_START&&office.getGrouping()==LACK){
-                    orders.remove(i);
-                    Log.d(TAG, "culling: "+travel.getTitle());
-                }else if(office.getState()==ALREADY_END){
-                    orders.remove(i);
-                    Log.d(TAG, "culling: "+travel.getTitle());
-                }
-            } catch (ParseException e) {
-                Log.w(TAG, "culling: ", e);
-            }
+
+    private ArrayList<Order> getSkes() {
+        ArrayList<Order> arrayList = new ArrayList<>();
+        for(int i = 0;i<10;i++){
+            arrayList.add(new Order());
         }
+        return arrayList;
+    }
+
+    private void culling(List<Order> orders) {
+        orders.remove(0);
+//        for (int i = orders.size()-1;i>=0;i--){
+//            Order order = orders.get(i);
+//            Travel travel = order.getTravel();
+//            try {
+//                TravelStateOffice office = new TravelStateOffice(travel);
+//                if (office.isCancelled()){
+//                    orders.remove(i);
+//                    Log.d(TAG, "culling: "+travel.getTitle());
+//                }else if(office.getState()==ALREADY_END){
+//                    orders.remove(i);
+//                    Log.d(TAG, "culling: "+travel.getTitle());
+//                }
+//            } catch (ParseException e) {
+//                Log.w(TAG, "culling: ", e);
+//            }
+//        }
 
     }
 

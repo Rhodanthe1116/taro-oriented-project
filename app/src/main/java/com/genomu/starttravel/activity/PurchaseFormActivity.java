@@ -1,4 +1,4 @@
-package com.genomu.starttravel;
+package com.genomu.starttravel.activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -10,17 +10,19 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.genomu.starttravel.LoadingDialog;
+import com.genomu.starttravel.Order;
+import com.genomu.starttravel.R;
+import com.genomu.starttravel.UserAuth;
 import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.AddOrderCommand;
 import com.genomu.starttravel.util.CommandException;
@@ -50,8 +52,6 @@ public class PurchaseFormActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_purchase_form);
-        ActionBar ab = getSupportActionBar();
-        ab.hide();
         boolean remind = getSharedPreferences("StartTravel",MODE_PRIVATE)
                 .getBoolean("remind_purchase",true);
         Log.d(TAG, "remind: "+remind);

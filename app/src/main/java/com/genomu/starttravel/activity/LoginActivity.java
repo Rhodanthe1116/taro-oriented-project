@@ -1,4 +1,4 @@
-package com.genomu.starttravel;
+package com.genomu.starttravel.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,18 +18,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.genomu.starttravel.travel_data.Travel;
-import com.genomu.starttravel.travel_data.TravelParser;
+import com.genomu.starttravel.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.genomu.starttravel.SignUpActivity.FUNC_SUP;
+import static com.genomu.starttravel.activity.SignUpActivity.FUNC_SUP;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -81,8 +76,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ActionBar ab = getSupportActionBar();
-        ab.hide();
         findViews();
         setupAuth();
         edx_email.addTextChangedListener(loginWatcher);

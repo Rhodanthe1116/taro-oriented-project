@@ -1,7 +1,6 @@
-package com.genomu.starttravel;
+package com.genomu.starttravel.activity;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,22 +9,26 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.genomu.starttravel.LoadingDialog;
+import com.genomu.starttravel.Order;
+import com.genomu.starttravel.R;
+import com.genomu.starttravel.TravelAdapter;
 import com.genomu.starttravel.travel_data.Travel;
-import com.genomu.starttravel.util.AddOrderCommand;
 import com.genomu.starttravel.util.CommandException;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.ExtirpateOrderCommand;
 import com.genomu.starttravel.util.HanWen;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.ReviseOrderCommand;
 import com.genomu.starttravel.util.TravelStateOffice;
 
@@ -48,21 +51,27 @@ public class UserOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_order);
-        ActionBar ab = getSupportActionBar();
-        ab.hide();
         findViews();
         setViews();
     }
 
+    private  String getPurchase(int resID,int amount){
+        return concatWord(resID,Integer.toString(amount));
+    }
+    private String concatWord(int resID, String str){
+        return getString(resID).concat(" : "+str);
+    }
+
     private void setViews() {
         final Order order = (Order) getIntent().getSerializableExtra("order");
+        assert order != null;
         Travel travel = order.getTravel();
         title.setText(travel.getTitle());
         price.setText(travel.getPrice()+"元");
-        UID.setText("訂單編號:"+order.getOrderUID());
-        anum.setText("adult: "+order.getAdult());
-        knum.setText("kid: "+order.getKid());
-        bnum.setText("baby: "+order.getBaby());
+        UID.setText(concatWord(R.string.uid_from_uid,order.getOrderUID()));
+        anum.setText(getPurchase(R.string.adult_purchase,order.getAdult()));
+        knum.setText(getPurchase(R.string.kid_purchase,order.getKid()));
+        bnum.setText(getPurchase(R.string.baby_purchase,order.getBaby()));
         imageView.setImageResource(R.drawable.alert);
         setBtn(order);
         long seed = TravelAdapter.getSeed(travel);
@@ -72,9 +81,9 @@ public class UserOrderActivity extends AppCompatActivity {
 
     private void clickBtn(final Order order, final boolean isCancel) {
         Button btn = (isCancel)?cancel:revise;
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new OnOneOffClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onSingleClick(View v) {
                 AlertDialog dialog = isCancel?getCancelDialog(order):getReviseDialog(order);
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
@@ -93,7 +102,7 @@ public class UserOrderActivity extends AppCompatActivity {
         return new AlertDialog.Builder(UserOrderActivity.this)
                             .setTitle("取消訂單")
                             .setMessage("確定要取消訂單嗎")
-                            .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog1, int which) {
                                     LoadingDialog loadingDialog = new LoadingDialog(UserOrderActivity.this);
@@ -112,7 +121,7 @@ public class UserOrderActivity extends AppCompatActivity {
                                     });
                                 }
                             })
-                            .setNegativeButton("deny",null)
+                            .setNegativeButton(R.string.no_just_no,null)
                             .create();
     }
 
@@ -135,9 +144,11 @@ public class UserOrderActivity extends AppCompatActivity {
                 revise.setText("無法修改");
                 revise.setClickable(false);
                 revise.setEnabled(false);
+                revise.setBackgroundColor(Color.LTGRAY);
                 cancel.setText("無法取消");
                 cancel.setClickable(false);
                 cancel.setEnabled(false);
+                cancel.setBackgroundColor(Color.LTGRAY);
             }
 
         } catch (ParseException e) {
@@ -165,8 +176,8 @@ public class UserOrderActivity extends AppCompatActivity {
         return new AlertDialog.Builder(UserOrderActivity.this)
                 .setTitle("修改訂單")
                 .setMessage("調整訂單人數")
-                .setNegativeButton("deny",null)
-                .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.no_just_no,null)
+                .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onClick(DialogInterface dialog1, int which) {

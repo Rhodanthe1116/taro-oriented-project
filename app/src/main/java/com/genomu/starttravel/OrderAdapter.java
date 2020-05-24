@@ -1,26 +1,17 @@
 package com.genomu.starttravel;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.genomu.starttravel.activity.UserOrderActivity;
 import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.TravelStateOffice;
@@ -42,7 +33,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @NonNull
     @Override
     public OrderAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = activity.getLayoutInflater().inflate(R.layout.row_travel_item, parent, false);
+        View view = activity.getLayoutInflater().inflate(R.layout.row_order_item, parent, false);
         return new OrderAdapter.OrderViewHolder(view);
     }
 
@@ -62,16 +53,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         }else {
             holder.title.setText(travel.getTitle());
         }
-        Log.d(TAG, "onBindViewHolder: "+travel.getTitle()+" : "+travel.getPurchased());
+        holder.status.setVisibility(View.GONE);
+        holder.day.setVisibility(View.GONE);
         try {
             TravelStateOffice office = new TravelStateOffice(travel);
             if(office.getState()==TravelStateOffice.CAN_BE_MODIFIED){
-                holder.title.setTextColor(Color.CYAN);
+                holder.status.setImageResource(R.drawable.od_sta_await);
+                holder.day.setText(Long.toString(office.dayCount()));
+                holder.day.setVisibility(View.VISIBLE);
             }else if(office.getState()==TravelStateOffice.ON_THE_ROAD){
-                holder.title.setTextColor(Color.GREEN);
-            }else if(office.getState()==TravelStateOffice.ALREADY_END){
-                holder.title.setTextColor(Color.RED);
+                holder.status.setImageResource(R.drawable.od_sta_ing);
+            }else if(office.isRoundedOff()){
+                holder.status.setImageResource(R.drawable.od_sta_home);
+            }else if(office.isCancelled()){
+                holder.status.setImageResource(R.drawable.od_sta_close);
             }
+            holder.status.setVisibility(View.VISIBLE);
         }catch(ParseException e){
             e.printStackTrace();
         }
@@ -79,7 +76,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.box.setOnClickListener(new OnOneOffClickListener() {
             @Override
             public void onSingleClick(View v) {
-                Intent intent = new Intent(activity,UserOrderActivity.class);
+                Intent intent = new Intent(activity, UserOrderActivity.class);
                 intent.putExtra("order",order);
                 activity.startActivityForResult(intent,UserOrderActivity.FUNC_USO);
             }
@@ -98,13 +95,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         ImageView image;
         TextView title;
         TextView price;
+        TextView day;
+        ImageView status;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image_row_travel);
+            status = itemView.findViewById(R.id.order_status_pic);
             box = itemView.findViewById(R.id.box_travel);
             title = itemView.findViewById(R.id.title_row_travel);
             price = itemView.findViewById(R.id.price_row_travel);
+            day = itemView.findViewById(R.id.order_day_count);
 //            lower = itemView.findViewById(R.id.lower_row_travel);
         }
     }

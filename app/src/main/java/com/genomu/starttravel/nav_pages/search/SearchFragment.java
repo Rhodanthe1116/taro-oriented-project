@@ -1,4 +1,4 @@
-package com.genomu.starttravel.ui.search;
+package com.genomu.starttravel.nav_pages.search;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,11 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
-import com.genomu.starttravel.MainActivity;
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
+import com.genomu.starttravel.activity.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.travel_data.PlaceCounselor;
 import com.genomu.starttravel.travel_data.PlaceSuggestion;
-import com.genomu.starttravel.ui.DatePickerFragment;
+import com.genomu.starttravel.nav_pages.DatePickerFragment;
 import com.genomu.starttravel.util.DBAspect;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.GetTravelsResultCommand;
@@ -47,7 +49,6 @@ public class SearchFragment extends Fragment {
     private Button start_btn;
     private Button end_btn;
     private String sorting;
-    private ProgressBar bar;
 
     private String lastQuery = "";
 
@@ -60,22 +61,7 @@ public class SearchFragment extends Fragment {
                 .getBoolean("remind_search",true);
         Log.d(TAG, "remind: "+remind);
         if(remind){
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("搜尋須知")
-                    .setMessage("長按日期鍵可以取消日期條件")
-                    .setView(R.layout.dialog_remind)
-                    .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            CheckBox checkBox = ((AlertDialog)dialog).findViewById(R.id.check_box_remind);
-                            Log.d(TAG, "isChecked: "+checkBox.isChecked());
-                            getActivity().getSharedPreferences("StartTravel",Context.MODE_PRIVATE)
-                                    .edit()
-                                    .putBoolean("remind_search",!checkBox.isChecked())
-                                    .apply();
-                        }
-                    })
-                    .show();
+            goRemindAlert();
         }
         findViews();
         defaultSearchResult();
@@ -86,8 +72,28 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void goRemindAlert() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("搜尋須知")
+                .setMessage("長按日期鍵可以取消日期條件\n右上角按鈕可以更換排序依據")
+                .setView(R.layout.dialog_remind)
+                .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CheckBox checkBox = ((AlertDialog)dialog).findViewById(R.id.check_box_remind);
+                        Log.d(TAG, "isChecked: "+checkBox.isChecked());
+                        getActivity().getSharedPreferences("StartTravel", Context.MODE_PRIVATE)
+                                .edit()
+                                .putBoolean("remind_search",!checkBox.isChecked())
+                                .apply();
+                    }
+                })
+                .show();
+    }
+
     private void setUpMenuSorting() {
-        sorting = getString(R.string.price_d);
+        sorting = getString(R.string.price_des);
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             private boolean isDescending = true;
             @Override
@@ -96,7 +102,7 @@ public class SearchFragment extends Fragment {
                     goDescending();
                     isDescending = false;
                 }else {
-                    goAscending(R.string.price_a);
+                    goAscending(R.string.price_asc);
                     isDescending = true;
                 }
 
@@ -109,7 +115,7 @@ public class SearchFragment extends Fragment {
             }
 
             private void goDescending() {
-                goAscending(R.string.price_d);
+                goAscending(R.string.price_des);
             }
         });
     }
@@ -231,7 +237,7 @@ public class SearchFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.result_search);
         DatabaseInvoker invoker = new DatabaseInvoker();
         GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end,place);
-        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity(),bar);
+        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
         DBAspect aspect = DBAspect.TRAVELS;
         aspect = getDbAspect(sorting, aspect);
         command.attach(observer,aspect);
@@ -241,10 +247,10 @@ public class SearchFragment extends Fragment {
 
     private DBAspect getDbAspect(String sorting, DBAspect aspect) {
         switch (sorting){
-            case "price:descending":
+            case "高價格優先":
                 aspect = DBAspect.PRICE_D;
                 break;
-            case "price:ascending":
+            case "低價格優先":
                 aspect = DBAspect.PRICE_A;
                 break;
         }
@@ -256,7 +262,7 @@ public class SearchFragment extends Fragment {
         final RecyclerView recyclerView = view.findViewById(R.id.result_search);
         DatabaseInvoker invoker = new DatabaseInvoker();
         GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20);
-        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity(),bar);
+        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
         command.attach(observer, DBAspect.TRAVELS);
         invoker.addCommand(command);
         invoker.assignCommand();
@@ -266,7 +272,6 @@ public class SearchFragment extends Fragment {
     private void findViews() {
         start_btn = view.findViewById(R.id.start_date_search);
         end_btn = view.findViewById(R.id.end_date_btn);
-        bar = view.findViewById(R.id.progress_search);
         searchView = view.findViewById(R.id.floating_search_view);
     }
 }

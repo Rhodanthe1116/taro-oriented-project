@@ -1,18 +1,24 @@
-package com.genomu.starttravel;
+package com.genomu.starttravel.activity;
 
 import android.annotation.SuppressLint;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.genomu.starttravel.R;
+import com.genomu.starttravel.util.OnOneOffClickListener;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -37,7 +43,7 @@ public class ScenicSpotActivity extends AppCompatActivity {
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
      */
-    private static final int UI_ANIMATION_DELAY = 300;
+    private static final int UI_ANIMATION_DELAY = 50;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -57,16 +63,23 @@ public class ScenicSpotActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
+    private boolean isScrolled = false;
+
+    private void startAnimation(View view,int resID){
+        Animation animation = AnimationUtils.loadAnimation(this,resID);
+        view.startAnimation(animation);
+    }
+    private void startAnimation(View view,int resID,long delay){
+        Animation animation = AnimationUtils.loadAnimation(this,resID);
+        animation.setStartOffset(delay);
+        view.startAnimation(animation);
+    }
     private View mControlsView;
+    private ScrollView scrollView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
             // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setTitle("首選行程導覽");
-                actionBar.show();
-            }
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
@@ -91,15 +104,30 @@ public class ScenicSpotActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    private ViewTreeObserver.OnScrollChangedListener onScrolled = new ViewTreeObserver.OnScrollChangedListener() {
+        @Override
+        public void onScrollChanged() {
+            int scrollY = scrollView.getScrollY();
+            if(scrollY>50&&!isScrolled){
+                startAnimation(findViewById(R.id.scenic_heading),R.anim.scenic_slide_in);
+                startAnimation(findViewById(R.id.scenic_paragraph),R.anim.scenic_slide_in,800);
+                isScrolled = true;
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_scenic_spot);
         mVisible = true;
+        scrollView = findViewById(R.id.scenic_scroll);
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
-
+        scrollView.setSmoothScrollingEnabled(true);
+        ViewTreeObserver vto = scrollView.getViewTreeObserver();
+        vto.addOnScrollChangedListener(onScrolled);
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -112,20 +140,25 @@ public class ScenicSpotActivity extends AppCompatActivity {
 
         String spots = getIntent().getStringExtra("spots");
         ((TextView)mContentView).setText(spots);
-
+        startAnimation(findViewById(R.id.scenic_down),R.anim.scenic_slide_in);
+        startAnimation(mContentView,R.anim.scenic_intro);
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         Button btn = findViewById(R.id.dummy_button);
         btn.setText("返回首頁");
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new OnOneOffClickListener() {
             @Override
-            public void onClick(View v) {
-                final Intent intent = getIntent();
-                setResult(RESULT_CANCELED,intent);
-                finish();
+            public void onSingleClick(View v) {
+                goBack();
             }
         });
+    }
+
+    private void goBack() {
+        final Intent intent = getIntent();
+        setResult(RESULT_CANCELED,intent);
+        finish();
     }
 
     @Override
@@ -148,10 +181,7 @@ public class ScenicSpotActivity extends AppCompatActivity {
 
     private void hide() {
         // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
 

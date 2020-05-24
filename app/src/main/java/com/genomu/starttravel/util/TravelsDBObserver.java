@@ -11,6 +11,10 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonAdapter;
+import com.ethanhua.skeleton.SkeletonScreen;
+import com.genomu.starttravel.R;
 import com.genomu.starttravel.TravelAdapter;
 import com.genomu.starttravel.travel_data.Travel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +32,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,14 +42,13 @@ public class TravelsDBObserver implements DBDataObserver {
     private Activity activity;
     private boolean isRanged;
     private String end;
-    private ProgressBar bar;
+    private TravelAdapter adapter;
 
-    public TravelsDBObserver(RecyclerView recyclerView, Activity activity, ProgressBar bar) {
+    public TravelsDBObserver(RecyclerView recyclerView, Activity activity) {
         this.recyclerView = recyclerView;
         this.activity = activity;
         this.isRanged = false;
         this.end = "2022年4月23日 星期五";
-        this.bar = bar;
     }
 
     @Override
@@ -52,11 +56,16 @@ public class TravelsDBObserver implements DBDataObserver {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void update(Query query) {
-        recyclerView.setVisibility(View.GONE);
+        List<Travel> skes = getSkes();
+        adapter = new TravelAdapter(activity,skes);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setAdapter(adapter);
+         final SkeletonScreen skeletonScreen = Skeleton.bind(recyclerView).adapter(adapter).load(R.layout.row_skeleton_travel).show();
         //waiting UI show here
-        bar.setVisibility(View.VISIBLE);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -79,18 +88,17 @@ public class TravelsDBObserver implements DBDataObserver {
                         }
                     }
                     if(travelList.size()>0){
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-                        TravelAdapter adapter = new TravelAdapter(activity, travelList);
+                        skeletonScreen.hide();
+                        adapter = new TravelAdapter(activity, travelList);
                         recyclerView.setAdapter(adapter);
-                        bar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
+
+
                     }else {
                         try {
                             throw new CommandException(CommandException.reasons.NO_RESULT,activity);
                         } catch (CommandException e) {
                             e.getExceptionDialog().show();
-                            bar.setVisibility(View.GONE);
+
                         }
                     }
                 }else{
@@ -98,6 +106,14 @@ public class TravelsDBObserver implements DBDataObserver {
                 }
             }
         });
+    }
+
+    private ArrayList<Travel> getSkes(){
+        ArrayList<Travel> arrayList = new ArrayList<Travel>();
+        for(int i = 0;i<10;i++){
+            arrayList.add(Travel.dummy);
+        }
+        return arrayList;
     }
 
     @Override

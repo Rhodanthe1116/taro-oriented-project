@@ -63,4 +63,17 @@ public class TravelStateOffice {
     public int getGrouping() {
         return grouping;
     }
+
+    public boolean isCancelled(){
+        return state<NOT_YET_START&&grouping==LACK;
+    }
+
+    public boolean isRoundedOff(){
+        return state==ALREADY_END&&grouping==ENSURE;
+    }
+
+    public long dayCount(){
+        long day = start_date.getTime() - now.getTime();
+        return day/(1000 * 60 * 60 * 24);
+    }
 }

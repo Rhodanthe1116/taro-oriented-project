@@ -1,4 +1,4 @@
-package com.genomu.starttravel.ui.home;
+package com.genomu.starttravel.nav_pages.home;
 
 public class GalleryPhoto {
 

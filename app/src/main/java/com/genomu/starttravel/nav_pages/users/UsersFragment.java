@@ -1,5 +1,7 @@
-package com.genomu.starttravel.ui.users;
+package com.genomu.starttravel.nav_pages.users;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import genomu.fire_image_helper.ImagePickingToken;
 import genomu.fire_image_helper.LoadMan;
-import com.genomu.starttravel.LoginActivity;
-import com.genomu.starttravel.MainActivity;
+import com.genomu.starttravel.activity.LoginActivity;
+import com.genomu.starttravel.activity.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.UserAuth;
 import com.genomu.starttravel.util.DatabaseInvoker;
@@ -30,7 +32,7 @@ import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.OrdersDBObserver;
 import com.google.firebase.auth.FirebaseAuth;
 
-import static com.genomu.starttravel.LoginActivity.FUNC_LIN;
+import static com.genomu.starttravel.activity.LoginActivity.FUNC_LIN;
 import static com.genomu.starttravel.util.DBAspect.*;
 
 public class UsersFragment extends Fragment{
@@ -65,12 +67,9 @@ public class UsersFragment extends Fragment{
             log_out.setOnClickListener(new OnOneOffClickListener() {
                 @Override
                 public void onSingleClick(View v) {
-                    MainActivity.navGto(R.id.navigation_users);
-                    auth.signOut();
-                    userAuth.goDefault();
+                    alertSignOut();
                 }
             });
-            ProgressBar bar = view.findViewById(R.id.progress_user);
             userName = view.findViewById(R.id.name_users_logged);
             userImage = view.findViewById(R.id.image_users_logged);
             final String storeKey = "profile/"+userAuth.getUserUID();
@@ -79,8 +78,7 @@ public class UsersFragment extends Fragment{
             userImage.setOnClickListener(new OnOneOffClickListener() {
                 @Override
                 public void onSingleClick(View v) {
-                    ImagePickingToken token = (ImagePickingToken) getActivity();
-                    token.setStoreKey(storeKey);
+                    changeProfilePic(storeKey);
                 }
             });
             TextView membership = view.findViewById(R.id.membership);
@@ -89,7 +87,7 @@ public class UsersFragment extends Fragment{
             NameDBObserver dbObserver = new NameDBObserver(userName,membership);
             GetUserCommand command = new GetUserCommand(new HanWen(),userAuth.getUserUID());
             command.attach(dbObserver,NAME);
-            command.attach(new OrdersDBObserver(recyclerView,getActivity(),bar), ORDERS);
+            command.attach(new OrdersDBObserver(recyclerView,getActivity()), ORDERS);
             invoker.addCommand(command);
             invoker.assignCommand();
 
@@ -112,8 +110,34 @@ public class UsersFragment extends Fragment{
         return view;
     }
 
-    private void get(){
-        Toast.makeText(getActivity(),auth.getUid(),Toast.LENGTH_LONG).show();
+    private void alertSignOut() {
+        new AlertDialog.Builder(getContext()).setTitle("登出").setMessage("確定要登出?")
+                .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        goSignOut();
+                    }
+                })
+                .setNegativeButton(R.string.cancel_btn,null).show();
+    }
+
+    private void goSignOut() {
+        MainActivity.navGto(R.id.navigation_users);
+        auth.signOut();
+        userAuth.goDefault();
+    }
+
+    private void changeProfilePic(final String storeKey) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("上傳大頭貼")
+                .setNegativeButton(R.string.cancel_btn,null)
+                .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ImagePickingToken token = (ImagePickingToken) getActivity();
+                        token.setStoreKey(storeKey);
+                    }
+                }).show();
     }
 
     private void goLogin(){

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.genomu.starttravel.ui.home.HomeFragment"
+        android:name="com.genomu.starttravel.nav_pages.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.genomu.starttravel.ui.search.SearchFragment"
+        android:name="com.genomu.starttravel.nav_pages.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_users"
-        android:name="com.genomu.starttravel.ui.users.UsersFragment"
+        android:name="com.genomu.starttravel.nav_pages.users.UsersFragment"
         android:label="@string/title_users"
         tools:layout="@layout/fragment_users" />
 </navigation>

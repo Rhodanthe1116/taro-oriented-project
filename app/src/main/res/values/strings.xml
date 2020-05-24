@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StartTravel</string>
+    <string name="app_name">TaroTravel</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search</string>
     <string name="title_users">Users</string>
@@ -25,6 +25,8 @@
     <!--下拉式排序資料-->
     <string name="price_d">price:descending</string>
     <string name="price_a">price:ascending</string>
+    <string name="price_des">高價格優先</string>
+    <string name="price_asc">低價格優先</string>
     <!--地區搜尋資料-->
     <string name="place_neas">東北亞</string>
     <string name="place_ncn">中國北部</string>
@@ -105,4 +107,18 @@
     <string name="row_travel_status02">已成團</string>
     <string name="row_travel_status03">已滿團</string>
     <string name="sorting">sorting</string>
+    <string name="cancel_btn">取消</string>
+    <string name="confirm_btn">確認</string>
+    <string name="no_just_no">不要啦</string>
+    <string name="total_purchase">總計</string>
+    <string name="baby_purchase">嬰兒</string>
+    <string name="kid_purchase">孩童</string>
+    <string name="adult_purchase">成人</string>
+    <string name="title_purchase">旅程標題</string>
+    <string name="purchase_tag_label">1</string>
+    <string name="revise_btn">修改</string>
+    <string name="order_price">單價</string>
+    <string name="uid_from_uid">訂單編號</string>
+    <string name="orderpicture">orderPicture</string>
+    <string name="paragraph">這是內文</string>
 </resources>

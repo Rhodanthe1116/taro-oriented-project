@@ -1,6 +1,5 @@
-package com.genomu.starttravel;
+package com.genomu.starttravel.activity;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -17,13 +16,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.genomu.starttravel.R;
+import com.genomu.starttravel.TravelAdapter;
 import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.TravelStateOffice;
 
 import java.text.ParseException;
 
-import static com.genomu.starttravel.PurchaseFormActivity.FUNC_PUR;
+import static com.genomu.starttravel.activity.PurchaseFormActivity.FUNC_PUR;
 
 public class TravelDetailActivity extends AppCompatActivity {
     public  final static  int RESULT_VIRUS = 433;
@@ -47,8 +48,7 @@ public class TravelDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
-        ActionBar ab = getSupportActionBar();
-        ab.hide();
+
         setUpView();
 
 
@@ -102,6 +102,7 @@ public class TravelDetailActivity extends AppCompatActivity {
                 go_btn.setText("行程無法預定");
                 go_btn.setClickable(false);
                 go_btn.setEnabled(false);
+                go_btn.setAlpha(0.4f);
             }
         } catch (ParseException e) {
             e.printStackTrace();

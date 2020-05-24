@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".nav_pages.home.HomeFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/gallery_ph01"
+                        android:src="@drawable/tx_00"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -110,7 +110,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/gallery_ph02"
+                        android:src="@drawable/tx_01"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ph_tx1"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -127,7 +127,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/gallery_ph03"
+                        android:src="@drawable/tx_02"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ph_tx2"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -144,7 +144,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="4dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/gallery_ph04"
+                        android:src="@drawable/tx_03"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/ph_tx3"
                         app:layout_constraintTop_toTopOf="parent" />

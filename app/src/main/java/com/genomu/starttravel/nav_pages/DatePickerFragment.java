@@ -1,4 +1,4 @@
-package com.genomu.starttravel.ui;
+package com.genomu.starttravel.nav_pages;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

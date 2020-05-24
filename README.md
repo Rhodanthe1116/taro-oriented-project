@@ -1,6 +1,47 @@
 # taro-oriented-project
 ## log
 ###### tags: `程式專案`,`紫芋導向`,`start travel`
+### beta-1.2
+> 版本資訊：
+> -
+> 
+> **概述**
+> > HomeFrag修改
+> > UserFrag修改
+> 
+> **類別更動**
+> - (重構)**MainActi**:將動畫處理部分交給新的class
+> - (微調)**TravelStateOffice**:新增未成團、已結束、倒數的取得方法
+> 
+> **GUI處理類別更動**
+> - (微調)**ScenicActi**:大略架構
+> - (修改)**HomeFrag**:連結到熱門景點Acti
+> - (微調)**UserFrag**:新增「換頭貼」alert
+> - SkeletonUI
+> 
+> **GUI資料更動**
+> - 新增row_order_item
+> - 更新hot spots圖
+> - 新增advertise圖
+> - app圖示修改
+> - 加入splash頁
+> - 新增row_skeleton_travel
+
+--- 
+> 開發方向
+> - 
+> - 萃取觀察者模式
+> - 藉由快取優化搜尋速度
+> - view內抽取字串
+> - Invoker實例是否提升層級
+> - 整理程式碼 註解
+> - seekbar重構
+> - 搜尋清單數量問題
+> - ScenicActi完整化
+> - Purchase : 改layout
+> - userFrag : 單項改layout、改資訊量
+> - userOrder : 加狀態
+> - login,signup ： 改layout?
 ### beta-1.1
 > 版本資訊：
 > -
@@ -21,35 +62,3 @@
 > 
 > **GUI資料更動**
 > - 新增單筆slide
-
---- 
-> 開發方向
-> - 
-> - 萃取觀察者模式
-> - Invoker實例是否提升層級
-> - 整理程式碼 註解
-> - 搜尋清單數量問題
-> - Purchase : 改layout
-> - userFrag : 單項改layout、改資訊量
-> - userOrder : 加狀態
-> - login,signup ： 改layout?
-
-### beta-1.0
-> 版本資訊：
-> -
-> 
-> **概述**
-> > Auth 讀寫資料庫設定
-> > 清單GUI更新
-> 
-> **類別更動**
-> - (新增)**OnOneOffClickListener**:解決listner聽兩次的狀況
-> - (微調)**OrdersDBObserver**:吃進來的list移除「已經開始且沒到下限」的order
-> - user/orders中的travel跟travels的同步
-> 
-> **GUI處理類別更動**
-> - (微調)**userFrag**:登出功能
-> 
-> **GUI資料更動**
-> - SearchFrag : 改篩選圖示、單項travel變矮、差幾人成團以及已經成團只剩多少名額、不能訂(人滿、過期)灰掉
-> - TravelDetail ： 改layout

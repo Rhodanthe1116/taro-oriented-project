@@ -1,4 +1,4 @@
-package com.genomu.starttravel;
+package com.genomu.starttravel.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.genomu.starttravel.Order;
+import com.genomu.starttravel.R;
+import com.genomu.starttravel.UserAuth;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.SetUserCommand;
@@ -42,8 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        ActionBar ab = getSupportActionBar();
-        ab.hide();
         auth = FirebaseAuth.getInstance();
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
