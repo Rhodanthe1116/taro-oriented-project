@@ -288,3 +288,23 @@
 > **GUI資料更動**
 > - SearchFrag : 改篩選圖示、單項travel變矮、差幾人成團以及已經成團只剩多少名額、不能訂(人滿、過期)灰掉
 > - TravelDetail ： 改layout
+### beta-1.1
+> 版本資訊：
+> -
+> 
+> **概述**
+> > HomeFrag修改
+> > UserFrag修改
+> > 會員功能完整化
+> 
+> **類別更動**
+> - (新增)[FireImage Helper package](https://hackmd.io/@3kyPThCWTuy3rfeeIvxfQQ/HybKMB1qU)
+> - (修改)**NameDBObserver**:根據購買量更新會員狀態
+> 
+> **GUI處理類別更動**
+> - (修改)**HomeFrag**:ImageSlider、Scroller
+> - (微調)**SearchFrag**:排序改icon、運作模式改為toggle
+> - (修改)**UserFrag**:會員頭像、會員部分改窄、會員狀態、登出
+> 
+> **GUI資料更動**
+> - 新增單筆slide

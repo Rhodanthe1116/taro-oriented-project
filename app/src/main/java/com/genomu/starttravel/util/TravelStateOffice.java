@@ -17,15 +17,15 @@ public class TravelStateOffice {
     public static final int ENSURE = 0;
     public static final int LACK = -1;
 
-    private Date now;
+    private static Date now = Calendar.getInstance().getTime();
     private Date start_date;
     private Date end_date;
     private int grouping;
-    private SimpleDateFormat dateFormat;
+
+    private static SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
+
     private int state;
     public TravelStateOffice(Travel travel) throws ParseException {
-        now = Calendar.getInstance().getTime();
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         start_date = dateFormat.parse(travel.getStart_date());
         end_date = dateFormat.parse(travel.getEnd_date());
         if(start_date.after(now)){
@@ -47,13 +47,19 @@ public class TravelStateOffice {
             grouping = LACK;
         }
     }
-
     private Date modifyDeadLine(){
         return new Date(start_date.getTime()-7 * 24 * 60 * 60 * 1000L);
     }
 
-    public Date getNow() {
-        return now;
+    public static Date getNow(int offset) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.DAY_OF_WEEK,offset);
+        return calendar.getTime();
+    }
+
+    public static SimpleDateFormat getDateFormat() {
+        return dateFormat;
     }
 
     public int getState() {

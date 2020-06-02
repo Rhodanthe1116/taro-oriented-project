@@ -3,6 +3,7 @@ package com.genomu.starttravel.nav_pages.search;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,18 +28,24 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
+import com.genomu.starttravel.SpotDescribing;
 import com.genomu.starttravel.activity.MainActivity;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.travel_data.PlaceCounselor;
 import com.genomu.starttravel.travel_data.PlaceSuggestion;
 import com.genomu.starttravel.nav_pages.DatePickerFragment;
+import com.genomu.starttravel.travel_data.Travel;
 import com.genomu.starttravel.util.DBAspect;
+import com.genomu.starttravel.util.DBCommand;
 import com.genomu.starttravel.util.DatabaseInvoker;
 import com.genomu.starttravel.util.GetTravelsResultCommand;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.OnOneOffClickListener;
+import com.genomu.starttravel.util.TravelStateOffice;
 import com.genomu.starttravel.util.TravelsDBObserver;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
@@ -59,17 +66,32 @@ public class SearchFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_search,container,false);
         boolean remind = getActivity().getSharedPreferences("StartTravel", Context.MODE_PRIVATE)
                 .getBoolean("remind_search",true);
-        Log.d(TAG, "remind: "+remind);
+
+
         if(remind){
             goRemindAlert();
         }
         findViews();
-        defaultSearchResult();
+        String date = DateFormat.getDateInstance(DateFormat.FULL).format(TravelStateOffice.getNow(1));
+        start_btn.setText(date);
         setUpSearchView();
         setUpMenuSorting();
+        searchOnSuggestion(MainActivity.getWhichGoing());
+        MainActivity.resetWhichGoing();
+
         setBtn();
 
         return view;
+    }
+
+    private void searchOnSuggestion(int whichGoing) {
+        if(whichGoing>-1&&whichGoing<8) {
+            SpotDescribing describing = new SpotDescribing(getActivity(),whichGoing);
+            lastQuery=describing.getQuery();
+            searchPlace(lastQuery);
+        }else{
+            searchPlace(null);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -230,17 +252,25 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    public void searchPlace(String place) {
+    private void searchPlace(String place) {
         String start = start_btn.getText().toString();
         String end = end_btn.getText().toString();
+        if(place == null){
+            assignMission(new GetTravelsResultCommand(new HanWen(),20));
+            return;
+        }
         Log.d(TAG, "search range: "+start+","+end);
-        RecyclerView recyclerView = view.findViewById(R.id.result_search);
-        DatabaseInvoker invoker = new DatabaseInvoker();
         GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20,start,end,place);
+        assignMission(command);
+    }
+
+    private void assignMission(GetTravelsResultCommand command) {
+        RecyclerView recyclerView = view.findViewById(R.id.result_search);
         TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
         DBAspect aspect = DBAspect.TRAVELS;
         aspect = getDbAspect(sorting, aspect);
         command.attach(observer,aspect);
+        DatabaseInvoker invoker = new DatabaseInvoker();
         invoker.addCommand(command);
         invoker.assignCommand();
     }
@@ -255,18 +285,6 @@ public class SearchFragment extends Fragment {
                 break;
         }
         return aspect;
-    }
-
-
-    private void defaultSearchResult() {
-        final RecyclerView recyclerView = view.findViewById(R.id.result_search);
-        DatabaseInvoker invoker = new DatabaseInvoker();
-        GetTravelsResultCommand command = new GetTravelsResultCommand(new HanWen(),20);
-        TravelsDBObserver observer = new TravelsDBObserver(recyclerView,getActivity());
-        command.attach(observer, DBAspect.TRAVELS);
-        invoker.addCommand(command);
-        invoker.assignCommand();
-
     }
 
     private void findViews() {

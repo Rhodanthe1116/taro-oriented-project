@@ -83,17 +83,19 @@ public class HomeFragment extends Fragment {
 
     private void clickingTx(int i) {
         String[] txTitles = getResources().getStringArray(R.array.tx_titles);
-        goSceneDetail(i,txTitles);
+        goSceneDetail(i,txTitles,false);
     }
 
     private void clickingHot(int i){
         String[] hotTitles = getResources().getStringArray(R.array.photo_titles);
-        goSceneDetail(i,hotTitles);
+        goSceneDetail(i,hotTitles,true);
     }
-    private void goSceneDetail(int i,String[] titles){
+    private void goSceneDetail(int i,String[] titles,boolean isHot){
         Intent intent = new Intent(getActivity(), ScenicSpotActivity.class);
         intent.putExtra("spots",titles[i]);
-        startActivityForResult(intent,FUNC_SCS);
+        int whichScene = i +((isHot)?0:4);
+        intent.putExtra("whichScene",whichScene);
+        getActivity().startActivityForResult(intent,FUNC_SCS);
     }
 
     private void setUpTxs() {
@@ -142,7 +144,7 @@ public class HomeFragment extends Fragment {
 
         class HomeViewHolder extends SliderViewAdapter.ViewHolder{
             ImageView image;
-            public HomeViewHolder(View itemView) {
+            HomeViewHolder(View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.image_slide_item);
             }

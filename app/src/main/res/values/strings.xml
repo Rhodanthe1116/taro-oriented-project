@@ -121,4 +121,8 @@
     <string name="uid_from_uid">訂單編號</string>
     <string name="orderpicture">orderPicture</string>
     <string name="paragraph">這是內文</string>
+    <string name="purchase_notice">訂購前提醒您\n◆ 孩童與嬰兒的條件分別為:\n      返國當天年滿2~15歲、2歲以下
+        \n◆ 年滿15歲以成人價計費\n◆ 至少需要一個大人訂單才得成立
+        \n◆ 一位嬰兒至少需要一位大人的陪同"\n◆ 孩童享成人價7折、嬰兒則為1折"</string>
+    <string name="let_go_btn">出發吧</string>
 </resources>

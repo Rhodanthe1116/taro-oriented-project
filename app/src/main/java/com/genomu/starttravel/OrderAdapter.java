@@ -106,7 +106,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             title = itemView.findViewById(R.id.title_row_travel);
             price = itemView.findViewById(R.id.price_row_travel);
             day = itemView.findViewById(R.id.order_day_count);
-//            lower = itemView.findViewById(R.id.lower_row_travel);
         }
     }
 }

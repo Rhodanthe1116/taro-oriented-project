@@ -3,21 +3,24 @@ package com.genomu.starttravel.activity;
 import android.annotation.SuppressLint;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.genomu.starttravel.R;
+import com.genomu.starttravel.SpotDescribing;
 import com.genomu.starttravel.util.OnOneOffClickListener;
 
 /**
@@ -25,7 +28,7 @@ import com.genomu.starttravel.util.OnOneOffClickListener;
  * status bar and navigation/system bar) with user interaction.
  */
 public class ScenicSpotActivity extends AppCompatActivity {
-    public static final int FUNC_SCS = 9;
+    public final static int FUNC_SCS = 9;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -64,6 +67,8 @@ public class ScenicSpotActivity extends AppCompatActivity {
         }
     };
     private boolean isScrolled = false;
+    private ImageView down;
+    private int which;
 
     private void startAnimation(View view,int resID){
         Animation animation = AnimationUtils.loadAnimation(this,resID);
@@ -105,13 +110,20 @@ public class ScenicSpotActivity extends AppCompatActivity {
         }
     };
 
+    private Button let_go;
+    private TextView paragraph;
+    private TextView heading;
+    private ImageView image;
     private ViewTreeObserver.OnScrollChangedListener onScrolled = new ViewTreeObserver.OnScrollChangedListener() {
         @Override
         public void onScrollChanged() {
             int scrollY = scrollView.getScrollY();
             if(scrollY>50&&!isScrolled){
-                startAnimation(findViewById(R.id.scenic_heading),R.anim.scenic_slide_in);
-                startAnimation(findViewById(R.id.scenic_paragraph),R.anim.scenic_slide_in,800);
+                down.setAlpha(0.2f);
+                startAnimation(heading,R.anim.scenic_slide_in);
+                startAnimation(image,R.anim.scenic_slide_in);
+                startAnimation(paragraph,R.anim.scenic_slide_in,800);
+                startAnimation(let_go,R.anim.scenic_slide_in,1000);
                 isScrolled = true;
             }
         }
@@ -122,10 +134,8 @@ public class ScenicSpotActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_scenic_spot);
         mVisible = true;
-        scrollView = findViewById(R.id.scenic_scroll);
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
-        scrollView.setSmoothScrollingEnabled(true);
+        setBackgroundGrad();
+        findViews();
         ViewTreeObserver vto = scrollView.getViewTreeObserver();
         vto.addOnScrollChangedListener(onScrolled);
 
@@ -137,27 +147,69 @@ public class ScenicSpotActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        String spots = getIntent().getStringExtra("spots");
-        ((TextView)mContentView).setText(spots);
-        startAnimation(findViewById(R.id.scenic_down),R.anim.scenic_slide_in);
-        startAnimation(mContentView,R.anim.scenic_intro);
+        initializeViews();
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        Button btn = findViewById(R.id.dummy_button);
-        btn.setText("返回首頁");
-        btn.setOnClickListener(new OnOneOffClickListener() {
-            @Override
-            public void onSingleClick(View v) {
-                goBack();
-            }
-        });
+        setBtn();
     }
 
-    private void goBack() {
+    private void setBtn() {
+        Button btn = findViewById(R.id.dummy_button);
+        btn.setText("返回首頁");
+        btn.setOnClickListener(new OnGoingBackListener(false));
+        let_go.setOnClickListener(new OnGoingBackListener(true));
+    }
+    private class OnGoingBackListener extends OnOneOffClickListener {
+        private boolean isGoing;
+
+        OnGoingBackListener(boolean isGoing) {
+            this.isGoing = isGoing;
+        }
+
+        @Override
+        public void onSingleClick(View v) {
+            goBack(isGoing);
+        }
+    }
+
+    private void initializeViews() {
+        Intent intent = getIntent();
+        String spots = intent.getStringExtra("spots");
+        which = intent.getIntExtra("whichScene",0);
+        SpotDescribing describing = new SpotDescribing(this, which);
+        paragraph.setText(describing.getParagraph());
+        image.setImageResource(describing.getImgResId());
+        heading.setText(describing.getHeading());
+        ((TextView)mContentView).setText(spots);
+        startAnimation(down,R.anim.scenic_point_down);
+        startAnimation(mContentView,R.anim.scenic_intro);
+    }
+
+    private void findViews() {
+        let_go = findViewById(R.id.scenic_let_go_btn);
+        scrollView = findViewById(R.id.scenic_scroll);
+        down = findViewById(R.id.scenic_down);
+        mControlsView = findViewById(R.id.fullscreen_content_controls);
+        mContentView = findViewById(R.id.fullscreen_content);
+        paragraph = findViewById(R.id.scenic_paragraph);
+        heading = findViewById(R.id.scenic_heading);
+        image = findViewById(R.id.scenic_image);
+        scrollView.setSmoothScrollingEnabled(true);
+    }
+
+    private void setBackgroundGrad() {
+        ConstraintLayout background = findViewById(R.id.scenic_bg);
+        AnimationDrawable gradient = (AnimationDrawable) background.getBackground();
+        gradient.setEnterFadeDuration(2000);
+        gradient.setExitFadeDuration(4000);
+        gradient.start();
+    }
+
+    private void goBack(boolean isGoing) {
         final Intent intent = getIntent();
-        setResult(RESULT_CANCELED,intent);
+        intent.putExtra("whichGoing",which);
+        setResult(isGoing?RESULT_OK:RESULT_CANCELED,intent);
         finish();
     }
 

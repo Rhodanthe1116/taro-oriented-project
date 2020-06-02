@@ -22,6 +22,7 @@ import com.genomu.starttravel.UserAuth;
 import com.genomu.starttravel.anim_manager.VirusManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -35,6 +36,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 
 import static com.genomu.starttravel.activity.LoginActivity.FUNC_LIN;
+import static com.genomu.starttravel.activity.ScenicSpotActivity.FUNC_SCS;
 import static com.genomu.starttravel.activity.TravelDetailActivity.FUNC_TRA;
 import static com.genomu.starttravel.activity.TravelDetailActivity.RESULT_VIRUS;
 import static com.genomu.starttravel.activity.UserOrderActivity.FUNC_USO;
@@ -49,6 +51,17 @@ public class MainActivity extends ImagePickingToken implements DatePickerDialog.
     public static boolean isStartBtn = true;
     private VirusManager manager;
     private TickAnim anim;
+
+
+    private static int whichGoing = -1;
+
+    public static void resetWhichGoing() {
+        MainActivity.whichGoing = -1;
+    }
+
+    public static int getWhichGoing() {
+        return whichGoing;
+    }
 
     @Override
     public void onBackPressed() {
@@ -116,6 +129,12 @@ public class MainActivity extends ImagePickingToken implements DatePickerDialog.
                 anim.tickedAnimation();
                 Toast.makeText(this,"成功登入",Toast.LENGTH_LONG).show();
                 navGto(R.id.navigation_users);
+            }
+        }else if(requestCode== FUNC_SCS){
+            if(resultCode==RESULT_OK){
+                whichGoing = data.getIntExtra("whichGoing",-1);
+
+                navGto(R.id.navigation_search);
             }
         }
     }

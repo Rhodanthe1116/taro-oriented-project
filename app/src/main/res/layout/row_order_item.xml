@@ -75,21 +75,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/status_travel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/status01"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="@string/row_travel_status01"
-                android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/title_row_travel"
-                app:layout_constraintTop_toBottomOf="@+id/title_row_travel" />
-
             <ImageView
                 android:id="@+id/order_status_pic"
                 android:layout_width="85dp"

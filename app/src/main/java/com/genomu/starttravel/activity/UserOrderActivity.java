@@ -1,22 +1,15 @@
 package com.genomu.starttravel.activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.genomu.starttravel.LoadingDialog;
@@ -24,9 +17,7 @@ import com.genomu.starttravel.Order;
 import com.genomu.starttravel.R;
 import com.genomu.starttravel.TravelAdapter;
 import com.genomu.starttravel.travel_data.Travel;
-import com.genomu.starttravel.util.CommandException;
 import com.genomu.starttravel.util.DatabaseInvoker;
-import com.genomu.starttravel.util.ExtirpateOrderCommand;
 import com.genomu.starttravel.util.HanWen;
 import com.genomu.starttravel.util.OnOneOffClickListener;
 import com.genomu.starttravel.util.ReviseOrderCommand;
@@ -47,6 +38,8 @@ public class UserOrderActivity extends AppCompatActivity {
     private TextView knum;
     private TextView bnum;
     private ImageView imageView;
+    private UserOrderAffiliate affiliate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +60,8 @@ public class UserOrderActivity extends AppCompatActivity {
         assert order != null;
         Travel travel = order.getTravel();
         title.setText(travel.getTitle());
-        price.setText(travel.getPrice()+"元");
+        String strPrice = (travel.getPrice())+"元";
+        price.setText(strPrice);
         UID.setText(concatWord(R.string.uid_from_uid,order.getOrderUID()));
         anum.setText(getPurchase(R.string.adult_purchase,order.getAdult()));
         knum.setText(getPurchase(R.string.kid_purchase,order.getKid()));
@@ -84,7 +78,9 @@ public class UserOrderActivity extends AppCompatActivity {
         btn.setOnClickListener(new OnOneOffClickListener() {
             @Override
             public void onSingleClick(View v) {
-                AlertDialog dialog = isCancel?getCancelDialog(order):getReviseDialog(order);
+                affiliate = new UserOrderAffiliate(UserOrderActivity.this);
+                View root = View.inflate(getApplicationContext(),R.layout.revise_order,null);
+                AlertDialog dialog = isCancel?affiliate.getCancelDialog(order): affiliate.getReviseDialog(order,root);
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
@@ -98,42 +94,6 @@ public class UserOrderActivity extends AppCompatActivity {
         });
     }
 
-    private AlertDialog getCancelDialog(final Order order) {
-        return new AlertDialog.Builder(UserOrderActivity.this)
-                            .setTitle("取消訂單")
-                            .setMessage("確定要取消訂單嗎")
-                            .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog1, int which) {
-                                    LoadingDialog loadingDialog = new LoadingDialog(UserOrderActivity.this);
-                                    DatabaseInvoker invoker = new DatabaseInvoker();
-                                    invoker.addCommand(new ExtirpateOrderCommand(new HanWen(),order,loadingDialog));
-                                    Log.d(TAG, "onClick: "+order.getOrderUID());
-                                    invoker.assignCommand();
-                                    final Intent intent = getIntent();
-                                    loadingDialog.startLoading();
-                                    loadingDialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog11) {
-                                            setResult(RESULT_OK,intent);
-                                            finish();
-                                        }
-                                    });
-                                }
-                            })
-                            .setNegativeButton(R.string.no_just_no,null)
-                            .create();
-    }
-
-    private SeekBar abar;
-    private SeekBar kbar;
-    private SeekBar bbar;
-    private TextView atag;
-    private TextView ktag;
-    private TextView btag;
-    private int[] amount;
-    private float baby_sec;
-    private int length;
     private void setBtn(final Order order) {
         try {
             TravelStateOffice office = new TravelStateOffice(order.getTravel());
@@ -157,170 +117,32 @@ public class UserOrderActivity extends AppCompatActivity {
 
     }
 
-    private AlertDialog getReviseDialog(final Order order) {
-        firstEnter = true;
-        View root = View.inflate(getApplicationContext(),R.layout.revise_order,null);
-        abar = root.findViewById(R.id.abar_revise);
-        kbar = root.findViewById(R.id.kbar_revise);
-        bbar = root.findViewById(R.id.bbar_revise);
-        atag = root.findViewById(R.id.atag_revise);
-        ktag = root.findViewById(R.id.ktag_revise);
-        btag = root.findViewById(R.id.btag_revise);
-        amount = new int[3];
-        amount[0] = order.getAdult();
-        amount[1] = order.getKid();
-        amount[2] = order.getBaby();
-        setUpSeekBar(atag,abar);
-        setUpSeekBar(ktag,kbar);
-        setUpSeekBar(btag,bbar);
-        return new AlertDialog.Builder(UserOrderActivity.this)
-                .setTitle("修改訂單")
-                .setMessage("調整訂單人數")
-                .setNegativeButton(R.string.no_just_no,null)
-                .setPositiveButton(R.string.confirm_btn, new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                    @Override
-                    public void onClick(DialogInterface dialog1, int which) {
-                        try{
-                            if(amount[0]>0){
-                                sendReviseRequest(order);
-                            }else if(amount[1]!=0||amount[2]!=0){
-                                throw new CommandException(CommandException.reasons.INPUT_INVALID,UserOrderActivity.this);
-                            }else {
-                                throw new CommandException(CommandException.reasons.INPUT_INVALID,UserOrderActivity.this);
-                            }
-                        }catch (CommandException e){
-                            e.getExceptionDialog().show();
-                        }
-                    }
-                })
-                .setView(root)
-                .create();
+    void goCancel(LoadingDialog loadingDialog) {
+        leaving(loadingDialog, RESULT_OK);
     }
 
-    private void sendReviseRequest(Order order) {
+    void sendReviseRequest(Order order) {
         DatabaseInvoker invoker = new DatabaseInvoker();
         LoadingDialog loadingDialog = new LoadingDialog(UserOrderActivity.this);
         HanWen hanWen = new HanWen();
+        int[] amount = affiliate.getAmount();
         invoker.addCommand(new ReviseOrderCommand(hanWen,this,order,loadingDialog,amount));
         invoker.assignCommand();
+        leaving(loadingDialog, RESULT_REVISE);
+    }
+
+    private void leaving(LoadingDialog loadingDialog, final int resultCode) {
         final Intent intent = getIntent();
         loadingDialog.startLoading();
         loadingDialog.getAlertDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                setResult(RESULT_REVISE,intent);
+                setResult(resultCode, intent);
                 finish();
             }
         });
     }
 
-    private static boolean firstEnter = true;
-    private void setUpSeekBar(final TextView tag,final SeekBar bar) {
-        bar.post(new Runnable() {
-            @Override
-            public void run() {
-                if(firstEnter){
-                    abar.setProgress(amount[0]);    kbar.setProgress(amount[1]);    bbar.setProgress(amount[2]);    bbar.setMax(amount[0]);
-                    atag.setText(amount[0]+"");     ktag.setText(amount[1]+"");     btag.setText(amount[2]+"");
-                    length = (int)(abar.getWidth()*0.9f);
-                    baby_sec = (float) length/(float)amount[0];
-                    btag.setX(bbar.getLeft()+24+baby_sec*amount[2]);
-                    firstEnter = false;
-                }
-                final int tag_t = tag.getTop();
-                final float sec = (float)length/(float)bar.getMax();
-                tag.setVisibility(View.GONE);
-                bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if(seekBar==bbar&&fromUser){
-                            tag.setX(seekBar.getLeft()+24+baby_sec*progress);
-                        }else if(fromUser){
-                            tag.setX(seekBar.getLeft()+24+sec*progress);
-                        }
-
-                        tag.setText(progress+"");
-                        amount[0] = abar.getProgress(); amount[1] = kbar.getProgress(); amount[2] = bbar.getProgress();
-                        if(seekBar==abar){
-                            bbar.setMax(progress);
-                            baby_sec = (float)length/(float)bbar.getMax();
-                        }
-                    }
-
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                        showUp(tag_t,seekBar, tag, sec);
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        fadeOut();
-                    }
-
-                    private void fadeOut() {
-
-                        ValueAnimator animatorY = ValueAnimator.ofInt(tag_t,tag_t+20);
-                        ValueAnimator animatorA = ValueAnimator.ofInt(255,0);
-                        animatorY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                int curVal = (Integer) animation.getAnimatedValue();
-                                tag.layout(tag.getLeft(),curVal,tag.getRight(),curVal+tag.getHeight());
-                            }
-                        });
-                        animatorA.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                int curVal = (Integer) animation.getAnimatedValue();
-                                tag.getBackground().setAlpha(curVal);
-                            }
-                        });
-                        animatorA.setDuration(500);
-                        animatorY.setDuration(500);
-                        animatorA.start();
-                        animatorY.start();
-                        animatorY.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                tag.setVisibility(View.GONE);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    private void showUp(int tag_t,SeekBar seekBar, final TextView tag, float sec) {
-        tag.setVisibility(View.VISIBLE);
-        tag.setX(seekBar.getLeft()+sec*seekBar.getProgress());
-//        Log.d(TAG, "onStartTrackingTouch: "+"left>>"+seekBar.getLeft()+" , sec*progress>>"+sec*seekBar.getProgress());
-        ValueAnimator animatorY = ValueAnimator.ofInt(tag_t,tag_t-20);
-        ValueAnimator animatorA = ValueAnimator.ofInt(0,255);
-        animatorY.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int curVal = (Integer) animation.getAnimatedValue();
-                tag.layout(tag.getLeft(),curVal,tag.getRight(),curVal+tag.getHeight());
-            }
-        });
-        animatorA.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int curVal = (Integer) animation.getAnimatedValue();
-                tag.getBackground().setAlpha(curVal);
-            }
-        });
-        animatorA.setDuration(500);
-        animatorY.setDuration(500);
-        animatorA.start();
-        animatorY.start();
-    }
 
     private void findViews(){
         title = findViewById(R.id.title_user_order);

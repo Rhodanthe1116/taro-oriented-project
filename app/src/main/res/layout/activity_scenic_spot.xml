@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scenic_bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="@drawable/scenic_grad"
     tools:context=".activity.ScenicSpotActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -32,14 +33,15 @@
                 android:gravity="center"
                 android:keepScreenOn="true"
                 android:text="@string/dummy_content"
-                android:textColor="#A9DFF3"
-                android:textSize="120sp"
+                android:textColor="#FFFFFF"
+                android:textSize="90sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/scenic_down"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:rotation="180"
                 android:scaleType="centerInside"
                 app:srcCompat="@drawable/down_arrow"
                 tools:srcCompat="@drawable/down_arrow" />
@@ -55,24 +57,13 @@
                     android:orientation="horizontal"
                     app:layout_constraintGuide_begin="68dp" />
 
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="245dp" />
-
                 <ImageView
                     android:id="@+id/scenic_image"
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginLeft="4dp"
+                    android:layout_height="200dp"
                     android:layout_marginTop="80dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
                     android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/guideline4"
                     app:srcCompat="@drawable/ph_jp" />
@@ -83,25 +74,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
                     android:text="@string/paragraph"
                     android:textColor="#FFFFFF"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline3"
-                    app:layout_constraintTop_toTopOf="@+id/scenic_image" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/scenic_image" />
 
                 <TextView
                     android:id="@+id/scenic_heading"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="75dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="32dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
                     android:text="@string/title_purchase"
                     android:textColor="#FFFFFF"
                     android:textSize="30sp"
                     android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
@@ -111,7 +108,19 @@
                     android:layout_height="100dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/scenic_image" />
+                    app:layout_constraintTop_toBottomOf="@+id/scenic_let_go_btn" />
+
+                <Button
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:id="@+id/scenic_let_go_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="#FFFFFF"
+                    android:text="@string/let_go_btn"
+                    app:layout_constraintEnd_toEndOf="@+id/scenic_paragraph"
+                    app:layout_constraintStart_toStartOf="@+id/scenic_paragraph"
+                    app:layout_constraintTop_toBottomOf="@+id/scenic_paragraph" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
@@ -139,7 +148,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:background="#C9D599E6"
+                android:text="@string/dummy_button"
+                android:textColor="@color/colorPrimary" />
 
         </LinearLayout>
     </FrameLayout>
